@@ -1,0 +1,17 @@
+Fabric==1.8.0
+Flask==0.10.1
+Flask-Assets==0.8
+Jinja2==2.7.1
+MarkupSafe==0.18
+Werkzeug==0.9.4
+cssmin==0.2.0
+ecdsa==0.10
+futures==2.1.5
+itsdangerous==0.23
+paramiko==1.12.0
+pycrypto==2.6.1
+python-dateutil==2.2
+pytz==2013.8
+six==1.4.1
+webassets==0.8
+wsgiref==0.1.2
