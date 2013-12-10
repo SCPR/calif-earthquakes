@@ -84,7 +84,19 @@ class process_usgs_api_data():
                 item['geometry']['coordinates'][2],
             )
             list_of_earthquake_instances.append(this_earthquake)
-        logging.debug(list_of_earthquake_instances)
+        process_usgs_api_data.write(list_of_earthquake_instances, 'earthquake.db')
+
+    @staticmethod
+    def write(list_of_earthquake_instances, database):
+        ''' write class instances to the database '''
+        connection = None
+        connection = sqlite3.connect(database)
+        with connection:
+            cursor = connection.cursor()
+            for item in list_of_earthquake_instances:
+                cursor.execute("INSERT INTO Earthquakes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (item.primary_id, item.mag, item.place, item.title, item.time, item.updated, item.tz, item.url, item.felt, item.cdi, item.mmi, item.alert, item.status, item.tsunami, item.sig, item.type, item.latitude, item.longitude, item.depth))
+                connection.commit()
+        connection.close()
 
 if __name__ == '__main__':
     new_api_query = usgs_api_query()

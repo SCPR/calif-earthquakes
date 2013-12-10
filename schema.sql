@@ -1,4 +1,21 @@
 create table earthquakes (
-    id integer primary key autoincrement,
-    type text not null
+    primary_id integer primary key autoincrement,
+    mag integer null,
+    place text not null,
+    title text not null,
+    time integer null,
+    updated integer null,
+    tz integer null,
+    url text not null,
+    felt integer null,
+    cdi integer null,
+    mmi integer null,
+    alert text not null,
+    status text not null,
+    tsunami integer null,
+    sig integer null,
+    type text not null,
+    latitude integer null,
+    longitude integer null,
+    depth integer null
 );
