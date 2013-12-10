@@ -5,53 +5,87 @@ from contextlib import closing
 from concurrent import futures
 import config
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 class a_single_earthquake():
     ''' describes and gives structure to a single earthquake '''
-    def __init__(self, data_id, data_type):
-        self.data_id = data_id
-        self.data_type = data_type
+    def __init__(self, id, mag, place, title, time, updated, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, type, latitude, longitude, depth):
+        self.primary_id = id
+        self.mag = mag
+        self.place = place
+        self.title = title
+        self.time = time
+        self.updated = updated
+        self.tz = tz
+        self.url = url
+        self.felt = felt
+        self.cdi = cdi
+        self.mmi = mmi
+        self.alert = alert
+        self.status = status
+        self.tsunami = tsunami
+        self.sig = sig
+        self.type = type
+        self.latitude = latitude
+        self.longitude = longitude
+        self.depth = depth
 
-def query_usgs_api(target_url):
-    #usgs_api_query = requests.get(TARGET_URL, headers=config.config_settings['headers'])
-    usgs_api_query = requests.get(config.config_settings['seven_days_m4.5'])
-    usgs_api_data = usgs_api_query.json()
-    usgs_earthquakes = usgs_api_data['features']
-    list_of_earthquakes = []
-    for index, item in enumerate(usgs_earthquakes):
-        this_earthquake = a_single_earthquake(
-            index,
-            item['type']
-        )
-        list_of_earthquakes.append(this_earthquake)
-    write_data_to(list_of_earthquakes)
+class usgs_api_query():
+    @staticmethod
+    def make_request_to_api(target_url):
+        ''' performs request on earthquake api url and returns the data '''
+        usgs_query_api = requests.get(target_url, headers=config.config_settings['headers'])
+        usgs_api_data = usgs_query_api.json()
+        list_of_details_urls = []
+        for item in usgs_api_data['features']:
+            if 'Oklahoma' in item['properties']['place']:
+                usgs_details_link = str(item['properties']['detail'])
+                list_of_details_urls.append(usgs_details_link)
+            else:
+                pass
+        usgs_api_query.retrieve_details_from(list_of_details_urls)
 
-def write_data_to(list_of_data):
-    logging.debug(list_of_data)
+    @staticmethod
+    def retrieve_details_from(list_of_details_urls):
+        ''' performs request on local earthquake details url and returns the data '''
+        list_of_details_data = []
+        for detail_url in list_of_details_urls:
+            usgs_query_details = requests.get(detail_url, headers=config.config_settings['headers'])
+            usgs_api_details = usgs_query_details.json()
+            list_of_details_data.append(usgs_api_details)
+        process_this_data = process_usgs_api_data()
+        process_this_data.create_earthquake_classes_from(list_of_details_data)
 
-    connection = None
-    connection = sqlite3.connect('earthquake.db')
-    with connection:
-        cursor = connection.cursor()
-        for item in list_of_data:
-            logging.debug(item.data_type)
-            cursor.execute("INSERT INTO Earthquakes VALUES (%s, %s)", (item.data_id, item.data_type))
-        connection.commit()
-        if connection:
-            connection.close()
-
-def retrieve_data_from(database):
-    connection = sqlite3.connect(database)
-    with connection:
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
-        cursor.execute('SELECT * FROM Earthquakes')
-        rows = cursor.fetchall()
-        for row in rows:
-            logging.debug('fetching row')
-            print '%s %s' % (row['id'], row['type'])
+class process_usgs_api_data():
+    @staticmethod
+    def create_earthquake_classes_from(list_of_details_data):
+        ''' take data and create a list of class instances '''
+        list_of_earthquake_instances = []
+        for index, item in enumerate(list_of_details_data):
+            this_earthquake = a_single_earthquake(
+                index,
+                item['properties']['mag'],
+                item['properties']['place'],
+                item['properties']['title'],
+                item['properties']['time'],
+                item['properties']['updated'],
+                item['properties']['tz'],
+                item['properties']['url'],
+                item['properties']['felt'],
+                item['properties']['cdi'],
+                item['properties']['mmi'],
+                item['properties']['alert'],
+                item['properties']['status'],
+                item['properties']['tsunami'],
+                item['properties']['sig'],
+                item['properties']['type'],
+                item['geometry']['coordinates'][1],
+                item['geometry']['coordinates'][0],
+                item['geometry']['coordinates'][2],
+            )
+            list_of_earthquake_instances.append(this_earthquake)
+        logging.debug(list_of_earthquake_instances)
 
 if __name__ == '__main__':
-    query_usgs_api(config.config_settings['seven_days_m4.5'])
-    #retrieve_data_from('earthquake.db')
+    new_api_query = usgs_api_query()
+    data_to_process = new_api_query.make_request_to_api(config.config_settings['month_sig'])
