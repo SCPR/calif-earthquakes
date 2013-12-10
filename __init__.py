@@ -58,8 +58,33 @@ def close_db(error):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    db = get_db()
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+    cursor.execute('SELECT * from Earthquakes order by primary_id desc')
+    entries = [dict(
+        primary_id=row[0],
+        mag=row[1],
+        place=row[2],
+        title=row[3],
+        time=row[4],
+        updated=row[5],
+        tz=row[6],
+        url=row[7],
+        felt=row[8],
+        cdi=row[9],
+        mmi=row[10],
+        alert=row[11],
+        status=row[12],
+        tsunami=row[13],
+        sig=row[14],
+        type=row[15],
+        latitude=row[16],
+        longitude=row[17],
+        depth=row[18],
+    ) for row in cursor.fetchall()]
+    return render_template('index.html', entries=entries)
 
 if __name__ == '__main__':
-    init_db()
+    #init_db()
     app.run()
