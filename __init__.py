@@ -7,7 +7,7 @@ from flask.ext.assets import Environment, Bundle
 from contextlib import closing
 from concurrent import futures
 import config
-import jinja_filters
+import template_filters
 import webassets
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
@@ -64,6 +64,7 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+"""
 @app.route('/', methods=['GET'])
 def index():
     ''' displays main page and earthquakes in the database '''
@@ -95,6 +96,41 @@ def index():
 def detail(primary_id):
     earthquake = query_db('SELECT * from Earthquakes WHERE primary_id = primary_id order by primary_id desc', one=True)
     return render_template('detail.html', earthquake=earthquake)
+"""
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+@app.route('/return_data_from_database')
+def return_data_from_database():
+    ''' displays main page and earthquakes in the database '''
+    earthquakes = query_db('SELECT * from Earthquakes order by primary_id desc')
+    records = [dict(
+        primary_id=row[0],
+        mag=row[1],
+        place=row[2],
+        title=row[3],
+        time=row[4],
+        updated=row[5],
+        tz=row[6],
+        url=row[7],
+        felt=row[8],
+        cdi=row[9],
+        mmi=row[10],
+        alert=row[11],
+        status=row[12],
+        tsunami=row[13],
+        sig=row[14],
+        type=row[15],
+        latitude=row[16],
+        longitude=row[17],
+        depth=row[18],
+    ) for row in earthquakes]
+
+    return jsonify(
+        results = records
+    )
 
 if __name__ == '__main__':
     #init_db()
