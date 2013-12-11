@@ -4,28 +4,28 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <h1>Earthquakes</h1>
-            <ul class=entries>
-                {% for entry in entries %}
+            <ul class="entries">
+                {% for record in records %}
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <h2>{{ entry.title }} - {{ entry.time }}</h2>
+                            <a href="/{{ record.primary_id }}"><h2>{{ record.title }} - {{ record.time }}</h2></a>
                             <ul>
-                                <li>Magnitude: {{ entry.mag }}</li>
-                                <li>Place: {{ entry.place }}</li>
-                                <li>Updated: {{ entry.updated }}</li>
-                                <li>Time zone: {{ entry.tz }}</li>
-                                <li>URL: {{ entry.url }}</li>
-                                <li>Felt: {{ entry.felt }}</li>
-                                <li>CDI: {{ entry.cdi }}</li>
-                                <li>MMI: {{ entry.mmi }}</li>
-                                <li>Alert: {{ entry.alert }}</li>
-                                <li>Status: {{ entry.status }}</li>
-                                <li>Tsunami: {{ entry.tsunami }}</li>
-                                <li>Significant: {{ entry.sig }}</li>
-                                <li>Type: {{ entry.type }}</li>
-                                <li>Latitude: {{ entry.latitude }}</li>
-                                <li>Longitude: {{ entry.longitude }}</li>
-                                <li>Depth: {{ entry.depth }}</li>
+                                <li>Magnitude: {{ record.mag }}</li>
+                                <li>Place: {{ record.place }}</li>
+                                <li>Updated: {{ record.updated }}</li>
+                                <li>Time zone: {{ record.tz }}</li>
+                                <li>URL: {{ record.url }}</li>
+                                <li>Felt: {{ record.felt }}</li>
+                                <li>CDI: {{ record.cdi }}</li>
+                                <li>MMI: {{ record.mmi }}</li>
+                                <li>Alert: {{ record.alert }}</li>
+                                <li>Status: {{ record.status }}</li>
+                                <li>Tsunami: {{ record.tsunami }}</li>
+                                <li>Significant: {{ record.sig }}</li>
+                                <li>Type: {{ record.type }}</li>
+                                <li>Latitude: {{ record.latitude }}</li>
+                                <li>Longitude: {{ record.longitude }}</li>
+                                <li>Depth: {{ record.depth }}</li>
                             </ul>
                         </div>
                     </div>

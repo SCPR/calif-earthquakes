@@ -30,12 +30,6 @@ css = Bundle(
 )
 assets.register('css_all', css)
 
-def connect_db():
-    '''Connects to the specific database.'''
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv
-
 def init_db():
     '''Creates the database tables.'''
     with app.app_context():
@@ -56,13 +50,23 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-@app.route('/')
+def connect_db():
+    '''Connects to the specific database.'''
+    rv = sqlite3.connect(app.config['DATABASE'])
+    rv.row_factory = sqlite3.Row
+    return rv
+
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+@app.route('/', methods=['GET'])
 def index():
-    db = get_db()
-    db.row_factory = sqlite3.Row
-    cursor = db.cursor()
-    cursor.execute('SELECT * from Earthquakes order by primary_id desc')
-    entries = [dict(
+    ''' displays main page and earthquakes in the database '''
+    earthquakes = query_db('SELECT * from Earthquakes order by primary_id desc')
+    records = [dict(
         primary_id=row[0],
         mag=row[1],
         place=row[2],
@@ -82,8 +86,13 @@ def index():
         latitude=row[16],
         longitude=row[17],
         depth=row[18],
-    ) for row in cursor.fetchall()]
-    return render_template('index.html', entries=entries)
+    ) for row in earthquakes]
+    return render_template('index.html', records=records)
+
+@app.route('/<primary_id>', methods=['GET'])
+def detail(primary_id):
+    earthquake = query_db('SELECT * from Earthquakes WHERE primary_id = primary_id order by primary_id desc', one=True)
+    return render_template('detail.html', earthquake=earthquake)
 
 if __name__ == '__main__':
     #init_db()
