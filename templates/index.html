@@ -8,13 +8,14 @@
                 {% for record in records %}
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <a href="/{{ record.primary_id }}"><h2>{{ record.title }} - {{ record.time }}</h2></a>
+                            <a href="/{{ record.primary_id }}"><h2>{{ record.title }}</h2></a>
                             <ul>
+								<li>Time: {{ record.time|datetime_format }}</li>
                                 <li>Magnitude: {{ record.mag }}</li>
                                 <li>Place: {{ record.place }}</li>
-                                <li>Updated: {{ record.updated }}</li>
-                                <li>Time zone: {{ record.tz }}</li>
-                                <li>URL: {{ record.url }}</li>
+                                <li>Updated: {{ record.updated|datetime_format }}</li>
+                                <li>Timezone offset from UTC in minutes at the event epicenter: {{ record.tz }}</li>
+                                <li>URL: {{ record.url|urlize() }}</li>
                                 <li>Felt: {{ record.felt }}</li>
                                 <li>CDI: {{ record.cdi }}</li>
                                 <li>MMI: {{ record.mmi }}</li>

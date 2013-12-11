@@ -7,11 +7,13 @@ from flask.ext.assets import Environment, Bundle
 from contextlib import closing
 from concurrent import futures
 import config
+import jinja_filters
 import webassets
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
+app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
 app.config.from_object(config)
 assets = Environment(app)
 
