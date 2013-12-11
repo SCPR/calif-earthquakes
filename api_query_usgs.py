@@ -100,4 +100,4 @@ class process_usgs_api_data():
 
 if __name__ == '__main__':
     new_api_query = usgs_api_query()
-    data_to_process = new_api_query.make_request_to_api(config.config_settings['month_sig'])
+    data_to_process = new_api_query.make_request_to_api(config.config_settings['thirty_days_sig'])
