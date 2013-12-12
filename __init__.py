@@ -5,6 +5,7 @@ from flask import Flask, jsonify, render_template, request, \
     Response, send_from_directory, session, g, redirect, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
+from flask.ext.restful import reqparse, abort, Api, Resource
 from functools import wraps
 from contextlib import closing
 from concurrent import futures
@@ -13,13 +14,19 @@ import template_filters
 import webassets
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+
+# app settings
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
 app.config.from_object(app_config)
-assets = Environment(app)
 
-# combine and compress scripts
+api = Api(app)
+parser = reqparse.RequestParser()
+parser.add_argument('task', type=str)
+
+# asset pipeline
+assets = Environment(app)
 js = Bundle(
     'scripts/app.js',
     filters='rjsmin',
@@ -61,7 +68,7 @@ def connect_db():
     return rv
 
 def query_db(query, args=(), one=False):
-    ''' best reusable function ever '''
+    ''' function to query database '''
     cur = get_db().execute(query, args)
     rv = [dict((cur.description[i][0], value) \
                for i, value in enumerate(row)) for row in cur.fetchall()]
@@ -70,10 +77,11 @@ def query_db(query, args=(), one=False):
 
 def make_public_resource(item):
     ''' take database record and add resource_uri '''
-    item['resource_uri'] = url_for('return_earthquake_from_database', primary_id = item['primary_id'], _external = True)
+    item['resource_uri'] = url_for('earthquake', primary_id = item['primary_id'], _external = True)
     return item
 
 def require_appkey(view_function):
+    ''' requires an api key to hit json endpoints '''
     @wraps(view_function)
     def decorated_function(*args, **kwargs):
         if request.args.get('apikey') and request.args.get('apikey') == app.config['APIKEY']:
@@ -82,6 +90,20 @@ def require_appkey(view_function):
             abort(401)
     return decorated_function
 
+def evaluate_query_comparison(comparison):
+    ''' evaluates logic for sql query '''
+    if comparison == 'gt':
+        query_comparison = '>'
+    elif comparison == 'lt':
+        query_comparison = '<'
+    elif comparison == 'is':
+        query_comparison = '='
+    else:
+        query_comparison = None
+        abort(400)
+    return query_comparison
+
+# views
 @app.route('/', methods=['GET'])
 def index():
     ''' displays main page and earthquakes in the database '''
@@ -95,49 +117,84 @@ def detail(primary_id):
         abort(404)
     return render_template('detail.html', earthquake=earthquake)
 
+# error handlers
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(
+        jsonify({
+            'error': {'message': 'Bad request'},
+            'metadata': {'status': 400, 'records': 0},
+    }), 400)
 
-
-
-# trying to create api urls
-@app.route('/api/v1.0/earthquakes/', methods=['GET'])
-@require_appkey
-def return_earthquakes_from_database():
-    ''' returns all of the earthquakes in the database sorted by newest first '''
-    earthquakes = query_db('SELECT * from Earthquakes order by time desc')
-
-    if earthquakes is None:
-        abort(404)
-    return jsonify({
-        'metadata': {'status': 200, 'records': len(earthquakes)},
-        'results': map(make_public_resource, earthquakes)
-    })
-
-@app.route('/api/v1.0/earthquakes/<int:primary_id>/', methods=['GET'])
-@require_appkey
-def return_earthquake_from_database(primary_id):
-    earthquakes = query_db('SELECT * from Earthquakes WHERE primary_id = ? order by primary_id desc', [primary_id], one=True)
-    if earthquakes is None:
-        abort(404)
-    return jsonify({
-        'metadata': {'status': 200, 'records': 1},
-        'results': make_public_resource(earthquakes)
-    })
-
-@app.route('/api/v1.0/earthquakes/mag_gt=<float:mag>', methods=['GET'])
-@require_appkey
-def test_return_earthquake_from_database(mag):
-    earthquakes = query_db('SELECT * from Earthquakes WHERE mag > ?', [mag])
-    if earthquakes is None:
-        abort(404)
-    return jsonify({
-        'metadata': {'status': 200, 'records': len(earthquakes)},
-        'results': earthquakes
-    })
+@app.errorhandler(401)
+def unauthorized(error):
+    return make_response(
+        jsonify({
+            'error': {'message': 'Unauthorized access'},
+            'metadata': {'status': 401, 'records': 0},
+    }), 401)
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Resource Not Found'}), 404)
+    return make_response(
+        jsonify({
+            'error': {'message': 'Resource not found'},
+            'metadata': {'status': 404, 'records': 0},
+        }), 404)
 
+@app.errorhandler(500)
+def server_error(error):
+    return make_response(
+        jsonify({
+            'error': {'message': 'Resource not found'},
+            'metadata': {'status': 500, 'records': 0},
+        }), 500)
+
+# rest api classes
+class EarthquakeList(Resource):
+    #@require_appkey
+    def get(self):
+        ''' list all items '''
+        earthquakes = query_db('SELECT * from Earthquakes order by time desc')
+        if earthquakes is None:
+            abort(404)
+        return jsonify({
+            'metadata': {'status': 200, 'records': len(earthquakes), 'version': '1.0',},
+            'results': map(make_public_resource, earthquakes)
+        })
+
+class Earthquake(Resource):
+    #@require_appkey
+    def get(self, primary_id):
+        ''' list earthquake based on primary id '''
+        earthquakes = query_db('SELECT * from Earthquakes WHERE primary_id = ? order by primary_id desc', [primary_id], one=True)
+        if earthquakes is None:
+            abort(404)
+        return jsonify({
+            'metadata': {'status': 200, 'records': 1, 'version': '1.0',},
+            'results': make_public_resource(earthquakes)
+        })
+
+class EarthquakeMagnitude(Resource):
+    #@require_appkey
+    def get(self, query_comparison, query_param):
+        ''' list earthquakes based magnitude comparisons '''
+        query_comparison = evaluate_query_comparison(query_comparison)
+        earthquakes = query_db('SELECT * from Earthquakes WHERE mag ' + query_comparison + ' ?', [query_param])
+        if earthquakes is None:
+            abort(404)
+        return jsonify({
+            'metadata': {'status': 200, 'records': len(earthquakes), 'version': '1.0',},
+            'results': map(make_public_resource, earthquakes)
+        })
+
+# routing for rest resources
+root_api_path = '/api/v1.0/earthquakes/'
+api.add_resource(EarthquakeList, root_api_path, endpoint='earthquakes')
+api.add_resource(Earthquake, root_api_path + 'primary_id=<int:primary_id>/', endpoint='earthquake')
+api.add_resource(EarthquakeMagnitude, root_api_path + 'magnitude/<path:query_comparison>=<path:query_param>/', endpoint='earthquake_magnitude')
+
+# start the application
 if __name__ == '__main__':
     #init_db()
     app.run()
