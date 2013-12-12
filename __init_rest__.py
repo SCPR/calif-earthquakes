@@ -5,6 +5,7 @@ from flask import Flask, jsonify, render_template, request, \
     Response, send_from_directory, session, g, redirect, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
+from flask.ext.restful import reqparse, abort, Api, Resource
 from functools import wraps
 from contextlib import closing
 from concurrent import futures
@@ -17,6 +18,7 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
 app.config.from_object(config)
+api = Api(app)
 assets = Environment(app)
 
 # combine and compress scripts
@@ -95,15 +97,16 @@ def detail(primary_id):
         abort(404)
     return render_template('detail.html', earthquake=earthquake)
 
+###########################
 
-
-
-# trying to create api urls
+# handcrafted api endpoints
 @app.route('/api/v1.0/earthquakes/', methods=['GET'])
-@require_appkey
+#@require_appkey
 def return_earthquakes_from_database():
     ''' returns all of the earthquakes in the database sorted by newest first '''
     earthquakes = query_db('SELECT * from Earthquakes order by time desc')
+
+    logging.debug(earthquakes)
 
     if earthquakes is None:
         abort(404)
@@ -113,7 +116,7 @@ def return_earthquakes_from_database():
     })
 
 @app.route('/api/v1.0/earthquakes/<int:primary_id>/', methods=['GET'])
-@require_appkey
+#@require_appkey
 def return_earthquake_from_database(primary_id):
     earthquakes = query_db('SELECT * from Earthquakes WHERE primary_id = ? order by primary_id desc', [primary_id], one=True)
     if earthquakes is None:
@@ -124,7 +127,7 @@ def return_earthquake_from_database(primary_id):
     })
 
 @app.route('/api/v1.0/earthquakes/mag_gt=<float:mag>', methods=['GET'])
-@require_appkey
+#@require_appkey
 def test_return_earthquake_from_database(mag):
     earthquakes = query_db('SELECT * from Earthquakes WHERE mag > ?', [mag])
     if earthquakes is None:
@@ -140,7 +143,40 @@ def not_found(error):
 
 
 
+###########################
 
+# handcrafted api endpoints
+
+# https://github.com/miguelgrinberg/REST-tutorial/blob/master/rest-server-v2.py
+
+earthquakes = [{'status': u'reviewed', 'sig': 882, 'updated': 1386710939478, 'tz': -360, 'title': u'M4.5  - 11km NNW of Jones, Oklahoma', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000ldeh', 'felt': 3638, 'cdi': 5.7, 'longitude': -97.3261, 'alert': u'green', 'primary_id': 0, 'tsunami': None, 'depth': 5, 'place': u'11km NNW of Jones, Oklahoma', 'mag': 4.5, 'time': 1386439823060, 'latitude': 35.6627, 'mmi': 4.47, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 632, 'updated': 1385873780000, 'tz': 540, 'title': u'M6.4  - Kepulauan Barat Daya, Indonesia', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000l8mb', 'felt': 3, 'cdi': 5.8, 'longitude': 128.3757, 'alert': u'green', 'primary_id': 1, 'tsunami': None, 'depth': 10.01, 'place': u'Kepulauan Barat Daya, Indonesia', 'mag': 6.4, 'time': 1385861053620, 'latitude': -7.0137, 'mmi': 6.4, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 754, 'updated': 1385477923937, 'tz': -240, 'title': u'M7.0  - South Atlantic Ocean', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000l5zn', 'felt': None, 'cdi': None, 'longitude': -54.8821, 'alert': u'green', 'primary_id': 2, 'tsunami': None, 'depth': 10, 'place': u'South Atlantic Ocean', 'mag': 7, 'time': 1385360853990, 'latitude': -53.8813, 'mmi': 0, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 651, 'updated': 1386255344172, 'tz': -720, 'title': u'M6.5  - Fiji region', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000l51g', 'felt': 3, 'cdi': 2.9, 'longitude': -176.5416, 'alert': u'green', 'primary_id': 3, 'tsunami': None, 'depth': 371, 'place': u'Fiji region', 'mag': 6.5, 'time': 1385192912120, 'latitude': -17.1137, 'mmi': 3.57, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 912, 'updated': 1386400251592, 'tz': -180, 'title': u'M7.7  - Scotia Sea', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000l0gq', 'felt': None, 'cdi': None, 'longitude': -46.4011, 'alert': u'green', 'primary_id': 4, 'tsunami': 1, 'depth': 10, 'place': u'Scotia Sea', 'mag': 7.7, 'time': 1384679095530, 'latitude': -60.2738, 'mmi': 6.71, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 711, 'updated': 1384989142188, 'tz': -180, 'title': u'M6.8  - Scotia Sea', 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000kznc', 'felt': None, 'cdi': None, 'longitude': -47.1076, 'alert': u'green', 'primary_id': 5, 'tsunami': 1, 'depth': 9.98, 'place': u'Scotia Sea', 'mag': 6.8, 'time': 1384572871950, 'latitude': -60.2132, 'mmi': 4.92, 'type': u'earthquake'}, {'status': u'reviewed', 'sig': 631, 'updated': 1386669010611, 'tz': 720, 'title': u"M6.4  - 172km S of Ust'-Kamchatsk Staryy, Russia", 'url': u'http://earthquake.usgs.gov/earthquakes/eventpage/usb000kw1x', 'felt': 1, 'cdi': 4.3, 'longitude': 162.3024, 'alert': u'green', 'primary_id': 6, 'tsunami': 1, 'depth': 43, 'place': u"172km S of Ust'-Kamchatsk Staryy, Russia", 'mag': 6.4, 'time': 1384239831090, 'latitude': 54.6859, 'mmi': 6.33, 'type': u'earthquake'}]
+
+def abort_if_doesnt_exist(primary_id):
+    return abort(404, message="An item with the id of {} doesn't exist".format(primary_id))
+
+parser = reqparse.RequestParser()
+parser.add_argument('task', type=str)
+
+
+# list all items
+class EarthquakeList(Resource):
+    def get(self):
+        return earthquakes
+
+# show single item
+class Earthquake(Resource):
+    def get(self, primary_id):
+        for quake in earthquakes:
+            logging.debug(quake['primary_id'])
+            if quake['primary_id'] == primary_id:
+                return quake
+            else:
+                abort_if_doesnt_exist(primary_id)
+
+
+
+api.add_resource(EarthquakeList, '/test_quakes')
+api.add_resource(Earthquake, '/test_quakes/<int:primary_id>')
 
 
 
