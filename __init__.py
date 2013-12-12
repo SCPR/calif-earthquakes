@@ -2,8 +2,10 @@
 import os, logging
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, jsonify, render_template, request, \
-    Response, send_from_directory, session, g, redirect, url_for, abort, flash
+    Response, send_from_directory, session, g, redirect, \
+    url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
+from functools import wraps
 from contextlib import closing
 from concurrent import futures
 import config
@@ -59,78 +61,90 @@ def connect_db():
     return rv
 
 def query_db(query, args=(), one=False):
+    ''' best reusable function ever '''
     cur = get_db().execute(query, args)
-    rv = cur.fetchall()
+    rv = [dict((cur.description[i][0], value) \
+               for i, value in enumerate(row)) for row in cur.fetchall()]
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-"""
+def make_public_resource(item):
+    ''' take database record and add resource_uri '''
+    item['resource_uri'] = url_for('return_earthquake_from_database', primary_id = item['primary_id'], _external = True)
+    return item
+
+def require_appkey(view_function):
+    @wraps(view_function)
+    def decorated_function(*args, **kwargs):
+        if request.args.get('apikey') and request.args.get('apikey') == app.config['APIKEY']:
+            return view_function(*args, **kwargs)
+        else:
+            abort(401)
+    return decorated_function
+
 @app.route('/', methods=['GET'])
 def index():
     ''' displays main page and earthquakes in the database '''
-    earthquakes = query_db('SELECT * from Earthquakes order by primary_id desc')
-    records = [dict(
-        primary_id=row[0],
-        mag=row[1],
-        place=row[2],
-        title=row[3],
-        time=row[4],
-        updated=row[5],
-        tz=row[6],
-        url=row[7],
-        felt=row[8],
-        cdi=row[9],
-        mmi=row[10],
-        alert=row[11],
-        status=row[12],
-        tsunami=row[13],
-        sig=row[14],
-        type=row[15],
-        latitude=row[16],
-        longitude=row[17],
-        depth=row[18],
-    ) for row in earthquakes]
-    return render_template('index.html', records=records)
+    earthquakes = query_db('SELECT * from Earthquakes order by time desc')
+    return render_template('index.html', earthquakes=earthquakes)
 
-@app.route('/<primary_id>', methods=['GET'])
+@app.route('/<int:primary_id>', methods=['GET'])
 def detail(primary_id):
-    earthquake = query_db('SELECT * from Earthquakes WHERE primary_id = primary_id order by primary_id desc', one=True)
+    earthquake = query_db('SELECT * from Earthquakes WHERE primary_id = ? order by primary_id desc', [primary_id], one=True)
+    if earthquake is None:
+        abort(404)
     return render_template('detail.html', earthquake=earthquake)
-"""
 
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
 
-@app.route('/return_data_from_database')
-def return_data_from_database():
-    ''' displays main page and earthquakes in the database '''
-    earthquakes = query_db('SELECT * from Earthquakes order by primary_id desc')
-    records = [dict(
-        primary_id=row[0],
-        mag=row[1],
-        place=row[2],
-        title=row[3],
-        time=row[4],
-        updated=row[5],
-        tz=row[6],
-        url=row[7],
-        felt=row[8],
-        cdi=row[9],
-        mmi=row[10],
-        alert=row[11],
-        status=row[12],
-        tsunami=row[13],
-        sig=row[14],
-        type=row[15],
-        latitude=row[16],
-        longitude=row[17],
-        depth=row[18],
-    ) for row in earthquakes]
 
-    return jsonify(
-        results = records
-    )
+
+# trying to create api urls
+@app.route('/api/v1.0/earthquakes/', methods=['GET'])
+@require_appkey
+def return_earthquakes_from_database():
+    ''' returns all of the earthquakes in the database sorted by newest first '''
+    earthquakes = query_db('SELECT * from Earthquakes order by time desc')
+
+    if earthquakes is None:
+        abort(404)
+    return jsonify({
+        'metadata': {'status': 200, 'records': len(earthquakes)},
+        'results': map(make_public_resource, earthquakes)
+    })
+
+@app.route('/api/v1.0/earthquakes/<int:primary_id>/', methods=['GET'])
+@require_appkey
+def return_earthquake_from_database(primary_id):
+    earthquakes = query_db('SELECT * from Earthquakes WHERE primary_id = ? order by primary_id desc', [primary_id], one=True)
+    if earthquakes is None:
+        abort(404)
+    return jsonify({
+        'metadata': {'status': 200, 'records': 1},
+        'results': make_public_resource(earthquakes)
+    })
+
+@app.route('/api/v1.0/earthquakes/mag_gt=<float:mag>', methods=['GET'])
+@require_appkey
+def test_return_earthquake_from_database(mag):
+    earthquakes = query_db('SELECT * from Earthquakes WHERE mag > ?', [mag])
+    if earthquakes is None:
+        abort(404)
+    return jsonify({
+        'metadata': {'status': 200, 'records': len(earthquakes)},
+        'results': earthquakes
+    })
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Resource Not Found'}), 404)
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     #init_db()
