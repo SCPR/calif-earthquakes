@@ -8,7 +8,7 @@ from flask.ext.assets import Environment, Bundle
 from functools import wraps
 from contextlib import closing
 from concurrent import futures
-import config
+import app_config
 import template_filters
 import webassets
 
@@ -16,7 +16,7 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
-app.config.from_object(config)
+app.config.from_object(app_config)
 assets = Environment(app)
 
 # combine and compress scripts
@@ -137,14 +137,6 @@ def test_return_earthquake_from_database(mag):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Resource Not Found'}), 404)
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     #init_db()

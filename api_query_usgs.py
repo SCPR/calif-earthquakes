@@ -3,7 +3,7 @@ import os, logging, requests
 from sqlite3 import dbapi2 as sqlite3
 from contextlib import closing
 from concurrent import futures
-import config
+import app_config
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -34,7 +34,7 @@ class usgs_api_query():
     @staticmethod
     def make_request_to_api(target_url):
         ''' performs request on earthquake api url and returns the data '''
-        usgs_query_api = requests.get(target_url, headers=config.config_settings['headers'])
+        usgs_query_api = requests.get(target_url, headers=app_config.config_settings['headers'])
         usgs_api_data = usgs_query_api.json()
         list_of_details_urls = []
         for item in usgs_api_data['features']:
@@ -50,7 +50,7 @@ class usgs_api_query():
         ''' performs request on local earthquake details url and returns the data '''
         list_of_details_data = []
         for detail_url in list_of_details_urls:
-            usgs_query_details = requests.get(detail_url, headers=config.config_settings['headers'])
+            usgs_query_details = requests.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.json()
             list_of_details_data.append(usgs_api_details)
         process_this_data = process_usgs_api_data()
@@ -100,4 +100,4 @@ class process_usgs_api_data():
 
 if __name__ == '__main__':
     new_api_query = usgs_api_query()
-    data_to_process = new_api_query.make_request_to_api(config.config_settings['month_sig'])
+    data_to_process = new_api_query.make_request_to_api(app_config.config_settings['month_sig'])

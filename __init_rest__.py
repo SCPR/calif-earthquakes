@@ -9,7 +9,7 @@ from flask.ext.restful import reqparse, abort, Api, Resource
 from functools import wraps
 from contextlib import closing
 from concurrent import futures
-import config
+import app_config
 import template_filters
 import webassets
 
@@ -17,7 +17,7 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
-app.config.from_object(config)
+app.config.from_object(app_config)
 api = Api(app)
 assets = Environment(app)
 
