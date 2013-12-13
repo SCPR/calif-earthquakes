@@ -1,8 +1,5 @@
 DEBUG = True
-DATABASE = 'earthquake.db'
-SECRET_KEY = 'QKq1256cy<V|Z3Y>B0cq7o?V$3o(6'
-USERNAME = 'admin'
-PASSWORD = 'default'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:19NnpnnP19@localhost/calif_earthquakes'
 APIKEY = 'kI9xkkQSnL'
 
 config_settings = {
