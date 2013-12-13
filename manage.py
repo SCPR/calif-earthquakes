@@ -5,7 +5,7 @@ from earthquakes import app_config
 from flask.ext.script import Manager, Command
 from earthquakes import app
 from earthquakes.database import init_db, db_session
-from earthquakes.models import User, Earthquake
+from earthquakes.models import Experiment, Earthquake
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -27,30 +27,31 @@ class UsgsApiQuery(Command):
     def run(self):
         usgs_query_api = requests.get(app_config.config_settings['month_sig'], headers=app_config.config_settings['headers'])
         usgs_api_data = usgs_query_api.json()
-        list_of_details_urls = []
+        list_of_urls = []
         for item in usgs_api_data['features']:
             if 'Oklahoma' in item['properties']['place']:
                 usgs_details_link = str(item['properties']['detail'])
-                list_of_details_urls.append(usgs_details_link)
+                list_of_urls.append(usgs_details_link)
             else:
                 pass
-        self.retrieve_details_from(list_of_details_urls)
+        self.retrieve_details_from(list_of_urls)
 
     "performs request on local earthquake details url and returns the data"
-    def retrieve_details_from(self, list_of_details_urls):
-        logging.debug(list_of_details_urls)
-        list_of_details_data = []
-        for detail_url in list_of_details_urls:
+    def retrieve_details_from(self, list_of_urls):
+        logging.debug(list_of_urls)
+        list_of_data = []
+        for detail_url in list_of_urls:
             usgs_query_details = requests.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.json()
-            list_of_details_data.append(usgs_api_details)
-        self.write(list_of_details_data)
+            list_of_data.append(usgs_api_details)
+        self.write(list_of_data)
 
     "write class instances to the database"
-    def write(self, list_of_earthquake_instances):
-        for item in list_of_earthquake_instances:
+    def write(self, list_of_instances):
+        for item in list_of_instances:
             thisQuake = self.get_or_create(db_session, Earthquake,
-                primary_id = 2,
+                primary_id = None,
+                primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
                 mag = item['properties']['mag'],
                 place = item['properties']['place'],
                 title = item['properties']['title'],

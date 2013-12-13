@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import os, logging
-from sqlalchemy import Column, Integer, String, Float, BigInteger
+from sqlalchemy import Column, Integer, String, Float, BigInteger, DateTime, Text
 from earthquakes.database import Base
 
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+class Experiment(Base):
+    __tablename__ = 'experiments'
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(1000))
+    date_time = Column(DateTime)
 
     def __init__(self, id, name):
         self.id = id
@@ -18,28 +19,30 @@ class User(Base):
 
 class Earthquake(Base):
     __tablename__ = 'earthquakes'
-    primary_id = Column(Integer, primary_key=True)
-    mag = Column(Integer)
-    place = Column(String(1000))
-    title = Column(String(1000))
-    date_time = Column(BigInteger)
-    updated = Column(BigInteger)
-    tz = Column(Integer)
-    url = Column(String(1000))
-    felt = Column(Integer)
-    cdi = Column(Float)
-    mmi = Column(Integer)
-    alert = Column(String(1000))
-    status = Column(String(1000))
-    tsunami = Column(Integer)
-    sig = Column(Integer)
-    resource_type = Column(String(1000))
-    latitude = Column(Float)
-    longitude = Column(Float)
-    depth = Column(Float)
+    primary_id = Column(BigInteger, primary_key=True, autoincrement=True)
+    primary_slug = Column(Text)
+    mag = Column(Integer, nullable=True)
+    place = Column(String(1000), nullable=True)
+    title = Column(String(1000), nullable=True)
+    date_time = Column(BigInteger, nullable=True)
+    updated = Column(BigInteger, nullable=True)
+    tz = Column(Integer, nullable=True)
+    url = Column(Text, nullable=True)
+    felt = Column(Integer, nullable=True)
+    cdi = Column(Float, nullable=True)
+    mmi = Column(Integer, nullable=True)
+    alert = Column(String(1000), nullable=True)
+    status = Column(String(1000), nullable=True)
+    tsunami = Column(Integer, nullable=True)
+    sig = Column(Integer, nullable=True)
+    resource_type = Column(String(1000), nullable=True)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    depth = Column(Float, nullable=True)
 
-    def __init__(self, primary_id, mag, place, title, date_time, updated, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth):
+    def __init__(self, primary_id, primary_slug, mag, place, title, date_time, updated, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth):
         self.primary_id = primary_id
+        self.primary_slug = primary_slug
         self.mag = mag
         self.place = place
         self.title = title
