@@ -75,11 +75,6 @@ class UsgsApiQuery(Command):
                 depth = item['geometry']['coordinates'][2],
             )
 
-
-
-
-
-
 class TestDates(Command):
     "mimics django's get or create function"
     def get_or_create(self, session, model, **kwargs):
@@ -114,12 +109,6 @@ class TestDates(Command):
             name = 'test',
             date_time = test
         )
-
-
-
-
-
-
 
 class InitDb(Command):
     "sets up the database based on models"
