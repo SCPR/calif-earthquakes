@@ -127,14 +127,14 @@ class InitDb(Command):
     def run(self):
         init_db()
 
-class Hello(Command):
-    "prints hello world"
+class Testing(Command):
+    "prints that the test command is working"
     def run(self):
-        print "hello world"
+        print "The Test Command Is Working"
 
 manager.add_command('initdb', InitDb())
 manager.add_command('query', UsgsApiQuery())
-manager.add_command('hello', Hello())
+manager.add_command('test', Testing())
 
 if __name__ == "__main__":
     manager.run()
