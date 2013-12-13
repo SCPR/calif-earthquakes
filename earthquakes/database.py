@@ -1,7 +1,12 @@
+#!/usr/bin/env python
+
+import os, logging
 from app_config import config_settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 engine = create_engine(config_settings['sqlalchemy_database_uri'], convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,

@@ -4,6 +4,18 @@ import os, logging
 from sqlalchemy import Column, Integer, String, Float, BigInteger
 from earthquakes.database import Base
 
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(1000))
+
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+    def __repr__(self):
+        return '<User %r>' % self.name
+
 class Earthquake(Base):
     __tablename__ = 'earthquakes'
     primary_id = Column(Integer, primary_key=True)
