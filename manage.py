@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import os, logging, requests
+import os, logging, requests, time, datetime, calendar
+import pytz
+from pytz import timezone
+from datetime import tzinfo, date
 from earthquakes import app_config
 from flask.ext.script import Manager, Command
 from earthquakes import app
@@ -69,8 +72,54 @@ class UsgsApiQuery(Command):
                 resource_type = item['properties']['type'],
                 latitude = item['geometry']['coordinates'][1],
                 longitude = item['geometry']['coordinates'][0],
-                depth = item['geometry']['coordinates'][2]
+                depth = item['geometry']['coordinates'][2],
             )
+
+
+
+
+
+
+class TestDates(Command):
+    "mimics django's get or create function"
+    def get_or_create(self, session, model, **kwargs):
+        instance = session.query(model).filter_by(**kwargs).first()
+        if instance:
+            return instance
+        else:
+            instance = model(**kwargs)
+            session.add(instance)
+            session.commit()
+            return instance
+
+    "tests writing dates to the database"
+    def run(self):
+
+        # terminal shows datetime object as local time
+        # via http://www.epochconverter.com/ - 2013-12-07 6:10:23.060000
+        # local: 2013-12-07 10:10:23.060000
+
+        # the date/time from the api is a unix timestamp
+        date_time = 1386439823060
+
+        # the timezone from the api offset from UTC in minutes at the event epicenter
+        tz = -360
+
+        # convert the unix timestamp to utc datetime object
+        test = datetime.datetime.utcfromtimestamp(date_time/1e3)
+        logging.debug(test)
+
+        thisDate = self.get_or_create(db_session, Experiment,
+            id = None,
+            name = 'test',
+            date_time = test
+        )
+
+
+
+
+
+
 
 class InitDb(Command):
     "sets up the database based on models"
@@ -84,6 +133,7 @@ class Testing(Command):
 
 manager.add_command('initdb', InitDb())
 manager.add_command('query', UsgsApiQuery())
+manager.add_command('date', TestDates())
 manager.add_command('test', Testing())
 
 if __name__ == "__main__":

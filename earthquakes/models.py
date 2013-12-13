@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, logging
+import os, logging, requests, time, datetime, calendar
 from sqlalchemy import Column, Integer, String, Float, BigInteger, DateTime, Text
 from earthquakes.database import Base
 
@@ -8,11 +8,12 @@ class Experiment(Base):
     __tablename__ = 'experiments'
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(1000))
-    date_time = Column(DateTime)
+    date_time = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
-    def __init__(self, id, name):
+    def __init__(self, id, name, date_time):
         self.id = id
         self.name = name
+        self.date_time = date_time
 
     def __repr__(self):
         return '<User %r>' % self.name
