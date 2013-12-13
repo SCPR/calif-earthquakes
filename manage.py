@@ -4,7 +4,7 @@ import os, logging, requests
 from earthquakes import app_config
 from flask.ext.script import Manager, Command
 from earthquakes import app
-from earthquakes.database import db_session
+from earthquakes.database import init_db, db_session
 from earthquakes.models import User, Earthquake
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
@@ -34,7 +34,7 @@ class a_single_earthquake():
         self.longitude = longitude
         self.depth = depth
 
-class usgs_api_query(Command):
+class UsgsApiQuery(Command):
     "mimics django's get or create function"
     def get_or_create(self, session, model, **kwargs):
         instance = session.query(model).filter_by(**kwargs).first()
@@ -122,12 +122,18 @@ class usgs_api_query(Command):
                 depth = item.depth
             )
 
+class InitDb(Command):
+    "sets up the database based on models"
+    def run(self):
+        init_db()
+
 class Hello(Command):
     "prints hello world"
     def run(self):
         print "hello world"
 
-manager.add_command('query', usgs_api_query())
+manager.add_command('initdb', InitDb())
+manager.add_command('query', UsgsApiQuery())
 manager.add_command('hello', Hello())
 
 if __name__ == "__main__":
