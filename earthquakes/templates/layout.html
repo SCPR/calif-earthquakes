@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<!-- begin doc -->
+<html lang="en">
+
+    <!-- begin header -->
+    <head>
+
+        <!-- begin meta -->
+        <title>Title</title>
+        <!-- end meta -->
+
+        <!-- begin css -->
+        {% assets "css_all" %}
+            <link href="{{ ASSET_URL }}" rel="stylesheet" />
+        {% endassets %}
+
+        <!-- begin scripts -->
+        <script type=text/javascript>
+            var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+    </head>
+    <!-- end header -->
+
+    <body>
+        <div class="container">
+            <div class="presentation">
+                {% block main_content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- begin scripts -->
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        {% assets "scripts_all" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+        <!-- end scripts -->
+
+    </body>
+</html>

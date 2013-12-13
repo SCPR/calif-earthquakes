@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h1>Earthquakes</h1>
+            <ul class="entries">
+                {% for earthquake in earthquake_instances %}
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <a href="/{{ earthquake.primary_id }}"><h2>{{ earthquake.title }}</h2></a>
+                            <ul>
+								<li>Time: {{ earthquake.date_time|datetime_format }}</li>
+                                <li>Magnitude: {{ earthquake.mag }}</li>
+                                <li>Place: {{ earthquake.place }}</li>
+                                <li>Updated: {{ earthquake.updated|datetime_format }}</li>
+                                <li>Timezone offset from UTC in minutes at the event epicenter: {{ earthquake.tz }}</li>
+                                <li>URL: {{ earthquake.url|urlize() }}</li>
+                                <li>Felt: {{ earthquake.felt }}</li>
+                                <li>CDI: {{ earthquake.cdi }}</li>
+                                <li>MMI: {{ earthquake.mmi }}</li>
+                                <li>Alert: {{ earthquake.alert }}</li>
+                                <li>Status: {{ earthquake.status }}</li>
+                                <li>Tsunami: {{ earthquake.tsunami }}</li>
+                                <li>Significant: {{ earthquake.sig }}</li>
+                                <li>Type: {{ earthquake.type }}</li>
+                                <li>Latitude: {{ earthquake.latitude }}</li>
+                                <li>Longitude: {{ earthquake.longitude }}</li>
+                                <li>Depth: {{ earthquake.depth }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr>
+                {% else %}
+                    <li><em>No earthquakes thus far</em>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
