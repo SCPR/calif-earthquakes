@@ -3,11 +3,6 @@
 {% block main_content %}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-            {% for experiment in experiment_instances %}
-                <li>{{ experiment.date_time|test_datetime_format }}</li>
-            {% endfor %}
-
             <h1>Earthquakes</h1>
             <ul class="entries">
                 {% for earthquake in earthquake_instances %}

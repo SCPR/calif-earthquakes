@@ -28,11 +28,11 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app_config.config_settings['month_sig'], headers=app_config.config_settings['headers'])
+        usgs_query_api = requests.get(app_config.config_settings['seven_days_2.5'], headers=app_config.config_settings['headers'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
-            if 'Oklahoma' in item['properties']['place']:
+            if 'California' in item['properties']['place']:
                 usgs_details_link = str(item['properties']['detail'])
                 list_of_urls.append(usgs_details_link)
             else:
@@ -58,8 +58,8 @@ class UsgsApiQuery(Command):
                 mag = item['properties']['mag'],
                 place = item['properties']['place'],
                 title = item['properties']['title'],
-                date_time = item['properties']['time'],
-                updated = item['properties']['updated'],
+                date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
                 tz = item['properties']['tz'],
                 url = item['properties']['url'],
                 felt = item['properties']['felt'],

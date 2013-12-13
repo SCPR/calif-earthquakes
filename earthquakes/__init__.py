@@ -18,7 +18,6 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 app = Flask(__name__, static_url_path='/static')
 app.config.from_object(app_config)
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
-app.jinja_env.filters['test_datetime_format'] = template_filters.test_datetime_format
 
 import earthquakes.views
 
