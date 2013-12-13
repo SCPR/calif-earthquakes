@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+import os, logging
 from sqlalchemy import Column, Integer, String, Float, BigInteger
 from earthquakes.database import Base
 

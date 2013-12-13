@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
 import os, logging, requests
-from sqlite3 import dbapi2 as sqlite3
-from contextlib import closing
-from concurrent import futures
 import app_config
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
@@ -84,19 +82,23 @@ class process_usgs_api_data():
                 item['geometry']['coordinates'][2],
             )
             list_of_earthquake_instances.append(this_earthquake)
-        process_usgs_api_data.write(list_of_earthquake_instances, 'earthquake.db')
+        process_usgs_api_data.write(list_of_earthquake_instances)
 
     @staticmethod
-    def write(list_of_earthquake_instances, database):
+    def write(list_of_earthquake_instances):
         ''' write class instances to the database '''
-        connection = None
-        connection = sqlite3.connect(database)
-        with connection:
-            cursor = connection.cursor()
-            for item in list_of_earthquake_instances:
-                cursor.execute("INSERT INTO Earthquakes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (item.primary_id, item.mag, item.place, item.title, item.time, item.updated, item.tz, item.url, item.felt, item.cdi, item.mmi, item.alert, item.status, item.tsunami, item.sig, item.type, item.latitude, item.longitude, item.depth))
-                connection.commit()
-        connection.close()
+
+        logging.debug(list_of_earthquake_instances)
+        return list_of_earthquake_instances
+
+        #connection = None
+        #connection = sqlite3.connect(database)
+        #with connection:
+            #cursor = connection.cursor()
+            #for item in list_of_earthquake_instances:
+                #cursor.execute("INSERT INTO Earthquakes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (item.primary_id, item.mag, item.place, item.title, item.time, item.updated, item.tz, item.url, item.felt, item.cdi, item.mmi, item.alert, item.status, item.tsunami, item.sig, item.type, item.latitude, item.longitude, item.depth))
+                #connection.commit()
+        #connection.close()
 
 if __name__ == '__main__':
     new_api_query = usgs_api_query()

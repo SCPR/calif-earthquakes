@@ -19,5 +19,4 @@ parser.add_argument('task', type=str)
 @app.route('/')
 def index():
     earthquake_instances = Earthquake.query.all()
-    logging.debug(earthquake_instances)
     return render_template('index.html', earthquake_instances=earthquake_instances)
