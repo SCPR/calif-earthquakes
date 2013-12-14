@@ -4,16 +4,22 @@ import os, logging
 from flask import Flask, jsonify, render_template, request, \
     Response, send_from_directory, session, g, redirect, \
     url_for, abort, flash, make_response
-from flask.ext.restful import reqparse, abort, Api, Resource
+#from flask.ext.restful import reqparse, abort, Api, Resource
+
+import flask.ext.sqlalchemy
+import flask.ext.restless
+
 from earthquakes import app, db
 from earthquakes.models import Earthquake
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
-# flask_restful config
-api = Api(app)
-parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
+# flask_restless config
+#parser = reqparse.RequestParser()
+#parser.add_argument('task', type=str)
+root_api_path = '/api/v1.0/earthquakes/'
+manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+manager.create_api(Earthquake, methods=['GET'])
 
 @app.route('/')
 def index():
@@ -24,16 +30,6 @@ def index():
 def detail(primary_id):
     earthquake_instances = Earthquake.query.filter_by(primary_id=primary_id).order_by(Earthquake.date_time.desc()).first_or_404()
     return render_template('detail.html', earthquake_instances=earthquake_instances)
-
-
-
-
-
-
-def make_public_resource(item):
-    ''' take database record and add resource_uri '''
-    item['resource_uri'] = url_for('earthquake', primary_id = item['primary_id'], _external = True)
-    return item
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''

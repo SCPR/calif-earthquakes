@@ -7,7 +7,7 @@ from datetime import tzinfo, date
 from earthquakes import app_config
 from flask.ext.script import Manager, Command
 from earthquakes import app, db
-from earthquakes.models import Earthquake
+from earthquakes.models import Earthquake, Experiment
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 

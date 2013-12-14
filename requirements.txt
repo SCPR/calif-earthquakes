@@ -2,7 +2,7 @@ Fabric==1.8.0
 Flask==0.10.1
 Flask-Assets==0.8
 Flask-MySQL==1.2
-Flask-RESTful==0.2.8
+Flask-Restless==0.12.1
 Flask-SQLAlchemy==1.0
 Flask-Script==0.6.6
 Jinja2==2.7.1
@@ -15,6 +15,7 @@ ecdsa==0.10
 futures==2.1.5
 itsdangerous==0.23
 paramiko==1.12.0
+peewee==2.1.6
 pycrypto==2.6.1
 python-dateutil==2.2
 pytz==2013.8
