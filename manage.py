@@ -14,16 +14,17 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 manager = Manager(app)
 
 class UsgsApiQuery(Command):
-    "mimics django's get or create function"
-    def get_or_create(self, session, model, **kwargs):
-        instance = session.query(model).filter_by(**kwargs).first()
-        if instance:
-            return instance
-        else:
-            instance = model(**kwargs)
-            session.add(instance)
-            session.commit()
-            return instance
+
+    #"mimics django's get or create function"
+    #def get_or_create(self, session, model, **kwargs):
+        #instance = session.query(model).filter_by(**kwargs).first()
+        #if instance:
+            #return instance
+        #else:
+            #instance = model(**kwargs)
+            #session.add(instance)
+            #session.commit()
+            #return instance
 
     "performs request on earthquake api url and returns the data"
     def run(self):
@@ -44,6 +45,8 @@ class UsgsApiQuery(Command):
         logging.debug(list_of_urls)
         list_of_data = []
         for detail_url in list_of_urls:
+            time.sleep(5)
+            logging.debug('sleeping prior to details request')
             usgs_query_details = requests.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.json()
             list_of_data.append(usgs_api_details)
@@ -52,28 +55,76 @@ class UsgsApiQuery(Command):
     "write class instances to the database"
     def write(self, list_of_instances):
         for item in list_of_instances:
-            thisQuake = self.get_or_create(db.session, Earthquake,
-                primary_id = None,
-                primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
-                mag = item['properties']['mag'],
-                place = item['properties']['place'],
-                title = item['properties']['title'],
-                date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
-                updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
-                tz = item['properties']['tz'],
-                url = item['properties']['url'],
-                felt = item['properties']['felt'],
-                cdi = item['properties']['cdi'],
-                mmi = item['properties']['mmi'],
-                alert = item['properties']['alert'],
-                status = item['properties']['status'],
-                tsunami = item['properties']['tsunami'],
-                sig = item['properties']['sig'],
-                resource_type = item['properties']['type'],
-                latitude = item['geometry']['coordinates'][1],
-                longitude = item['geometry']['coordinates'][0],
-                depth = item['geometry']['coordinates'][2],
-            )
+            comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
+            comparison_updated_raw = item['properties']['updated']
+            instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
+
+            if instance is not None and instance.updated_raw == comparison_updated_raw:
+                logging.debug('record exists and hasnt been updated')
+                quake = None
+
+            elif instance is not None and instance.updated_raw != comparison_updated_raw:
+                logging.debug('there is an update to this record')
+                quake = Earthquake(
+                    primary_id = None,
+                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
+                    mag = item['properties']['mag'],
+                    place = item['properties']['place'],
+                    title = item['properties']['title'],
+                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
+                    updated_raw = item['properties']['updated'],
+                    tz = item['properties']['tz'],
+                    url = item['properties']['url'],
+                    felt = item['properties']['felt'],
+                    cdi = item['properties']['cdi'],
+                    mmi = item['properties']['mmi'],
+                    alert = item['properties']['alert'],
+                    status = item['properties']['status'],
+                    tsunami = item['properties']['tsunami'],
+                    sig = item['properties']['sig'],
+                    resource_type = item['properties']['type'],
+                    latitude = item['geometry']['coordinates'][1],
+                    longitude = item['geometry']['coordinates'][0],
+                    depth = item['geometry']['coordinates'][2]
+                )
+
+            elif instance is None:
+                logging.debug('record doesnt exist')
+                quake = Earthquake(
+                    primary_id = None,
+                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
+                    mag = item['properties']['mag'],
+                    place = item['properties']['place'],
+                    title = item['properties']['title'],
+                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
+                    updated_raw = item['properties']['updated'],
+                    tz = item['properties']['tz'],
+                    url = item['properties']['url'],
+                    felt = item['properties']['felt'],
+                    cdi = item['properties']['cdi'],
+                    mmi = item['properties']['mmi'],
+                    alert = item['properties']['alert'],
+                    status = item['properties']['status'],
+                    tsunami = item['properties']['tsunami'],
+                    sig = item['properties']['sig'],
+                    resource_type = item['properties']['type'],
+                    latitude = item['geometry']['coordinates'][1],
+                    longitude = item['geometry']['coordinates'][0],
+                    depth = item['geometry']['coordinates'][2]
+                )
+
+            else:
+                logging.debug('dont know what this might be')
+                logging.debug(instance.updated_raw)
+                quake = None
+
+            if quake is not None:
+                db.session.add(quake)
+                db.session.commit()
+            else:
+                pass
 
 class TestDates(Command):
     "mimics django's get or create function"
