@@ -15,16 +15,16 @@ manager = Manager(app)
 
 class UsgsApiQuery(Command):
 
-    #"mimics django's get or create function"
-    #def get_or_create(self, session, model, **kwargs):
-        #instance = session.query(model).filter_by(**kwargs).first()
-        #if instance:
-            #return instance
-        #else:
-            #instance = model(**kwargs)
-            #session.add(instance)
-            #session.commit()
-            #return instance
+    "mimics django's get or create function"
+    def get_or_create(self, session, model, **kwargs):
+        instance = session.query(model).filter_by(**kwargs).first()
+        if instance:
+            return instance
+        else:
+            instance = model(**kwargs)
+            session.add(instance)
+            session.commit()
+            return instance
 
     "performs request on earthquake api url and returns the data"
     def run(self):
@@ -59,9 +59,37 @@ class UsgsApiQuery(Command):
             comparison_updated_raw = item['properties']['updated']
             instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
 
+            if instance is None:
+                logging.debug('record doesnt exist')
+                quake = Earthquake(
+                    primary_id = None,
+                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
+                    mag = item['properties']['mag'],
+                    place = item['properties']['place'],
+                    title = item['properties']['title'],
+                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
+                    updated_raw = item['properties']['updated'],
+                    tz = item['properties']['tz'],
+                    url = item['properties']['url'],
+                    felt = item['properties']['felt'],
+                    cdi = item['properties']['cdi'],
+                    mmi = item['properties']['mmi'],
+                    alert = item['properties']['alert'],
+                    status = item['properties']['status'],
+                    tsunami = item['properties']['tsunami'],
+                    sig = item['properties']['sig'],
+                    resource_type = item['properties']['type'],
+                    latitude = item['geometry']['coordinates'][1],
+                    longitude = item['geometry']['coordinates'][0],
+                    depth = item['geometry']['coordinates'][2]
+                )
+
+                db.session.add(quake)
+
             if instance is not None and instance.updated_raw == comparison_updated_raw:
-                logging.debug('record exists and hasnt been updated')
-                quake = None
+                logging.debug('record exists and doesnt need to be updated')
+                pass
 
             elif instance is not None and instance.updated_raw != comparison_updated_raw:
                 logging.debug('there is an update to this record')
@@ -89,42 +117,12 @@ class UsgsApiQuery(Command):
                     depth = item['geometry']['coordinates'][2]
                 )
 
-            elif instance is None:
-                logging.debug('record doesnt exist')
-                quake = Earthquake(
-                    primary_id = None,
-                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
-                    mag = item['properties']['mag'],
-                    place = item['properties']['place'],
-                    title = item['properties']['title'],
-                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
-                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
-                    updated_raw = item['properties']['updated'],
-                    tz = item['properties']['tz'],
-                    url = item['properties']['url'],
-                    felt = item['properties']['felt'],
-                    cdi = item['properties']['cdi'],
-                    mmi = item['properties']['mmi'],
-                    alert = item['properties']['alert'],
-                    status = item['properties']['status'],
-                    tsunami = item['properties']['tsunami'],
-                    sig = item['properties']['sig'],
-                    resource_type = item['properties']['type'],
-                    latitude = item['geometry']['coordinates'][1],
-                    longitude = item['geometry']['coordinates'][0],
-                    depth = item['geometry']['coordinates'][2]
-                )
-
-            else:
-                logging.debug('dont know what this might be')
-                logging.debug(instance.updated_raw)
-                quake = None
-
-            if quake is not None:
                 db.session.add(quake)
-                db.session.commit()
+
             else:
                 pass
+
+            db.session.commit()
 
 class TestDates(Command):
     "mimics django's get or create function"
@@ -171,9 +169,9 @@ class Testing(Command):
     def run(self):
         print "The Test Command Is Working"
 
-manager.add_command('initdb', InitDb())
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('date', TestDates())
+manager.add_command('initdb', InitDb())
 manager.add_command('test', Testing())
 
 if __name__ == "__main__":
