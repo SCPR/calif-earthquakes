@@ -7,24 +7,25 @@
             <ul class="entries">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <a href="/{{ earthquake.primary_id }}"><h2>{{ earthquake.title }} - {{ earthquake.time }}</h2></a>
+                        <a href="/{{ earthquake_instances.primary_id }}"><h2>{{ earthquake_instances.title }}</h2></a>
                         <ul>
-                            <li>Magnitude: {{ earthquake.mag }}</li>
-                            <li>Place: {{ earthquake.place }}</li>
-                            <li>Updated: {{ earthquake.updated }}</li>
-                            <li>Time zone: {{ earthquake.tz }}</li>
-                            <li>URL: {{ earthquake.url }}</li>
-                            <li>Felt: {{ earthquake.felt }}</li>
-                            <li>CDI: {{ earthquake.cdi }}</li>
-                            <li>MMI: {{ earthquake.mmi }}</li>
-                            <li>Alert: {{ earthquake.alert }}</li>
-                            <li>Status: {{ earthquake.status }}</li>
-                            <li>Tsunami: {{ earthquake.tsunami }}</li>
-                            <li>Significant: {{ earthquake.sig }}</li>
-                            <li>Type: {{ earthquake.type }}</li>
-                            <li>Latitude: {{ earthquake.latitude }}</li>
-                            <li>Longitude: {{ earthquake.longitude }}</li>
-                            <li>Depth: {{ earthquake.depth }}</li>
+                            <li>Time: {{ earthquake_instances.date_time|datetime_format }}</li>
+                            <li>Magnitude: {{ earthquake_instances.mag }}</li>
+                            <li>Place: {{ earthquake_instances.place }}</li>
+                            <li>Updated: {{ earthquake_instances.updated|datetime_format }}</li>
+                            <li>Time zone: {{ earthquake_instances.tz }}</li>
+                            <li>URL: {{ earthquake_instances.url }}</li>
+                            <li>Felt: {{ earthquake_instances.felt }}</li>
+                            <li>CDI: {{ earthquake_instances.cdi }}</li>
+                            <li>MMI: {{ earthquake_instances.mmi }}</li>
+                            <li>Alert: {{ earthquake_instances.alert }}</li>
+                            <li>Status: {{ earthquake_instances.status }}</li>
+                            <li>Tsunami: {{ earthquake_instances.tsunami }}</li>
+                            <li>Significant: {{ earthquake_instances.sig }}</li>
+                            <li>Type: {{ earthquake_instances.type }}</li>
+                            <li>Latitude: {{ earthquake_instances.latitude }}</li>
+                            <li>Longitude: {{ earthquake_instances.longitude }}</li>
+                            <li>Depth: {{ earthquake_instances.depth }}</li>
                         </ul>
                     </div>
                 </div>

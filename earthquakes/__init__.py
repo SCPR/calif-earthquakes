@@ -9,7 +9,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import app_config
 import template_filters
 import webassets
-from earthquakes.database import db_session
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -19,11 +18,15 @@ app = Flask(__name__, static_url_path='/static')
 app.config.from_object(app_config)
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
 
+# configure database
+app.config['SQLALCHEMY_DATABASE_URI'] = app_config.config_settings['sqlalchemy_database_uri']
+db = SQLAlchemy(app)
+
 import earthquakes.views
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-    db_session.remove()
+    db.session.remove()
 
 # asset pipeline
 assets = Environment(app)

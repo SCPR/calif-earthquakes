@@ -6,9 +6,8 @@ from pytz import timezone
 from datetime import tzinfo, date
 from earthquakes import app_config
 from flask.ext.script import Manager, Command
-from earthquakes import app
-from earthquakes.database import init_db, db_session
-from earthquakes.models import Experiment, Earthquake
+from earthquakes import app, db
+from earthquakes.models import Earthquake
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -36,6 +35,7 @@ class UsgsApiQuery(Command):
                 usgs_details_link = str(item['properties']['detail'])
                 list_of_urls.append(usgs_details_link)
             else:
+                logging.debug('passing this one by')
                 pass
         self.retrieve_details_from(list_of_urls)
 
@@ -52,7 +52,7 @@ class UsgsApiQuery(Command):
     "write class instances to the database"
     def write(self, list_of_instances):
         for item in list_of_instances:
-            thisQuake = self.get_or_create(db_session, Earthquake,
+            thisQuake = self.get_or_create(db.session, Earthquake,
                 primary_id = None,
                 primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
                 mag = item['properties']['mag'],
@@ -104,7 +104,7 @@ class TestDates(Command):
         test = datetime.datetime.utcfromtimestamp(date_time/1e3)
         logging.debug(test)
 
-        thisDate = self.get_or_create(db_session, Experiment,
+        thisDate = self.get_or_create(db.session, Experiment,
             id = None,
             name = 'test',
             date_time = test
@@ -113,7 +113,7 @@ class TestDates(Command):
 class InitDb(Command):
     "sets up the database based on models"
     def run(self):
-        init_db()
+        db.create_all()
 
 class Testing(Command):
     "prints that the test command is working"
