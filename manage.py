@@ -2,10 +2,12 @@
 
 import os, logging, requests, time, datetime, calendar
 import pytz
+from requests_futures.sessions import FuturesSession
 from pytz import timezone
 from datetime import tzinfo, date
 from earthquakes import app_config
 from flask.ext.script import Manager, Command
+from concurrent import futures
 from earthquakes import app, db
 from earthquakes.models import Earthquake, Experiment
 
@@ -42,13 +44,13 @@ class UsgsApiQuery(Command):
 
     "performs request on local earthquake details url and returns the data"
     def retrieve_details_from(self, list_of_urls):
-        logging.debug(list_of_urls)
         list_of_data = []
+        session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
             time.sleep(5)
-            logging.debug('sleeping prior to details request')
-            usgs_query_details = requests.get(detail_url, headers=app_config.config_settings['headers'])
-            usgs_api_details = usgs_query_details.json()
+            usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
+            usgs_api_details = usgs_query_details.result()
+            usgs_api_details = usgs_api_details.json()
             list_of_data.append(usgs_api_details)
         self.write(list_of_data)
 
@@ -58,41 +60,8 @@ class UsgsApiQuery(Command):
             comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
             comparison_updated_raw = item['properties']['updated']
             instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
-
             if instance is None:
-                logging.debug('record doesnt exist')
-                quake = Earthquake(
-                    primary_id = None,
-                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
-                    mag = item['properties']['mag'],
-                    place = item['properties']['place'],
-                    title = item['properties']['title'],
-                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
-                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
-                    updated_raw = item['properties']['updated'],
-                    tz = item['properties']['tz'],
-                    url = item['properties']['url'],
-                    felt = item['properties']['felt'],
-                    cdi = item['properties']['cdi'],
-                    mmi = item['properties']['mmi'],
-                    alert = item['properties']['alert'],
-                    status = item['properties']['status'],
-                    tsunami = item['properties']['tsunami'],
-                    sig = item['properties']['sig'],
-                    resource_type = item['properties']['type'],
-                    latitude = item['geometry']['coordinates'][1],
-                    longitude = item['geometry']['coordinates'][0],
-                    depth = item['geometry']['coordinates'][2]
-                )
-
-                db.session.add(quake)
-
-            if instance is not None and instance.updated_raw == comparison_updated_raw:
-                logging.debug('record exists and doesnt need to be updated')
-                pass
-
-            elif instance is not None and instance.updated_raw != comparison_updated_raw:
-                logging.debug('there is an update to this record')
+                logging.debug('creating new record')
                 quake = Earthquake(
                     primary_id = None,
                     primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
@@ -120,9 +89,34 @@ class UsgsApiQuery(Command):
                 db.session.add(quake)
 
             else:
-                pass
+                if instance.updated_raw == comparison_updated_raw:
+                    logging.debug('compared and found record exists and doesnt need to be updated')
+                    pass
+                else:
+                    logging.debug('compared and have updated this record')
+                    instance.primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
+                    instance.mag = item['properties']['mag']
+                    instance.place = item['properties']['place']
+                    instance.title = item['properties']['title']
+                    instance.date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3)
+                    instance.updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3)
+                    instance.updated_raw = item['properties']['updated']
+                    instance.tz = item['properties']['tz']
+                    instance.url = item['properties']['url']
+                    instance.felt = item['properties']['felt']
+                    instance.cdi = item['properties']['cdi']
+                    instance.mmi = item['properties']['mmi']
+                    instance.alert = item['properties']['alert']
+                    instance.status = item['properties']['status']
+                    instance.tsunami = item['properties']['tsunami']
+                    instance.sig = item['properties']['sig']
+                    instance.resource_type = item['properties']['type']
+                    instance.latitude = item['geometry']['coordinates'][1]
+                    instance.longitude = item['geometry']['coordinates'][0]
+                    instance.depth = item['geometry']['coordinates'][2]
 
             db.session.commit()
+        logging.debug('Processed %s records' % (len(list_of_instances)))
 
 class TestDates(Command):
     "mimics django's get or create function"
@@ -159,6 +153,31 @@ class TestDates(Command):
             date_time = test
         )
 
+class TestUpdates(Command):
+    "mimics django's get or create function"
+    def run(self):
+        comparison_slug = 'what-slug'
+        comparison_name = 'new name'
+        instance = Experiment.query.filter_by(slug=comparison_slug).first()
+        if instance is None:
+            logging.debug('record doesnt exist')
+            thisRecord = Experiment(
+                id = None,
+                slug = comparison_slug,
+                name = comparison_name,
+                date_time = datetime.datetime.utcfromtimestamp(1386439823060/1e3)
+            )
+            db.session.add(thisRecord)
+        else:
+            logging.debug('record exists so im comparing')
+            if instance.name == comparison_name:
+                logging.debug('record exists and doesnt need to be updated')
+                pass
+            else:
+                logging.debug('record exists and will be updated')
+                instance.name = 'new name'
+        db.session.commit()
+
 class InitDb(Command):
     "sets up the database based on models"
     def run(self):
@@ -171,6 +190,7 @@ class Testing(Command):
 
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('date', TestDates())
+manager.add_command('updates', TestUpdates())
 manager.add_command('initdb', InitDb())
 manager.add_command('test', Testing())
 

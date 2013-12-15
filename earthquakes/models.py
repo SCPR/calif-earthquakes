@@ -10,11 +10,13 @@ class Experiment(db.Model):
     __tablename__ = 'experiments'
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     name = db.Column(db.String(1000))
+    slug = db.Column(db.String(1000))
     date_time = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow)
 
-    def __init__(self, id, name, date_time):
+    def __init__(self, id, name, slug, date_time):
         self.id = id
         self.name = name
+        self.slug = slug
         self.date_time = date_time
 
     def __repr__(self):
