@@ -1,49 +1,56 @@
-App.Views.Item = Backbone.View.extend({
+App.Views.ItemView = Backbone.View.extend({
     tagName: "div",
 
     className: "row",
 
     template: _.template(template("static/templates/list-view.html")),
 
-    //template: $('#listView').html(),
-
     events: {
-        'click a': 'navigate'
+        "click a": "navigate"
     },
 
     navigate: function(e){
+
         e.preventDefault();
-        var modelId = this.model.attributes.primary_id;
-        window.app.navigate('#earthquakes/' + modelId, {
+
+        var primary_id = this.model.get("primary_id");
+        this.earthquakeDetail = new App.Views.DetailView({
+            model: this.model
+        });
+
+        window.app.navigate('#earthquakes/' + primary_id, {
             trigger: true,
             replace: false,
         });
     },
 
-    render: function () {
+    render: function(){
         this.$el.html(this.template(this.model.toJSON()));
         return this;
-
-        /*
-        var source = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.model.toJSON());
-        $(this.el).html(html);
-        return this;
-        */
     }
+
 });
 
-App.Views.Items = Backbone.View.extend({
+App.Views.ListView = Backbone.View.extend({
+
+    el: '#earthquake-entries',
+
     tagName: "div",
+
     className: "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+
+    initialize: function(){
+        _.bindAll(this, "render");
+    },
+
     render: function(){
         this.collection.each(function(earthquake){
-            var itemView = new App.Views.Item({
+            var itemView = new App.Views.ItemView({
                 model: earthquake
             });
             this.$el.append(itemView.render().el);
         }, this);
         return this;
     }
+
 });

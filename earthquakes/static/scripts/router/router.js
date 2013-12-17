@@ -1,12 +1,20 @@
 App.Router = Backbone.Router.extend({
     routes: {
-        "": "index",
-        "earthquakes/:primary_id": "searchEarthquakes"
+        "": "home",
+        "earthquakes/:primary_id": "earthquakes"
     },
 
-    searchEarthquakes: function(primary_id){
-        primary_id = parseInt(primary_id);
-        this.model = window.InitializePage.earthquakeCollection.where({'primary_id': primary_id});
-        this.DetailView = new App.Views.DetailView({model: this.model});
+    home: function(){
+        $("#earthquake-entry").empty();
+        this.loadView(new App.Views.Initialize());
+    },
+
+    earthquakes: function(primary_id){
+        $("#earthquake-entries").empty();
+    },
+
+    loadView: function(view){
+        this.view && this.view.remove();
+        this.view = view;
     }
 });

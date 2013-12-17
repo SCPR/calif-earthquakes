@@ -30,9 +30,8 @@
 
     $(function(){
         window.app = new App.Router();
-        window.InitializePage= new App.Views.Initialize({el: document});
         Backbone.history.start({
-            root: 'http://127.0.0.1:5000/',
+            root: '/',
             pushState: false,
         });
 
