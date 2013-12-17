@@ -76,3 +76,37 @@ class Earthquake(db.Model):
 
     def __repr__(self):
         return '<place %r>' % self.place
+
+    @property
+    def serialize(self):
+        return {
+            'primary_id': self.primary_id,
+            'primary_slug': self.primary_slug,
+            'mag': self.mag,
+            'place': self.place,
+            'title': self.title,
+            'date_time': self.date_time,
+            'updated': self.updated,
+            'updated_raw': self.updated_raw,
+            'tz': self.tz,
+            'url': self.url,
+            'felt': self.felt,
+            'cdi': self.cdi,
+            'mmi': self.mmi,
+            'alert': self.alert,
+            'status': self.status,
+            'tsunami': self.tsunami,
+            'sig': self.sig,
+            'resource_type': self.resource_type,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'depth': self.depth,
+        }
+
+    @property
+    def serialize_many2many(self):
+       '''
+       Return object's relations in easily serializeable format.
+       NB! Calls many2many's serialize property.
+       '''
+       return [ item.serialize for item in self.many2many]

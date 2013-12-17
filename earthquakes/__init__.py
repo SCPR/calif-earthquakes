@@ -16,22 +16,26 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 app.config.from_object(app_config)
+app.config['ASSETS_DEBUG'] = app_config.config_settings['DEBUG']
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
-
-# configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = app_config.config_settings['sqlalchemy_database_uri']
-db = SQLAlchemy(app)
-
-import earthquakes.views
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db.session.remove()
 
 # asset pipeline
 assets = Environment(app)
+
 js = Bundle(
+    'scripts/libs/jquery.min.js',
+    'scripts/libs/modernizr.min.js',
+    'scripts/libs/underscore-min.js',
+    'scripts/libs/backbone-min.js',
+    'scripts/libs/moment.min.js',
+    'scripts/libs/bootstrap.min.js',
     'scripts/app.js',
+    'scripts/router/router.js',
+    'scripts/models/earthquake.js',
+    'scripts/collections/earthquakes.js',
+    'scripts/views/initialize.js',
+    'scripts/views/list.js',
+    'scripts/views/details.js',
     filters='rjsmin',
     output='assets/scripts/min.js',
 )
@@ -43,3 +47,13 @@ css = Bundle(
     output='assets/css/min.css'
 )
 assets.register('css_all', css)
+
+# configure database
+app.config['SQLALCHEMY_DATABASE_URI'] = app_config.config_settings['sqlalchemy_database_uri']
+db = SQLAlchemy(app)
+
+import earthquakes.views
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()

@@ -1,12 +1,8 @@
-DEBUG = True
-APIKEY = 'kI9xkkQSnL'
-
-#DATABASE = 'earthquake.db'
-#SECRET_KEY = 'QKq1256cy<V|Z3Y>B0cq7o?V$3o(6'
-#USERNAME = 'admin'
-#PASSWORD = 'default'
+DEBUG=True
 
 config_settings = {
+    'DEBUG': True,
+    'APIKEY': 'kI9xkkQSnL',
     'sqlalchemy_database_uri':  'mysql://root:19NnpnnP19@localhost/test',
     'headers': {
         'From': 'ckeller@scpr.org',

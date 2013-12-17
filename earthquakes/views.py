@@ -13,13 +13,36 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc())
-    return render_template('index.html', earthquake_instances=earthquake_instances)
+    #earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc())
+    #return render_template('index.html', earthquake_instances=earthquake_instances)
+    return render_template('index.html')
 
-@app.route('/<int:primary_id>', methods=['GET'])
-def detail(primary_id):
-    earthquake_instances = Earthquake.query.filter_by(primary_id=primary_id).order_by(Earthquake.date_time.desc()).first_or_404()
-    return render_template('detail.html', earthquake_instances=earthquake_instances)
+
+
+
+
+@app.route('/earthquakes')
+def get_earthquakes():
+    earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc())
+    return jsonify(
+        collection=[i.serialize for i in earthquake_instances]
+    )
+
+
+
+
+
+#@app.route('/<int:primary_id>', methods=['GET'])
+#def detail(primary_id):
+    #earthquake_instances = Earthquake.query.filter_by(primary_id=primary_id).order_by(Earthquake.date_time.desc()).first_or_404()
+    #return render_template('detail.html', earthquake_instances=earthquake_instances)
+
+
+
+
+
+
+
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
@@ -33,4 +56,4 @@ def require_appkey(view_function):
 
 # flask_restless config
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=5)
+manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=25)

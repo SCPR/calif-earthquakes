@@ -47,7 +47,7 @@ class UsgsApiQuery(Command):
         list_of_data = []
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
-            time.sleep(5)
+            #time.sleep(5)
             usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()

@@ -1,9 +1,41 @@
-/*
-$(document).ready(function(){
-	$.getJSON($SCRIPT_ROOT + '/return_data_from_database', {
-	}, function(data) {
-		console.log(data);
-	});
-    return false;
-});
-*/
+(function(){
+
+    window.App = {
+        Models: {},
+        Collections: {},
+        Views: {},
+        Router: {},
+    };
+
+    /*
+    old shortcut function to render templates
+    window.template = function(id){
+        return _.template( $('#' + id).html());
+    };
+    */
+
+    // new shortcut function to render templates based on separate files
+    window.template = function(url){
+        var data = "<h1> failed to load url : " + url + "</h1>";
+        $.ajax({
+            async: false,
+            dataType: "text",
+            url: url,
+            success: function(response) {
+                data = response;
+            }
+        });
+        return data;
+    };
+
+    $(function(){
+        window.app = new App.Router();
+        window.InitializePage= new App.Views.Initialize({el: document});
+        Backbone.history.start({
+            root: 'http://127.0.0.1:5000/',
+            pushState: false,
+        });
+
+    });
+
+})();
