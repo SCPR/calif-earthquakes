@@ -1,3 +1,4 @@
+// create basic object to house application
 (function(){
 
     window.App = {
@@ -14,7 +15,7 @@
     };
     */
 
-    // new shortcut function to render templates based on separate files
+    // shortcut function to render templates based on separate files
     window.template = function(url){
         var data = "<h1> failed to load url : " + url + "</h1>";
         $.ajax({
@@ -28,14 +29,13 @@
         return data;
     };
 
+    // launch the router and start the history
     $(function(){
         window.router = new App.Router();
-        //window.initialize = new App.Views.Initialize();
         Backbone.history.start({
             root: '/',
             pushState: false,
         });
-
     });
 
 })();

@@ -1,47 +1,52 @@
 App.Router = Backbone.Router.extend({
 
     initialize: function(){
-
-        // create instance of our collection
-        this.earthquakeCollection = new App.Collections.Earthquakes();
-
-        // fetch data to add to our collection
-        this.earthquakeCollection.fetch({
+        /* initialize the collection to the application and
+        fetch data here backbone docs says you shouldn't use
+        fetch to populate collection on page load but my data
+        is on a server and i don't know another way at this
+        time need to refresh the collection when user navigates
+        to the home page view */
+        window.earthquakeCollection = new App.Collections.Earthquakes();
+        window.earthquakeCollection.fetch({
             async: false,
         });
-
-        // create instance of our items view
-        this.earthquakeList = new App.Views.ListView({
-            collection: this.earthquakeCollection
-        });
-
-        // render the items view
-        this.earthquakeList.render().el;
-
     },
 
     routes: {
-        "": "home",
-        "earthquakes/:primary_id": "earthquakes"
+        "": "listView",
+        "earthquakes/:primary_id": "detailView"
     },
 
-    home: function(){
-        console.log('home');
+    listView: function(){
+
+        // empty detail div when view is rendered
+        // has to be a better way
         $("#earthquake-entry").empty();
-        this.initialize();
+
+        /* assign the window's collection to my list view
+        and render it when user is on the 'home page' */
+        this.listView = new App.Views.ListView({
+            collection: window.earthquakeCollection
+        });
+        this.listView.render().el;
     },
 
-    earthquakes: function(primary_id){
+    detailView: function(primary_id){
+
+        // empty list div when view is rendered
+        // has to be a better way
         $("#earthquake-entries").empty();
 
-
-        // where the work has to happen
-        this.model = this.earthquakeCollection.where({primary_id: parseInt(primary_id)});
-        var newDetail = new App.Views.DetailView({
-            model: this.model.attributes
+        /* find the model in the window's collection
+        that matches the primary id and render the
+        detail view using that model. This allows the
+        user to 'bookmark' the detail view */
+        this.model = window.earthquakeCollection.where({primary_id: parseInt(primary_id)});
+        this.detailView = new App.Views.DetailView({
+            model: this.model[0]
         });
-
-
+        this.detailView.render().el;
     },
 
     loadView: function(view){
