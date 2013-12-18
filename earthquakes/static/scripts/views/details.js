@@ -4,8 +4,7 @@ App.Views.DetailView = Backbone.View.extend({
 
     template: _.template(template("static/templates/detail-view.html")),
 
-    initialize: function(primary_id){
-        console.log(this.model);
+    initialize: function(){
         this.render();
     },
 

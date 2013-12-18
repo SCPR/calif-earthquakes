@@ -29,7 +29,8 @@
     };
 
     $(function(){
-        window.app = new App.Router();
+        window.router = new App.Router();
+        //window.initialize = new App.Views.Initialize();
         Backbone.history.start({
             root: '/',
             pushState: false,

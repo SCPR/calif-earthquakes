@@ -22,4 +22,7 @@ App.Models.Earthquake = Backbone.Model.extend({
         longitude: null,
         depth: null
     },
+
+    //url: 'api/earthquakes/'
+
 });
