@@ -24,6 +24,8 @@ assets = Environment(app)
 
 js = Bundle(
     'scripts/libs/jquery.min.js',
+    'scripts/libs/leaflet.js',
+    'scripts/libs/leaflet.markercluster.js',
     'scripts/libs/modernizr.min.js',
     'scripts/libs/underscore-min.js',
     'scripts/libs/backbone-min.js',
@@ -32,15 +34,22 @@ js = Bundle(
     'scripts/app.js',
     'scripts/router/router.js',
     'scripts/models/earthquake.js',
+    'scripts/models/map.js',
+    'scripts/models/marker.js',
     'scripts/collections/earthquakes.js',
+    'scripts/collections/markers.js',
     'scripts/views/list.js',
     'scripts/views/details.js',
+    'scripts/views/map.js',
+    'scripts/views/marker.js',
     filters='rjsmin',
     output='assets/scripts/min.js',
 )
 assets.register('scripts_all', js)
 
 css = Bundle(
+    'css/leaflet.min.css',
+    'css/leaflet.markercluster',
     'css/style.css',
     filters='cssmin',
     output='assets/css/min.css'

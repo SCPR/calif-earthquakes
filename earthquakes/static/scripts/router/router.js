@@ -21,9 +21,12 @@ App.Router = Backbone.Router.extend({
     listView: function(){
         /* assign the window's collection to my list view
         and render it when user is on the 'home page' */
+
         this.loadView(new App.Views.ListView({
             collection: window.earthquakeCollection
         }));
+
+        this.createMap(window.earthquakeCollection);
     },
 
     detailView: function(primary_id){
@@ -31,11 +34,33 @@ App.Router = Backbone.Router.extend({
         that matches the primary id and render the
         detail view using that model. This allows the
         user to 'bookmark' the detail view */
-
         this.model = window.earthquakeCollection.where({primary_id: parseInt(primary_id)});
         this.loadView(new App.Views.DetailView({
             model: this.model[0]
         }));
+
+        this.createMap(this.model);
+
+    },
+
+    createMap: function(markerInstance){
+        // if the mapView is on the page
+        // remove it from the page
+
+        if (this.mapView){
+            this.mapView.remove();
+        };
+
+        this.map = new App.Models.Map({
+            markers: markerInstance
+        });
+
+        this.mapView = new App.Views.MapView({
+            model: this.map
+        });
+
+        return this.mapView;
+
     },
 
     loadView: function(view){
