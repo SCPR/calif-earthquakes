@@ -49,7 +49,7 @@ assets.register('scripts_all', js)
 
 css = Bundle(
     'css/leaflet.min.css',
-    'css/leaflet.markercluster',
+    'css/leaflet.markercluster.css',
     'css/style.css',
     filters='cssmin',
     output='assets/css/min.css'
