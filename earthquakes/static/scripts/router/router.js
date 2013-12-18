@@ -19,38 +19,29 @@ App.Router = Backbone.Router.extend({
     },
 
     listView: function(){
-
-        // empty detail div when view is rendered
-        // has to be a better way
-        $("#earthquake-entry").empty();
-
         /* assign the window's collection to my list view
         and render it when user is on the 'home page' */
-        this.listView = new App.Views.ListView({
+        this.loadView(new App.Views.ListView({
             collection: window.earthquakeCollection
-        });
-        this.listView.render().el;
+        }));
     },
 
     detailView: function(primary_id){
-
-        // empty list div when view is rendered
-        // has to be a better way
-        $("#earthquake-entries").empty();
-
         /* find the model in the window's collection
         that matches the primary id and render the
         detail view using that model. This allows the
         user to 'bookmark' the detail view */
+
         this.model = window.earthquakeCollection.where({primary_id: parseInt(primary_id)});
-        this.detailView = new App.Views.DetailView({
+        this.loadView(new App.Views.DetailView({
             model: this.model[0]
-        });
-        this.detailView.render().el;
+        }));
     },
 
     loadView: function(view){
+        /* remove a view when it's no longer needed */
         this.view && this.view.remove();
         this.view = view;
+        $("#earthquake-entries-container").append(this.view.render().el);
     }
 });

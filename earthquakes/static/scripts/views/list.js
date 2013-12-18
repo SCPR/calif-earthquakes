@@ -22,7 +22,6 @@ App.Views.ItemView = Backbone.View.extend({
 });
 
 App.Views.ListView = Backbone.View.extend({
-    el: '#earthquake-entries',
     tagName: "div",
     className: "col-xs-12 col-sm-12 col-md-12 col-lg-12",
     initialize: function(){

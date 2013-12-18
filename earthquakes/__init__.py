@@ -33,7 +33,6 @@ js = Bundle(
     'scripts/router/router.js',
     'scripts/models/earthquake.js',
     'scripts/collections/earthquakes.js',
-    'scripts/views/initialize.js',
     'scripts/views/list.js',
     'scripts/views/details.js',
     filters='rjsmin',
