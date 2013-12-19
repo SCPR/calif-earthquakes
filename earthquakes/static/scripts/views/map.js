@@ -5,7 +5,7 @@ App.Views.MapView = Backbone.View.extend({
 
     className: "initial",
 
-    initialize: function(markersArray){
+    initialize: function(markersCollectionObject){
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
@@ -25,12 +25,10 @@ App.Views.MapView = Backbone.View.extend({
             subdomains: ['otile1','otile2','otile3','otile4']
         });
 
-        this.render(markersArray);
+        this.render(markersCollectionObject);
     },
 
-    render: function(markersArray){
-
-        console.log(this.model);
+    render: function(markersCollectionObject){
 
         $(this.el).insertBefore("#earthquake-entries-container");
         var map = this.map = L.map('content-map-canvas', {
@@ -42,9 +40,13 @@ App.Views.MapView = Backbone.View.extend({
             this.center, this.initialZoom
         );
 
-        this.markerViews = this.model.get('markers').map(function(marker){
-            return new App.Views.MarkerView({model: marker, map: map}).render();
-        });
+        this.markersObject = markersCollectionObject.model.attributes;
+        this.markersObject.map = map;
+        this.markerViews = new App.Views.ClusteredMarkerView(this.markersObject);
+
+        //this.markerViews = this.model.get('markers').map(function(marker){
+            //return new App.Views.MarkerView({model: marker, map: map}).render();
+        //});
 
     }
 });

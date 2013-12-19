@@ -40,10 +40,9 @@ App.Router = Backbone.Router.extend({
         }));
 
         this.createMap(this.model);
-
     },
 
-    createMap: function(markerInstance){
+    createMap: function(markers){
         // if the mapView is on the page
         // remove it from the page
 
@@ -51,12 +50,14 @@ App.Router = Backbone.Router.extend({
             this.mapView.remove();
         };
 
-        this.map = new App.Models.Map({
-            markers: markerInstance
+        this.mapModel = new App.Models.Map({
+            markers: markers
         });
 
+        //console.log(this.mapModel);
+
         this.mapView = new App.Views.MapView({
-            model: this.map
+            model: this.mapModel
         });
 
         return this.mapView;

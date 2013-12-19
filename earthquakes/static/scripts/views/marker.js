@@ -4,6 +4,8 @@ App.Views.MarkerView = Backbone.View.extend({
 
         console.log('marker view initialized');
 
+        console.log(markersInstance);
+
         /*
         var myIcon = L.Icon.extend({
             iconUrl: 'images/camera.png',
@@ -24,12 +26,12 @@ App.Views.MarkerView = Backbone.View.extend({
 
         //this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')], {icon: new myIcon({iconUrl: 'static/images/camera.png'})});
 
-        this.map = markersInstance.map;
-        this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')]).addTo(this.map);
-        var that = this;
-        this.marker.on('click', function(){
+        //this.map = markersInstance.map;
+        //this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')]).addTo(this.map);
+        //var that = this;
+        //this.marker.on('click', function(){
 
-            console.log(that.model.attributes);
+            //console.log(that.model.attributes);
 
             // gymnastics to do something with marker data onclick
             /*
@@ -54,7 +56,7 @@ App.Views.MarkerView = Backbone.View.extend({
         	});
         */
 
-        });
+        //});
 
     }
 
