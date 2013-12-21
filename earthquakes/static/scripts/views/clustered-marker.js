@@ -38,7 +38,9 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
             this.bindEvent(this.marker, this.model);
 
         } else {
-            this.markerCluster = L.markerClusterGroup({disableClusteringAtZoom: 17});
+            this.markerCluster = L.markerClusterGroup({
+                disableClusteringAtZoom: 15
+            });
             this.markerInstance = markersCollection.markers.models;
             for(var i=0; i<this.markerInstance.length; i++){
                 this.marker = L.marker(L.latLng(this.markerInstance[i].attributes.latitude, this.markerInstance[i].attributes.longitude));
@@ -46,8 +48,44 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
                 this.bindEvent(this.marker, this.markerInstance[i].attributes);
                 this.markerCluster.addLayer(this.marker);
             };
+
+            var laCounty = L.geoJson(losAngelesCounty, {
+                style: function (feature) {
+                    return {
+                        color: '#787878',
+                        weight: 2,
+                        opacity: 1,
+                        fillColor: null,
+                        fillOpacity: 0
+                    }
+                },
+                onEachFeature: function(feature, layer) {
+                    layer.on('click', function (e) {
+                        console.log(feature.properties.name + ' county layer clicked');
+                    });
+                }
+            });
+
+            var laCountyFaults = L.geoJson(losAngelesCountyFaults, {
+                style: function (feature) {
+                    return {
+                        color: 'green',
+                        weight: 2,
+                        opacity: 1,
+                        fillColor: null,
+                        fillOpacity: 0
+                    }
+                },
+                onEachFeature: function(feature, layer) {
+                    layer.on('click', function (e) {
+                        console.log(feature.properties.NAME + ' fault line clicked');
+                    });
+                }
+            });
+            this.markerCluster.addLayer(laCountyFaults);
+            this.markerCluster.addLayer(laCounty);
             this.map.addLayer(this.markerCluster);
-            this.map.fitBounds(this.markerCluster.getBounds());
+            //this.map.fitBounds(this.markerCluster.getBounds());
         }
 
     },

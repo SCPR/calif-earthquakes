@@ -31,6 +31,8 @@ js = Bundle(
     'scripts/libs/bootstrap.min.js',
     'scripts/libs/leaflet.js',
     'scripts/libs/leaflet.markercluster-src.js',
+    'data/california/california-la-county.js',
+    'data/la-county-faults/la-county-faults.js',
     'scripts/app.js',
     'scripts/router/router.js',
     'scripts/models/earthquake.js',
