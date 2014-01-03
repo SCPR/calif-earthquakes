@@ -7,7 +7,7 @@
     <head>
 
         <!-- begin meta -->
-        <title>Title</title>
+        <title>Earthquake Tracker | Flats</title>
         <!-- end meta -->
 
         <!-- begin css -->
@@ -15,8 +15,11 @@
             <link href="{{ ASSET_URL }}" rel="stylesheet" />
         {% endassets %}
 
+        <script type="text/javascript" src="//use.typekit.net/dkj3oci.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
         <!-- begin scripts -->
-        <script type=text/javascript>
+        <script type="text/javascript">
             var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
         <!-- end scripts -->
@@ -27,11 +30,27 @@
     <!-- begin body -->
     <body>
 
-        <!-- begin content -->
+        <header class="masthead">
+            <div class="inner bound">
+                <h1><a href="#">Earthquake Tracker</a></h1>
+                <h2 class="tagline">KPCC's tool for following &amp; researching California earthquakes.</h2>
+                <h3 class="brand">89.3 KPCC</h3>
+                <aside class="pledge">
+                    <mark><a href="#">Pledge Now</a></mark>
+                    <p>KPCC is member-supported public radio.</p>
+                </aside>
+            </div>
+        </header>
+
         <div class="container">
             {% block main_content %}{% endblock %}
         </div>
-        <!-- end content -->
+
+        <footer class="epilogue">
+            <div class="inner bound">
+                here's some footer stuff
+            </div>
+        </footer>
 
         <!-- begin scripts -->
         <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>

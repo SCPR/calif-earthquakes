@@ -1,7 +1,5 @@
-DEBUG=True
-
 config_settings = {
-    'DEBUG': True,
+    'DEBUG': False,
     'APIKEY': 'kI9xkkQSnL',
     'sqlalchemy_database_uri':  'mysql://root:19NnpnnP19@localhost/test',
     'headers': {

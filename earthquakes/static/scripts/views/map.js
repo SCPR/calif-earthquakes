@@ -26,13 +26,12 @@ App.Views.MapView = Backbone.View.extend({
         }
 
         this.center = new L.LatLng(34.257216,-118.131351);
-
         this.render(markersCollectionObject);
     },
 
     render: function(markersCollectionObject){
 
-        $(this.el).insertBefore("#earthquake-entries-container");
+        $(this.el).insertAfter("#earthquake-entries-container");
         var map = this.map = L.map('content-map-canvas', {
             scrollWheelZoom: false,
             zoomControl: true

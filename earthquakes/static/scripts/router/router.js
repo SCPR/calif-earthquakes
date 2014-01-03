@@ -35,6 +35,7 @@ App.Router = Backbone.Router.extend({
         detail view using that model. This allows the
         user to 'bookmark' the detail view */
         this.model = window.earthquakeCollection.where({primary_id: parseInt(primary_id)});
+
         this.loadView(new App.Views.DetailView({
             model: this.model[0]
         }));

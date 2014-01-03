@@ -12,7 +12,7 @@ import webassets
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
-PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
+#PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 app.config.from_object(app_config)
