@@ -6,37 +6,22 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from earthquakes import app, db
 import earthquakes.views
 
-class Experiment(db.Model):
-    __tablename__ = 'experiments'
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(1000))
-    slug = db.Column(db.String(1000))
-    date_time = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow)
-
-    def __init__(self, id, name, slug, date_time):
-        self.id = id
-        self.name = name
-        self.slug = slug
-        self.date_time = date_time
-
-    def __repr__(self):
-        return '<User %r>' % self.name
-
 class Earthquake(db.Model):
-    __tablename__ = 'earthquakes'
-    primary_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    __tablename__ = 'earthquake'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     primary_slug = db.Column(db.Text)
-    mag = db.Column(db.Integer, nullable=True)
+    mag = db.Column(db.Float, nullable=True)
     place = db.Column(db.String(1000), nullable=True)
     title = db.Column(db.String(1000), nullable=True)
     date_time = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow)
+    date_time_raw = db.Column(db.BigInteger)
     updated = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow)
     updated_raw = db.Column(db.BigInteger)
     tz = db.Column(db.Integer, nullable=True)
     url = db.Column(db.Text, nullable=True)
     felt = db.Column(db.Integer, nullable=True)
     cdi = db.Column(db.Float, nullable=True)
-    mmi = db.Column(db.Integer, nullable=True)
+    mmi = db.Column(db.Float, nullable=True)
     alert = db.Column(db.String(1000), nullable=True)
     status = db.Column(db.String(1000), nullable=True)
     tsunami = db.Column(db.Integer, nullable=True)
@@ -45,15 +30,27 @@ class Earthquake(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     depth = db.Column(db.Float, nullable=True)
-    nearest_cities = db.Column(db.Text, nullable=True)
+    net = db.Column(db.String(1000), nullable=True)
+    code = db.Column(db.String(1000), nullable=True)
+    ids = db.Column(db.String(1000), nullable=True)
+    sources = db.Column(db.String(1000), nullable=True)
+    nst = db.Column(db.Integer, nullable=True)
+    dmin = db.Column(db.Float, nullable=True)
+    rms = db.Column(db.Float, nullable=True)
+    gap = db.Column(db.Float, nullable=True)
+    magType = db.Column(db.String(1000), nullable=True)
+    instance_type = db.Column(db.String(1000), nullable=True)
+    nearest_cities_url = db.Column(db.Text, nullable=True)
+    nearest_cities = db.relationship('NearestCity', backref='earthquake', lazy='dynamic')
 
-    def __init__(self, primary_id, primary_slug, mag, place, title, date_time, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, nearest_cities):
-        self.primary_id = primary_id
+    def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, instance_type, nearest_cities_url, nearest_cities):
+        self.id = id
         self.primary_slug = primary_slug
         self.mag = mag
         self.place = place
         self.title = title
         self.date_time = date_time
+        self.date_time_raw = date_time_raw
         self.updated = updated
         self.updated_raw = updated_raw
         self.tz = tz
@@ -69,12 +66,23 @@ class Earthquake(db.Model):
         self.latitude = latitude
         self.longitude = longitude
         self.depth = depth
+        self.net = net
+        self.code = code
+        self.ids = ids
+        self.sources = sources
+        self.nst = nst
+        self.dmin = dmin
+        self.rms = rms
+        self.gap = gap
+        self.magType = magType
+        self.instance_type = instance_type
+        self.nearest_cities_url = nearest_cities_url
         self.nearest_cities = nearest_cities
 
     def resource_uri(self):
         ''' take database record and add resource_uri '''
         url_prefix = 'http://127.0.0.1:5000/api/earthquakes'
-        return "%s/%s" % (url_prefix, self.primary_id)
+        return "%s/%s" % (url_prefix, self.id)
 
     def __repr__(self):
         return '<place %r>' % self.place
@@ -82,12 +90,13 @@ class Earthquake(db.Model):
     @property
     def serialize(self):
         return {
-            'primary_id': self.primary_id,
+            'id': self.id,
             'primary_slug': self.primary_slug,
             'mag': self.mag,
             'place': self.place,
             'title': self.title,
             'date_time': self.date_time,
+            'date_raw': self.date_raw,
             'updated': self.updated,
             'updated_raw': self.updated_raw,
             'tz': self.tz,
@@ -103,7 +112,18 @@ class Earthquake(db.Model):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'depth': self.depth,
-            'nearest_cities': self.nearest_cities,
+            'net': self.net,
+            'code': self.code,
+            'ids': self.ids,
+            'sources': self.sources,
+            'nst': self.nst,
+            'dmin': self.dmin,
+            'rms': self.rms,
+            'gap': self.gap,
+            'magType': self.magType,
+            'instance_type': self.instance_type,
+            'nearest_cities_url': self.nearest_cities_url,
+            #'nearest_cities': self.nearest_cities,
         }
 
     @property
@@ -113,3 +133,46 @@ class Earthquake(db.Model):
        NB! Calls many2many's serialize property.
        '''
        return [ item.serialize for item in self.many2many]
+
+class NearestCity(db.Model):
+    __tablename__ = 'nearest_cities'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    distance = db.Column(db.Integer, nullable=True)
+    direction = db.Column(db.String(1000))
+    name = db.Column(db.String(5000))
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    population = db.Column(db.Integer, nullable=True)
+    earthquake_id = db.Column(db.Integer, db.ForeignKey('earthquake.id'))
+    def __init__(self, id, distance, direction, name, latitude, longitude, population, earthquake_id):
+        self.id = id
+        self.name = name
+        self.distance = distance
+        self.direction = direction
+        self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
+        self.population = population
+        self.earthquake_id = earthquake_id
+
+class Person(db.Model):
+    __tablename__ = 'person'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50))
+    addresses = db.relationship('Address', backref='person', lazy='dynamic')
+
+    def __init__(self, id, name, addresses):
+        self.id = id
+        self.name = name
+        self.addresses = addresses
+
+class Address(db.Model):
+    __tablename__ = 'address'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(50))
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+
+    def __init__(self, id, email, person_id):
+        self.id = id
+        self.email = email
+        self.person_id = person_id

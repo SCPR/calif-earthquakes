@@ -9,7 +9,7 @@ from earthquakes import app_config
 from flask.ext.script import Manager, Command
 from concurrent import futures
 from earthquakes import app, db
-from earthquakes.models import Earthquake, Experiment
+from earthquakes.models import Earthquake, NearestCity, Person, Address
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -44,15 +44,47 @@ class UsgsApiQuery(Command):
 
     "performs request on local earthquake details url and returns the data"
     def retrieve_details_from(self, list_of_urls):
-        list_of_data = []
+        list_of_instances = []
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
             #time.sleep(5)
             usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
-            list_of_data.append(usgs_api_details)
-        self.write(list_of_data)
+            list_of_instances.append(usgs_api_details)
+        self.retrieve_nearby_cities_from(list_of_instances)
+
+    "performs request on local earthquake nearby cities url and returns the data"
+    def retrieve_nearby_cities_from(self, list_of_instances):
+        session = FuturesSession(max_workers=1)
+        for detail_instance in list_of_instances:
+            #time.sleep(5)
+            try:
+                nearest_cities_url = detail_instance['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
+            except:
+                nearest_cities_url = None
+            if nearest_cities_url:
+                nearest_cities_query_details = session.get(nearest_cities_url, headers=app_config.config_settings['headers'])
+                nearest_cities_api_details = nearest_cities_query_details.result()
+                nearest_cities_api_details = nearest_cities_api_details.json()
+                list_of_nearby_cities = []
+                for nearby_city in nearest_cities_api_details:
+                    city = NearestCity(
+                        id = None,
+                        distance = nearby_city['distance'],
+                        direction = nearby_city['direction'],
+                        name = nearby_city['name'],
+                        latitude = nearby_city['latitude'],
+                        longitude = nearby_city['longitude'],
+                        population = nearby_city['population'],
+                        earthquake_id = None
+                    )
+                    list_of_nearby_cities.append(city)
+            else:
+                pass
+            detail_instance['nearest_cities_url'] = nearest_cities_url
+            detail_instance['nearest_cities'] = list_of_nearby_cities
+        self.write(list_of_instances)
 
     "write class instances to the database"
     def write(self, list_of_instances):
@@ -60,21 +92,16 @@ class UsgsApiQuery(Command):
             comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
             comparison_updated_raw = item['properties']['updated']
             instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
-
-            try:
-                nearest_cities = item['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
-            except:
-                nearest_cities = None
-
             if instance is None:
                 logging.debug('creating new record')
                 quake = Earthquake(
-                    primary_id = None,
+                    id = None,
                     primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
                     mag = item['properties']['mag'],
                     place = item['properties']['place'],
                     title = item['properties']['title'],
                     date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                    date_time_raw = item['properties']['time'],
                     updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
                     updated_raw = item['properties']['updated'],
                     tz = item['properties']['tz'],
@@ -90,11 +117,22 @@ class UsgsApiQuery(Command):
                     latitude = item['geometry']['coordinates'][1],
                     longitude = item['geometry']['coordinates'][0],
                     depth = item['geometry']['coordinates'][2],
-                    nearest_cities = nearest_cities
+                    net = item['properties']['net'],
+                    code = item['properties']['code'],
+                    ids = item['properties']['ids'],
+                    sources = item['properties']['sources'],
+                    nst = item['properties']['nst'],
+                    dmin = item['properties']['dmin'],
+                    rms = item['properties']['rms'],
+                    gap = item['properties']['gap'],
+                    magType = item['properties']['magType'],
+                    instance_type = item['properties']['type'],
+                    nearest_cities_url = item['nearest_cities_url'],
+                    nearest_cities=item['nearest_cities']
                 )
-
                 db.session.add(quake)
-
+                for city in item['nearest_cities']:
+                    db.session.add(city)
             else:
                 if instance.updated_raw == comparison_updated_raw:
                     logging.debug('compared and found record exists and doesnt need to be updated')
@@ -106,6 +144,7 @@ class UsgsApiQuery(Command):
                     instance.place = item['properties']['place']
                     instance.title = item['properties']['title']
                     instance.date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3)
+                    instance.date_time_raw = item['properties']['time']
                     instance.updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3)
                     instance.updated_raw = item['properties']['updated']
                     instance.tz = item['properties']['tz']
@@ -121,69 +160,73 @@ class UsgsApiQuery(Command):
                     instance.latitude = item['geometry']['coordinates'][1]
                     instance.longitude = item['geometry']['coordinates'][0]
                     instance.depth = item['geometry']['coordinates'][2]
-                    instance.nearest_cities = nearest_cities
-
+                    instance.net = item['properties']['net']
+                    instance.code = item['properties']['code']
+                    instance.ids = item['properties']['ids']
+                    instance.sources = item['properties']['sources']
+                    instance.nst = item['properties']['nst']
+                    instance.dmin = item['properties']['dmin']
+                    instance.rms = item['properties']['rms']
+                    instance.gap = item['properties']['gap']
+                    instance.magType = item['properties']['magType']
+                    instance.instance_type = item['properties']['type']
+                    instance.nearest_cities_url = item['nearest_cities_url']
             db.session.commit()
         logging.debug('Processed %s records' % (len(list_of_instances)))
 
-class TestDates(Command):
-    "mimics django's get or create function"
-    def get_or_create(self, session, model, **kwargs):
-        instance = session.query(model).filter_by(**kwargs).first()
-        if instance:
-            return instance
-        else:
-            instance = model(**kwargs)
-            session.add(instance)
-            session.commit()
-            return instance
-
-    "tests writing dates to the database"
+class TestRelations(Command):
     def run(self):
 
-        # terminal shows datetime object as local time
-        # via http://www.epochconverter.com/ - 2013-12-07 6:10:23.060000
-        # local: 2013-12-07 10:10:23.060000
-
-        # the date/time from the api is a unix timestamp
-        date_time = 1386439823060
-
-        # the timezone from the api offset from UTC in minutes at the event epicenter
-        tz = -360
-
-        # convert the unix timestamp to utc datetime object
-        test = datetime.datetime.utcfromtimestamp(date_time/1e3)
-        logging.debug(test)
-
-        thisDate = self.get_or_create(db.session, Experiment,
+        city = NearestCity(
             id = None,
-            name = 'test',
-            date_time = test
+            distance = 46,
+            direction = "SSE",
+            name = "Lone Pine, California",
+            latitude = 36.60604,
+            longitude = -118.06287,
+            population = 2035,
+            earthquake_id = None
         )
 
-class TestUpdates(Command):
-    "mimics django's get or create function"
-    def run(self):
-        comparison_slug = 'what-slug'
-        comparison_name = 'new name'
-        instance = Experiment.query.filter_by(slug=comparison_slug).first()
-        if instance is None:
-            logging.debug('record doesnt exist')
-            thisRecord = Experiment(
-                id = None,
-                slug = comparison_slug,
-                name = comparison_name,
-                date_time = datetime.datetime.utcfromtimestamp(1386439823060/1e3)
-            )
-            db.session.add(thisRecord)
-        else:
-            logging.debug('record exists so im comparing')
-            if instance.name == comparison_name:
-                logging.debug('record exists and doesnt need to be updated')
-                pass
-            else:
-                logging.debug('record exists and will be updated')
-                instance.name = 'new name'
+        quake = Earthquake(
+            id = None,
+            primary_slug = 'test',
+            mag = 4.5,
+            place = '11km NNW of Jones, Oklahoma',
+            title = 'M4.5  - 11km NNW of Jones, Oklahoma',
+            date_time = datetime.datetime.utcfromtimestamp(1386439823060/1e3),
+            date_time_raw = 1386439823060,
+            updated = datetime.datetime.utcfromtimestamp(1386710939478/1e3),
+            updated_raw = 1386710939478,
+            tz = -360,
+            url = 'http://earthquake.usgs.gov/earthquakes/eventpage/usb000ldeh',
+            felt = 3638,
+            cdi = 5.7,
+            mmi = 4.47,
+            alert = 'green',
+            status = 'reviewed',
+            tsunami = None,
+            sig = 882,
+            resource_type = 'earthquake',
+            latitude = 35.6627,
+            longitude = -97.3261,
+            depth = 5,
+            net = None,
+            code = None,
+            ids = None,
+            sources = None,
+            nst = None,
+            dmin = None,
+            rms = None,
+            gap = None,
+            magType = None,
+            instance_type = None,
+            nearest_cities_url = 'http://earthquake.usgs.gov/product/nearby-cities/ci11410562/us/1388963699219/nearby-cities.json',
+            nearest_cities=[city]
+        )
+
+        db.session.add(quake)
+        db.session.add(city)
         db.session.commit()
 
 class InitDb(Command):
@@ -197,8 +240,7 @@ class Testing(Command):
         print "The Test Command Is Working"
 
 manager.add_command('query', UsgsApiQuery())
-manager.add_command('date', TestDates())
-manager.add_command('updates', TestUpdates())
+manager.add_command('relations', TestRelations())
 manager.add_command('initdb', InitDb())
 manager.add_command('test', Testing())
 
