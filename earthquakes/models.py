@@ -45,8 +45,9 @@ class Earthquake(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     depth = db.Column(db.Float, nullable=True)
+    nearest_cities = db.Column(db.Text, nullable=True)
 
-    def __init__(self, primary_id, primary_slug, mag, place, title, date_time, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth):
+    def __init__(self, primary_id, primary_slug, mag, place, title, date_time, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, nearest_cities):
         self.primary_id = primary_id
         self.primary_slug = primary_slug
         self.mag = mag
@@ -68,6 +69,7 @@ class Earthquake(db.Model):
         self.latitude = latitude
         self.longitude = longitude
         self.depth = depth
+        self.nearest_cities = nearest_cities
 
     def resource_uri(self):
         ''' take database record and add resource_uri '''
@@ -101,6 +103,7 @@ class Earthquake(db.Model):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'depth': self.depth,
+            'nearest_cities': self.nearest_cities,
         }
 
     @property

@@ -60,6 +60,12 @@ class UsgsApiQuery(Command):
             comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
             comparison_updated_raw = item['properties']['updated']
             instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
+
+            try:
+                nearest_cities = item['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
+            except:
+                nearest_cities = None
+
             if instance is None:
                 logging.debug('creating new record')
                 quake = Earthquake(
@@ -83,7 +89,8 @@ class UsgsApiQuery(Command):
                     resource_type = item['properties']['type'],
                     latitude = item['geometry']['coordinates'][1],
                     longitude = item['geometry']['coordinates'][0],
-                    depth = item['geometry']['coordinates'][2]
+                    depth = item['geometry']['coordinates'][2],
+                    nearest_cities = nearest_cities
                 )
 
                 db.session.add(quake)
@@ -114,6 +121,7 @@ class UsgsApiQuery(Command):
                     instance.latitude = item['geometry']['coordinates'][1]
                     instance.longitude = item['geometry']['coordinates'][0]
                     instance.depth = item['geometry']['coordinates'][2]
+                    instance.nearest_cities = nearest_cities
 
             db.session.commit()
         logging.debug('Processed %s records' % (len(list_of_instances)))
