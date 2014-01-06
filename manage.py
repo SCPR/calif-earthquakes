@@ -174,6 +174,11 @@ class UsgsApiQuery(Command):
             db.session.commit()
         logging.debug('Processed %s records' % (len(list_of_instances)))
 
+class InitDb(Command):
+    "sets up the database based on models"
+    def run(self):
+        db.create_all()
+
 class TestRelations(Command):
     def run(self):
 
@@ -229,20 +234,9 @@ class TestRelations(Command):
         db.session.add(city)
         db.session.commit()
 
-class InitDb(Command):
-    "sets up the database based on models"
-    def run(self):
-        db.create_all()
-
-class Testing(Command):
-    "prints that the test command is working"
-    def run(self):
-        print "The Test Command Is Working"
-
 manager.add_command('query', UsgsApiQuery())
-manager.add_command('relations', TestRelations())
 manager.add_command('initdb', InitDb())
-manager.add_command('test', Testing())
+manager.add_command('relations', TestRelations())
 
 if __name__ == "__main__":
     manager.run()
