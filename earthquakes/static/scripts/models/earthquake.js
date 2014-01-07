@@ -1,11 +1,12 @@
 App.Models.Earthquake = Backbone.Model.extend({
     defaults: {
-        primary_id: null,
+        id: null,
         primary_slug: null,
         mag: null,
         place: null,
-        title: 'Earthquake Title',
+        title: null,
         date_time: null,
+        date_time_raw: null,
         updated: null,
         updated_raw: null,
         tz: null,
@@ -20,9 +21,17 @@ App.Models.Earthquake = Backbone.Model.extend({
         resource_type: null,
         latitude: null,
         longitude: null,
-        depth: null
+        depth: null,
+        net: null,
+        code: null,
+        ids: null,
+        sources: null,
+        nst: null,
+        dmin: null,
+        rms: null,
+        gap: null,
+        magType: null,
+        nearest_cities_url: null,
+        nearest_cities: null,
     },
-
-    //url: 'api/earthquakes/'
-
 });

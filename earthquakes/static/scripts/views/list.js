@@ -9,8 +9,8 @@ App.Views.ItemView = Backbone.View.extend({
         e.preventDefault();
 
         // pass the model id to the router to the view
-        var primary_id = this.model.get("primary_id");
-        window.router.navigate("#earthquakes/" + primary_id, {
+        var id = this.model.get("id");
+        window.router.navigate("#earthquakes/" + id, {
             trigger: true,
             replace: false,
         });

@@ -126,7 +126,6 @@ class UsgsApiQuery(Command):
                     rms = item['properties']['rms'],
                     gap = item['properties']['gap'],
                     magType = item['properties']['magType'],
-                    instance_type = item['properties']['type'],
                     nearest_cities_url = item['nearest_cities_url'],
                     nearest_cities=item['nearest_cities']
                 )
@@ -169,7 +168,6 @@ class UsgsApiQuery(Command):
                     instance.rms = item['properties']['rms']
                     instance.gap = item['properties']['gap']
                     instance.magType = item['properties']['magType']
-                    instance.instance_type = item['properties']['type']
                     instance.nearest_cities_url = item['nearest_cities_url']
             db.session.commit()
         logging.debug('Processed %s records' % (len(list_of_instances)))
@@ -225,7 +223,6 @@ class TestRelations(Command):
             rms = None,
             gap = None,
             magType = None,
-            instance_type = None,
             nearest_cities_url = 'http://earthquake.usgs.gov/product/nearby-cities/ci11410562/us/1388963699219/nearby-cities.json',
             nearest_cities=[city]
         )

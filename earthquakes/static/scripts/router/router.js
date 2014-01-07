@@ -15,7 +15,7 @@ App.Router = Backbone.Router.extend({
 
     routes: {
         "": "listView",
-        "earthquakes/:primary_id": "detailView"
+        "earthquakes/:id": "detailView"
     },
 
     listView: function(){
@@ -29,12 +29,12 @@ App.Router = Backbone.Router.extend({
         this.createMap(window.earthquakeCollection);
     },
 
-    detailView: function(primary_id){
+    detailView: function(id){
         /* find the model in the window's collection
         that matches the primary id and render the
         detail view using that model. This allows the
         user to 'bookmark' the detail view */
-        this.model = window.earthquakeCollection.where({primary_id: parseInt(primary_id)});
+        this.model = window.earthquakeCollection.where({id: parseInt(id)});
 
         this.loadView(new App.Views.DetailView({
             model: this.model[0]

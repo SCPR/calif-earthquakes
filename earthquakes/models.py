@@ -39,11 +39,10 @@ class Earthquake(db.Model):
     rms = db.Column(db.Float, nullable=True)
     gap = db.Column(db.Float, nullable=True)
     magType = db.Column(db.String(1000), nullable=True)
-    instance_type = db.Column(db.String(1000), nullable=True)
     nearest_cities_url = db.Column(db.Text, nullable=True)
     nearest_cities = db.relationship('NearestCity', backref='earthquake', lazy='dynamic')
 
-    def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, instance_type, nearest_cities_url, nearest_cities):
+    def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, nearest_cities_url, nearest_cities):
         self.id = id
         self.primary_slug = primary_slug
         self.mag = mag
@@ -75,7 +74,6 @@ class Earthquake(db.Model):
         self.rms = rms
         self.gap = gap
         self.magType = magType
-        self.instance_type = instance_type
         self.nearest_cities_url = nearest_cities_url
         self.nearest_cities = nearest_cities
 
@@ -96,7 +94,7 @@ class Earthquake(db.Model):
             'place': self.place,
             'title': self.title,
             'date_time': self.date_time,
-            'date_raw': self.date_raw,
+            'date_time_raw': self.date_time_raw,
             'updated': self.updated,
             'updated_raw': self.updated_raw,
             'tz': self.tz,
@@ -121,7 +119,6 @@ class Earthquake(db.Model):
             'rms': self.rms,
             'gap': self.gap,
             'magType': self.magType,
-            'instance_type': self.instance_type,
             'nearest_cities_url': self.nearest_cities_url,
             #'nearest_cities': self.nearest_cities,
         }
@@ -132,7 +129,7 @@ class Earthquake(db.Model):
        Return object's relations in easily serializeable format.
        NB! Calls many2many's serialize property.
        '''
-       return [ item.serialize for item in self.many2many]
+       return [item.serialize for item in self.many2many]
 
 class NearestCity(db.Model):
     __tablename__ = 'nearest_cities'
@@ -144,6 +141,7 @@ class NearestCity(db.Model):
     longitude = db.Column(db.Float, nullable=True)
     population = db.Column(db.Integer, nullable=True)
     earthquake_id = db.Column(db.Integer, db.ForeignKey('earthquake.id'))
+
     def __init__(self, id, distance, direction, name, latitude, longitude, population, earthquake_id):
         self.id = id
         self.name = name
@@ -154,6 +152,9 @@ class NearestCity(db.Model):
         self.longitude = longitude
         self.population = population
         self.earthquake_id = earthquake_id
+
+    def __repr__(self):
+        return '<name %r>' % self.name
 
 class Person(db.Model):
     __tablename__ = 'person'

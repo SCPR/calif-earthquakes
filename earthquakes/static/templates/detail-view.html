@@ -1,12 +1,12 @@
 <header class="titling">
     <div class="inner bound clearfix">
         <div class="vitals">
-            <h1>Ferndale: December 17, 2013</h1>
-            <h2><time>2:57:48 p.m. PDT</time></h2>
+            <h1><%= title %></h1>
+            <h2><time><%= date_time %></time></h2>
         </div>
         <div class="stats">
-            3.2 magnitude
-            612 people felt it
+            <%= mag %> magnitude
+            <%= felt %> people felt it
         </div>
     </div>
 </header>
@@ -15,17 +15,20 @@
     <div class="inner bound clearfix">
         <div class="primary">
             <div class="dossier clearfix">
-                <%= title %>
-                Latitude: <%= latitude %>
-                Longitude: <%= longitude %>
-                USGS Source Report
-                Status: <%= status %>
-                Nearby Cities
-                23km (14mi) NNW of Lost Hills
-                36km (22mi) SE of Avenal
-                38km (24mi) SW of Corcoran
-                48km (30mi) WNW of Wasco
-                342km (213mi) SSE of Sacramento
+                <p>Latitude: <%= latitude %></p>
+                <p>Longitude: <%= longitude %></p>
+                <p>USGS Source Report</p>
+                <p>Status: <%= status %></p>
+                <p>Nearby Cities</p>
+
+                <%
+                    _.each(nearest_cities, function(item, key, list){
+                %>
+                        <p><%= item.distance %> km (miles) <%= item.direction %> of <strong><%= item.name %></strong></p>
+                <%
+                    });
+                %>
+
                 Share this page
             </div><!--/ .report -->
             <div class="triptych clearfix">
