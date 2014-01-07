@@ -30,7 +30,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app_config.config_settings['all_past_thirty'], headers=app_config.config_settings['headers'])
+        usgs_query_api = requests.get(app_config.config_settings['all_past_seven'], headers=app_config.config_settings['headers'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
@@ -47,7 +47,7 @@ class UsgsApiQuery(Command):
         list_of_instances = []
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
-            #time.sleep(5)
+            time.sleep(5)
             usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
@@ -58,28 +58,31 @@ class UsgsApiQuery(Command):
     def retrieve_nearby_cities_from(self, list_of_instances):
         session = FuturesSession(max_workers=1)
         for detail_instance in list_of_instances:
-            #time.sleep(5)
+            time.sleep(5)
             try:
                 nearest_cities_url = detail_instance['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
             except:
                 nearest_cities_url = None
             if nearest_cities_url:
-                nearest_cities_query_details = session.get(nearest_cities_url, headers=app_config.config_settings['headers'])
-                nearest_cities_api_details = nearest_cities_query_details.result()
-                nearest_cities_api_details = nearest_cities_api_details.json()
-                list_of_nearby_cities = []
-                for nearby_city in nearest_cities_api_details:
-                    city = NearestCity(
-                        id = None,
-                        distance = nearby_city['distance'],
-                        direction = nearby_city['direction'],
-                        name = nearby_city['name'],
-                        latitude = nearby_city['latitude'],
-                        longitude = nearby_city['longitude'],
-                        population = nearby_city['population'],
-                        earthquake_id = None
-                    )
-                    list_of_nearby_cities.append(city)
+                try:
+                    nearest_cities_query_details = session.get(nearest_cities_url, headers=app_config.config_settings['headers'])
+                    nearest_cities_api_details = nearest_cities_query_details.result()
+                    nearest_cities_api_details = nearest_cities_api_details.json()
+                    list_of_nearby_cities = []
+                    for nearby_city in nearest_cities_api_details:
+                        city = NearestCity(
+                            id = None,
+                            distance = nearby_city['distance'],
+                            direction = nearby_city['direction'],
+                            name = nearby_city['name'],
+                            latitude = nearby_city['latitude'],
+                            longitude = nearby_city['longitude'],
+                            population = nearby_city['population'],
+                            earthquake_id = None
+                        )
+                        list_of_nearby_cities.append(city)
+                except:
+                    list_of_nearby_cities.append(None)
             else:
                 pass
             detail_instance['nearest_cities_url'] = nearest_cities_url
