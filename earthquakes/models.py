@@ -155,25 +155,3 @@ class NearestCity(db.Model):
 
     def __repr__(self):
         return '<name %r>' % self.name
-
-class Person(db.Model):
-    __tablename__ = 'person'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50))
-    addresses = db.relationship('Address', backref='person', lazy='dynamic')
-
-    def __init__(self, id, name, addresses):
-        self.id = id
-        self.name = name
-        self.addresses = addresses
-
-class Address(db.Model):
-    __tablename__ = 'address'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(50))
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-
-    def __init__(self, id, email, person_id):
-        self.id = id
-        self.email = email
-        self.person_id = person_id
