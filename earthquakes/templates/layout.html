@@ -21,28 +21,28 @@
         -->
 
         <!-- begin meta -->
-        <title>Earthquake Tracker | Flats</title>
+        <title>{% block title %}{% endblock %}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="format-detection" content="telephone=no" />
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-        <meta name="description" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-        <meta name="keywords" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+        <meta name="description" content="{% block description %}{% endblock %}" />
+        <meta name="keywords" content="{% block keywords %}{% endblock %}" />
         <meta name="author" content="89.3 KPCC" />
-        <meta property="og:title" content="Ferndale: December 2013 | Earthquake Tracker | 89.3 KPCC" />
-        <meta property="og:site_name" content="Earthquake Tracker | 89.3 KPCC" />
-        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{% block og_title %}{% endblock %}" />
+        <meta property="og:site_name" content="{% block og_site_name %}{% endblock %}" />
+        <meta property="og:type" content="{% block og_type %}{% endblock %}" />
         <meta property="og:image" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-        <meta property="og:url" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-        <meta property="og:description" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+        <meta property="og:url" content="{% block og_url %}{% endblock %}" />
+        <meta property="og:description" content="{% block og_description %}{% endblock %}" />
         <meta name="twitter:card" content="summary"/>
-        <meta name="twitter:url" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-        <meta name="twitter:domain" content="http://scpr.org" />
-        <meta name="twitter:site" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
-        <meta name="twitter:title" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
-        <meta name="twitter:description" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
+        <meta name="twitter:url" content="{% block twitter_url %}{% endblock %}"/>
+        <meta name="twitter:domain" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
+        <meta name="twitter:site" content="KPCC"/>
+        <meta name="twitter:title" content="{% block twitter_title %}{% endblock %}"/>
+        <meta name="twitter:description" content="{% block twitter_description %}{% endblock %}"/>
         <meta name="twitter:image:src" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!">
         <link rel="shortcut icon" href="http://media.scpr.org/favicon.ico" type="image/x-icon" />
         <!-- end meta -->
@@ -71,11 +71,11 @@
     <!-- end header -->
 
     <!-- begin body -->
-    <body class="landing">
+    <body class="{% block bodyclass %}{% endblock %}">
 
         <header class="masthead">
             <div class="inner bound">
-                <h1><a href="#">Earthquake Tracker</a></h1>
+                <h1><a href="{{ url_for('index') }}">Earthquake Tracker</a></h1>
                 <h2 class="tagline">KPCC's tool for following &amp; researching California earthquakes.</h2>
                 <h3 class="brand">
                     <a href="http://kpcc.org">89.3 KPCC</a>
@@ -87,9 +87,7 @@
             </div>
         </header>
 
-        <div class="container">
-            {% block main_content %}{% endblock %}
-        </div>
+        {% block main_content %}{% endblock %}
 
         <footer class="epilogue">
             <div class="inner bound">

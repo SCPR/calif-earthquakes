@@ -21,6 +21,11 @@ app.config.from_object(app_config)
 app.config['ASSETS_DEBUG'] = app_config.config_settings['DEBUG']
 
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
+app.jinja_env.filters['date_format'] = template_filters.date_format
+app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_format_state
+app.jinja_env.filters['strip_state'] = template_filters.strip_state
+app.jinja_env.filters['place_format'] = template_filters.place_format
+app.jinja_env.filters['convert_km_to_miles'] = template_filters.convert_km_to_miles
 
 # asset pipeline
 assets = Environment(app)
@@ -45,8 +50,8 @@ js = Bundle(
     'scripts/models/marker.js',
     'scripts/collections/earthquakes.js',
     'scripts/collections/markers.js',
-    'scripts/views/list.js',
-    'scripts/views/details.js',
+    #'scripts/views/list.js',
+    #'scripts/views/details.js',
     'scripts/views/map.js',
     'scripts/views/clustered-marker.js',
     filters='rjsmin',

@@ -1,5 +1,19 @@
 {% extends "layout.html" %}
 
+{% block title %}{% endblock %}
+{% block description %}{% endblock %}
+{% block keywords %}{% endblock %}
+{% block og_title %}{% endblock %}
+{% block og_site_name %}{% endblock %}
+{% block og_type %}{% endblock %}
+{% block og_url %}{% endblock %}
+{% block og_description %}{% endblock %}
+{% block twitter_url %}{% endblock %}
+{% block twitter_title %}{% endblock %}
+{% block twitter_description %}{% endblock %}
+
+{% block bodyclass %}landing{% endblock %}
+
 {% block main_content %}
     <header class="prologue">
         <div class="inner bound clearfix">
@@ -8,43 +22,23 @@
                     <h1>Recent Earthquakes</h1>
                 </header>
                 <div class="roundup clearfix">
-                    <article>
-                        <a href="#">
-                            <h1>January 2, <span>2014</span></h1>
-                            <ul>
-                                <li class="near">34 km SSW of <mark>Ferndale</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>42 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">3.5</aside>
-                        </a>
-                    </article>
-                    <article>
-                        <a href="#">
-                            <h1>December 19, <span>2013</span></h1>
-                            <ul>
-                                <li class="near">34 km NE of <mark>San Luis Obispo</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>19 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">2.7</aside>
-                        </a>
-                    </article>
-                    <article>
-                        <a href="#">
-                            <h1>December 14, <span>2013</span></h1>
-                            <ul>
-                                <li class="near">34 km N of <mark>Lancaster</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>8.2 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">2.9</aside>
-                        </a>
-                    </article>
+                    {% for earthquake in recent_instances %}
+                        <article>
+                            <a href="{{ url_for('detail', id=earthquake.id) }}">
+                                <h1><span>{{ earthquake.date_time|date_format }}</span></h1>
+                                <ul>
+                                    <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
+                                    <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
+                                    <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
+                                </ul>
+                                <aside class="magnitude">{{ earthquake.mag }}</aside>
+                            </a>
+                        </article>
+                    {% else %}
+                        <h3><em>No earthquakes thus far</h3>
+                    {% endfor %}
                 </div>
             </section><!--/ .latest -->
-
-
         </div>
     </header>
     <div class="page-cols">
@@ -53,11 +47,13 @@
                 <header>
                     <h1>All Incidents</h1>
                 </header>
-
-                <!--/ .magnitude-log -->
-                <nav class="magnitude-log"></nav>
-                <!--/ .magnitude-log -->
-
+                <nav class="magnitude-log">
+                    <ul>
+                        {% for earthquake in earthquake_instances %}
+                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag }}</mark></a></li>
+                        {% endfor %}
+                    </ul>
+                </nav><!--/ .magnitude-log -->
             </div><!--/ .primary -->
             <div class="supportive clearfix">
                 <aside class="about">
@@ -70,52 +66,10 @@
                 <aside class="resources">
                     <h1>Socal earthquake resources</h1>
                     <ul>
-                        <li><a href="#">Earthquake: "Drop, Cover and Hold On"</a></li>
-                        <li><a href="#">Emergency Supplies Checklist</a></li>
-                        <li><a href="#">Ever Wonder What Causes Earthquakes?</a></li>
-                        <li><a href="#">How To Secure Your Furniture</a></li>
-                        <li><a href="#">How To Strap Your Water Heater</a></li>
-                        <li><a href="#">Organizing Your Neighborhood</a></li>
-                        <li><a href="#">Preparing Children for Earthquakes</a></li>
-                        <li><a href="#">Preparing Your Family</a></li>
-                        <li><a href="#">Tips for Apartment and Mobile Home Managers</a></li>
-                        <li><a href="#">Tips for the Elderly</a></li>
-                        <li><a href="#">Tips for Pet Owners</a></li>
-                        <li><a href="#">Tips for the Physically Challenged</a></li>
-                        <li><a href="#">What To Do Before, During &amp; After Earthquake</a></li>
+                        {% include 'resources.html' %}
                     </ul>
                 </aside>
             </div>
         </div>
     </div><!--/ .page-cols -->
-
-    <div class="definitions">
-        <aside class="definition" id="define-magnitude" name="define-magnitude">
-            <div class="pane">
-                <dl>
-                    <dt>Magnitude</dt>
-                    <dd>The magnitude is a number that characterizes the relative size of an earthquake. Magnitude is based on measurement of the maximum motion recorded by a seismograph. Several scales have been defined, but the most commonly used are (1) local magnitude (ML), commonly referred to as "Richter magnitude," (2) surface-wave magnitude (Ms), (3) body-wave magnitude (Mb), and (4) moment magnitude (Mw). Scales 1-3 have limited range and applicability and do not satisfactorily measure the size of the largest earthquakes. The moment magnitude (Mw) scale, based on the concept of seismic moment, is uniformly applicable to all sizes of earthquakes but is more difficult to compute than the other types. All magnitude scales should yield approximately the same value for any given earthquake.</dd>
-                </dl>
-                <button>Close</button>
-            </div>
-        </aside>
-        <aside class="definition" id="define-depth" name="define-depth">
-            <div class="pane">
-                <dl>
-                    <dt>Depth</dt>
-                    <dd>Earthquakes can occur anywhere between the Earth's surface and about 700 kilometers below the surface. For scientific purposes, this earthquake depth range of 0 - 700 km is divided into three zones: shallow, intermediate, and deep. Shallow earthquakes are between 0 and 70 km deep; intermediate earthquakes, 70 - 300 km deep; and deep earthquakes, 300 - 700 km deep. In general, the term "deep-focus earthquakes" is applied to earthquakes deeper than 70 km. All earthquakes deeper than 70 km are localized within great slabs of shallow lithosphere that are sinking into the Earth's mantle.</dd>
-                </dl>
-                <button>Close</button>
-            </div>
-        </aside>
-        <aside class="definition" id="define-intensity" name="define-intensity">
-            <div class="pane">
-                <dl>
-                    <dt>Intensity</dt>
-                    <dd>The intensity is a number describing the severity of an earthquake in terms of its effects on the earth's surface and on humans and their structures. Several scales exist, but the ones most commonly used in the United States are the Modified Mercalli scale and the Rossi-Forel scale. There are many intensities for an earthquake, depending on where you are, unlike the magnitude, which is one number for each earthquake. </dd>
-                </dl>
-                <button>Close</button>
-            </div>
-        </aside>
-    </div><!--/ .definitions -->
 {% endblock %}

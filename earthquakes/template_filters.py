@@ -12,3 +12,36 @@ def datetime_format(value):
 	value = value.replace(tzinfo=pytz.UTC).astimezone(pacific)
 	value = value.strftime(date_format)
 	return value
+
+def date_format(value):
+	date_format = '%B %d, %Y'
+	value = value.strftime(date_format)
+	return value
+
+def strip_and_format_state(value, html_tag):
+    value = value.replace(', California', '')
+    split_value = value.split(' of ')
+    if html_tag:
+        formatted_value = '%s of <%s>%s</%s>' % (split_value[0], html_tag, split_value[1], html_tag)
+    else:
+        formatted_value = '%s of %s' % (split_value[0], split_value[1])
+    return formatted_value
+
+def strip_state(value):
+    try:
+        value = value.replace(', California', '')
+    except:
+        value = value
+    return value
+
+def place_format(value, date):
+    value = value.replace(', California', '')
+    split_value = value.split(' of ')
+    date_format = '%B %d, %Y'
+    date_string = date.strftime(date_format)
+    formatted_value = '%s: %s' % (split_value[1], date_string)
+    return formatted_value
+
+def convert_km_to_miles(value):
+    value = value * 1.609344
+    return '{0:.3g}'.format(value)
