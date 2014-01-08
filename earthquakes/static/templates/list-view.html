@@ -1,5 +1,5 @@
 <h4>rendering list view item</h4>
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color: #ffffff;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <a href="javascript:void(0)"><h2><%= title %></h2></a>
     <ul>
         <li>id: <%= id %></li>
@@ -34,6 +34,15 @@
         <li>gap: <%= gap %></li>
         <li>magType: <%= magType %></li>
         <li>nearest_cities_url: <%= nearest_cities_url %></li>
-        <li>nearest_cities: <%= nearest_cities %></li>
+        <li>nearest_cities:
+            <%
+                _.each(nearest_cities, function(item, key, list){
+            %>
+                    <p><%= item.distance %> km (miles) <%= item.direction %> of <%= item.name %></p>
+            <%
+                });
+            %>
+        </li>
     </ul>
 </div>
+<hr />

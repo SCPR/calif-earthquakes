@@ -28,12 +28,14 @@ assets = Environment(app)
 js = Bundle(
     'scripts/libs/jquery.min.js',
     'scripts/libs/modernizr.min.js',
+    'scripts/libs/jquery-ui.js',
     'scripts/libs/underscore-min.js',
     'scripts/libs/backbone-min.js',
     'scripts/libs/moment.min.js',
     'scripts/libs/bootstrap.min.js',
     'scripts/libs/leaflet.js',
     'scripts/libs/leaflet.markercluster-src.js',
+    'scripts/libs/jQRangeSlider-min.js',
     'data/california/california-la-county.js',
     'data/la-county-faults/la-county-faults.js',
     'scripts/app.js',
@@ -46,7 +48,6 @@ js = Bundle(
     'scripts/views/list.js',
     'scripts/views/details.js',
     'scripts/views/map.js',
-    'scripts/views/marker.js',
     'scripts/views/clustered-marker.js',
     filters='rjsmin',
     output='assets/scripts/min.js',
@@ -54,6 +55,8 @@ js = Bundle(
 assets.register('scripts_all', js)
 
 css = Bundle(
+    'css/jquery-ui.css',
+    'css/iThing.css',
     'css/leaflet.min.css',
     'css/MarkerCluster.css',
     'css/MarkerCluster.Default.css',

@@ -2,9 +2,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     initialize: function(markersCollection) {
 
-        /* set the variable for the
-        map the markers will be added to */
-        this.map = markersCollection.map;
+        // if else gymnastics to set marker icon based on params
 
         /*
         var myIcon = L.Icon.extend({
@@ -13,10 +11,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
             iconAnchor: [22, 94],
             popupAnchor: [-3, -76]
         });
-        */
 
-        // if else gymnastics to set marker icon based on params
-        /*
         if (this.model.attributes.result_type === 'instagram'){
             this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')], {icon: new myIcon({iconUrl: 'static/images/new-instagram-logo.png'})});
         } else {
@@ -28,66 +23,36 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
         or a single marker map. these should really be different views similar to
         the items? maybe i pass the logic in the router sted of here. */
 
-        if (markersCollection.markers.length === undefined || markersCollection.markers.length === null){
+        // create this.collection
+        this.collection = markersCollection;
+
+        // create this.map
+        this.map = this.collection.map;
+
+        if (this.collection.markers.length === undefined || this.collection.markers.length === null){
             console.log('undefined length');
-
-        } else if (markersCollection.markers.length === 1){
-            this.model = markersCollection.markers[0].attributes;
+        } else if (this.collection.markers.length === 1){
+            this.model = this.collection.markers[0].attributes;
             this.marker = L.marker([this.model.latitude, this.model.longitude]).addTo(this.map);
-            //this.marker.bindPopup('single boom');
             this.bindEvent(this.marker, this.model);
-
         } else {
-            this.markerCluster = L.markerClusterGroup({
-                disableClusteringAtZoom: 15
-            });
-            this.markerInstance = markersCollection.markers.models;
-            for(var i=0; i<this.markerInstance.length; i++){
-                this.marker = L.marker(L.latLng(this.markerInstance[i].attributes.latitude, this.markerInstance[i].attributes.longitude));
-                //this.marker.bindPopup('cluster boom');
-                this.bindEvent(this.marker, this.markerInstance[i].attributes);
-                this.markerCluster.addLayer(this.marker);
-            };
-
-            var laCounty = L.geoJson(losAngelesCounty, {
-                style: function (feature) {
-                    return {
-                        color: '#787878',
-                        weight: 2,
-                        opacity: 1,
-                        fillColor: null,
-                        fillOpacity: 0
-                    }
-                },
-                onEachFeature: function(feature, layer) {
-                    layer.on('click', function (e) {
-                        console.log(feature.properties.name + ' county layer clicked');
-                    });
-                }
-            });
-
-            var laCountyFaults = L.geoJson(losAngelesCountyFaults, {
-                style: function (feature) {
-                    return {
-                        color: 'green',
-                        weight: 2,
-                        opacity: 1,
-                        fillColor: null,
-                        fillOpacity: 0
-                    }
-                },
-                onEachFeature: function(feature, layer) {
-                    layer.on('click', function (e) {
-                        console.log(feature.properties.NAME + ' fault line clicked');
-                    });
-                }
-            });
-            this.markerCluster.addLayer(laCountyFaults);
-            this.markerCluster.addLayer(laCounty);
-            this.map.addLayer(this.markerCluster);
-            //this.map.fitBounds(this.markerCluster.getBounds());
+            this.addCollectionToMap(this.collection.markers.models);
         }
+    },
 
+    addCollectionToMap: function(arrayOfModels){
+        this.markerCluster = L.markerClusterGroup({
+            disableClusteringAtZoom: 15
+        });
+
+        for(var i=0; i<arrayOfModels.length; i++){
+            this.marker = L.marker(L.latLng(arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude));
+            this.bindEvent(this.marker, arrayOfModels[i].attributes);
+            this.marker.addTo(this.map);
+            //this.markerCluster.addLayer(this.marker);
+        };
+
+        //this.map.addLayer(this.markerCluster);
     },
 
     bindEvent: function(marker, attributes){
@@ -95,8 +60,6 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
         marker.on('click', function(){
             console.log(attributes);
         });
-
-    }
 
         //var that = this;
         //this.marker.on('click', function(){
@@ -128,6 +91,5 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
         //});
 
-
-
+    }
 });

@@ -15,6 +15,7 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 def index():
     return render_template('index.html')
 
+'''
 @app.route('/earthquakes')
 def get_earthquakes():
     earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc())
@@ -22,6 +23,7 @@ def get_earthquakes():
     return jsonify(
         collection=[i.serialize for i in earthquake_instances]
     )
+'''
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
@@ -35,4 +37,4 @@ def require_appkey(view_function):
 
 # flask_restless config
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=25)
+manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=100)
