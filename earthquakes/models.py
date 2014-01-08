@@ -42,7 +42,7 @@ class Earthquake(db.Model):
     nearest_cities_url = db.Column(db.Text, nullable=True)
     nearest_cities = db.relationship('NearestCity', backref='earthquake', lazy='dynamic')
 
-    def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, nearest_cities_url, nearest_cities):
+    def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, nearest_cities_url, nearest_cities, test_migration):
         self.id = id
         self.primary_slug = primary_slug
         self.mag = mag
@@ -76,6 +76,7 @@ class Earthquake(db.Model):
         self.magType = magType
         self.nearest_cities_url = nearest_cities_url
         self.nearest_cities = nearest_cities
+        self.test_migration = test_migration
 
     def resource_uri(self):
         ''' take database record and add resource_uri '''
