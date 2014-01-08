@@ -1,7 +1,7 @@
 App.Views.MapView = Backbone.View.extend({
-    tagName: "div",
+    tagName: "section",
 
-    id: "earthquake-map-container",
+    className: "dashboard clearfix",
 
     template: _.template(template("static/templates/map-view.html")),
 
@@ -88,11 +88,10 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
-
     },
 
     render: function(markersCollection){
-        $(this.$el.html(this.template())).insertBefore("#earthquake-entries-container");
+        $(this.$el.html(this.template())).insertAfter("section.latest");
 
         $("#slider").rangeSlider({
             defaultValues: {min: 1.5, max: 3.5},

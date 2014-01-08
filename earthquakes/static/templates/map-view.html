@@ -1,13 +1,47 @@
-<div id="earthquake-map-controls">
-    <h1>Map view is being rendered!</h1>
+<div class="controls">
+    <header>
+        <h1>Browse Incidents</h1>
+    </header>
 
-    <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
-    <label for="fault-lines">Show fault lines</label>
+    <form class="filters" action="">
 
-    <input type="checkbox" value="show" name="county-boundaries" id="county-boundaries">
-    <label for="county-lines">Show county boundaries</label>
+        <div class="control">
+            <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
+            <label for="fault-lines">Show fault lines</label>
+        </div>
 
-    <div id="slider"></div>
+        <div class="control">
+            <input type="checkbox" value="show" name="county-boundaries" id="county-boundaries">
+            <label for="county-lines">Show county boundaries</label>
+        </div>
 
+        <div class="magnitude">
+            <div id="slider"></div>
+            <label for="slider">Magnitude slider</label>
+        </div>
+
+        <div class="intensity">
+            <div id="slider"></div>
+            <label for="slider">Intensity slider</label>
+        </div>
+
+        <div class="dates">
+            <div id="slider"></div>
+            <label for="slider">Date range picker</label>
+        </div>
+
+        <div class="location">
+            Location text field
+        </div>
+
+        <!--
+        <div class="submit">
+            <button value="go">Filter results</button>
+        </div>
+        -->
+
+    </form>
 </div>
-<div id="content-map-canvas" class="initial"></div>
+<figure class="module">
+    <div id="content-map-canvas" class="initial"></div>
+</figure>
