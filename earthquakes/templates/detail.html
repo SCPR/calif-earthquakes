@@ -33,11 +33,11 @@
                 </figure>
                 <figure class="felt">
                     <div class="value">
-                        <b>{{ earthquake_instance.felt }}</b>
+                        <b>{{ earthquake_instance.felt|default('n/a', true) }}</b>
                     </div>
                     <figcaption>
                         <mark>People Felt It</mark>
-                        <p><a href="#">Did you feel it, too? Tell USGS.</a></p>
+                        <p><a href="{{ earthquake_instance.url }}#dyfi_form" target="_blank">Did you feel it too? Tell the USGS.</a></p>
                     </figcaption>
                 </figure>
             </div>
@@ -57,7 +57,7 @@
                                 </ul>
                             </li>
                             <li class="usgs">
-                                <mark><a href="#">USGS Source Report</a></mark>
+                                <mark><a href="{{ earthquake_instance.url }}" target="_blank">USGS Source Report</a></mark>
                                 <ul>
                                     <li>Status: <b>{{ earthquake_instance.status }}</b></li>
                                 </ul>
@@ -91,6 +91,7 @@
                     <aside class="nearby">
                         <header>
                             <h1>Recent Incidents Near Here</h1>
+                            <h1>PLACEHOLDER DATA STILL</h1>
                         </header>
                         <nav class="magnitude-log">
                             <ul>
@@ -160,12 +161,9 @@
                     <h1>Recent SoCal Earthquakes</h1>
                     <nav>
                         <ul>
-                            <li><a href="#">Bridgeville: October 29, 2013</a></li>
-                            <li><a href="#">Loleta: June 17, 2013</a></li>
-                            <li><a href="#">Eureka: May 5, 2013</a></li>
-                            <li><a href="#">Fortuna: February 14, 2013</a></li>
-                            <li><a href="#">Rohnerville: November 30, 2012</a></li>
-                            <li><a href="#">McKinleyville: September 25, 2012</a></li>
+                            {% for instance in recent_instances %}
+                                <li><a href="{{ url_for('detail', id=instance.id) }}">{{ instance.place|place_format(instance.date_time) }}</a></li>
+                            {% endfor %}
                         </ul>
                     </nav>
                 </aside>

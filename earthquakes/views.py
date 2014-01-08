@@ -13,8 +13,8 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    recent_instances = Earthquake.query.limit(3).all()
-    earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).all()
+    recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
+    earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
     return render_template(
         'index.html',
         recent_instances=recent_instances,
@@ -24,7 +24,8 @@ def index():
 @app.route('/<int:id>', methods=['GET'])
 def detail(id):
     earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
-    return render_template('detail.html', earthquake_instance=earthquake_instance)
+    recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+    return render_template('detail.html', earthquake_instance=earthquake_instance, recent_instances=recent_instances)
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
