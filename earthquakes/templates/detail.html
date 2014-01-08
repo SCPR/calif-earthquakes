@@ -18,7 +18,7 @@
     <header class="titling">
         <div class="inner bound clearfix">
             <div class="vitals">
-                <h1>{{ earthquake_instance.title }}</h1>
+                <h1>{{ earthquake_instance.place|place_format(earthquake_instance.date_time) }}</h1>
                 <h2><time>{{ earthquake_instance.date_time }}</time></h2>
             </div>
             <div class="stats clearfix">

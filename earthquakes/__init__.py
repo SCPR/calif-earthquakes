@@ -23,7 +23,7 @@ app.config['ASSETS_DEBUG'] = app_config.config_settings['DEBUG']
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
 app.jinja_env.filters['date_format'] = template_filters.date_format
 app.jinja_env.filters['strip_state'] = template_filters.strip_state
-app.jinja_env.filters['title_format'] = template_filters.title_format
+app.jinja_env.filters['place_format'] = template_filters.place_format
 
 # asset pipeline
 assets = Environment(app)
