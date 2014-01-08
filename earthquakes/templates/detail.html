@@ -19,7 +19,7 @@
         <div class="inner bound clearfix">
             <div class="vitals">
                 <h1>{{ earthquake_instance.place|place_format(earthquake_instance.date_time) }}</h1>
-                <h2><time>{{ earthquake_instance.date_time }}</time></h2>
+                <h2><time>{{ earthquake_instance.date_time|time_format }}</time></h2>
             </div>
             <div class="stats clearfix">
                 <figure class="magnitude">
