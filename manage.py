@@ -47,7 +47,7 @@ class UsgsApiQuery(Command):
         list_of_instances = []
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
-            time.sleep(5)
+            #time.sleep(5)
             usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
@@ -58,7 +58,7 @@ class UsgsApiQuery(Command):
     def retrieve_nearby_cities_from(self, list_of_instances):
         session = FuturesSession(max_workers=1)
         for detail_instance in list_of_instances:
-            time.sleep(5)
+            #time.sleep(5)
             try:
                 nearest_cities_url = detail_instance['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
             except:
