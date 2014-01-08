@@ -5,7 +5,6 @@ import pytz
 from requests_futures.sessions import FuturesSession
 from pytz import timezone
 from datetime import tzinfo, date
-from earthquakes import settings_development
 from flask.ext.script import Manager, Command
 from concurrent import futures
 from earthquakes import app, db
@@ -30,7 +29,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(settings_development.config_settings['GT_2.5_PAST_DAY'], headers=settings_development.config_settings['API_MANAGER_HEADERS'])
+        usgs_query_api = requests.get(app.config['GT_2_5_PAST_DAY'], headers=app.config['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
@@ -48,7 +47,7 @@ class UsgsApiQuery(Command):
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
             #time.sleep(5)
-            usgs_query_details = session.get(detail_url, headers=settings_development.config_settings['API_MANAGER_HEADERS'])
+            usgs_query_details = session.get(detail_url, headers=app.config['API_MANAGER_HEADERS'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
             list_of_instances.append(usgs_api_details)
@@ -65,7 +64,7 @@ class UsgsApiQuery(Command):
                 nearest_cities_url = None
             if nearest_cities_url:
                 try:
-                    nearest_cities_query_details = session.get(nearest_cities_url, headers=settings_development.config_settings['headers'])
+                    nearest_cities_query_details = session.get(nearest_cities_url, headers=app.config['headers'])
                     nearest_cities_api_details = nearest_cities_query_details.result()
                     nearest_cities_api_details = nearest_cities_api_details.json()
                     list_of_nearby_cities = []

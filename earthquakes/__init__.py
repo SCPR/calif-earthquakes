@@ -6,9 +6,11 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.sqlalchemy import SQLAlchemy
-import settings_development
 import template_filters
 import webassets
+
+import settings_common
+settings_environment = __import__("settings_%s" % os.environ.setdefault("FLASK_ENV", "development"))
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -16,9 +18,10 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 
-app.config.from_object(settings_development)
+app.config.from_object(settings_common)
+app.config.from_object(settings_environment)
 
-app.config['ASSETS_DEBUG'] = settings_development.config_settings['ASSET_PIPELINE_DEBUG']
+app.config['ASSETS_DEBUG'] = app.config['ASSET_PIPELINE_DEBUG']
 
 app.jinja_env.filters['time_format'] = template_filters.time_format
 app.jinja_env.filters['date_format'] = template_filters.date_format
@@ -72,7 +75,6 @@ css = Bundle(
 assets.register('css_all', css)
 
 # configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = settings_development.config_settings['SQLALCHEMY_DATABASE_URI']
 db = SQLAlchemy(app)
 
 import earthquakes.views
