@@ -1,35 +1,176 @@
 {% extends "layout.html" %}
 
+{% block title %}{% endblock %}
+{% block description %}{% endblock %}
+{% block keywords %}{% endblock %}
+{% block og_title %}{% endblock %}
+{% block og_site_name %}{% endblock %}
+{% block og_type %}{% endblock %}
+{% block og_url %}{% endblock %}
+{% block og_description %}{% endblock %}
+{% block twitter_url %}{% endblock %}
+{% block twitter_title %}{% endblock %}
+{% block twitter_description %}{% endblock %}
+
+{% block bodyclass %}single{% endblock %}
+
 {% block main_content %}
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h1>Details</h1>
-            <ul class="entries">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <a href="/{{ earthquake.primary_id }}"><h2>{{ earthquake.title }} - {{ earthquake.time }}</h2></a>
-                        <ul>
-                            <li>Magnitude: {{ earthquake.mag }}</li>
-                            <li>Place: {{ earthquake.place }}</li>
-                            <li>Updated: {{ earthquake.updated }}</li>
-                            <li>Time zone: {{ earthquake.tz }}</li>
-                            <li>URL: {{ earthquake.url }}</li>
-                            <li>Felt: {{ earthquake.felt }}</li>
-                            <li>CDI: {{ earthquake.cdi }}</li>
-                            <li>MMI: {{ earthquake.mmi }}</li>
-                            <li>Alert: {{ earthquake.alert }}</li>
-                            <li>Status: {{ earthquake.status }}</li>
-                            <li>Tsunami: {{ earthquake.tsunami }}</li>
-                            <li>Significant: {{ earthquake.sig }}</li>
-                            <li>Type: {{ earthquake.type }}</li>
-                            <li>Latitude: {{ earthquake.latitude }}</li>
-                            <li>Longitude: {{ earthquake.longitude }}</li>
-                            <li>Depth: {{ earthquake.depth }}</li>
-                        </ul>
+    <header class="titling">
+        <div class="inner bound clearfix">
+            <div class="vitals">
+                <h1>{{ earthquake_instance.place|place_format(earthquake_instance.date_time) }}</h1>
+                <h2><time>{{ earthquake_instance.date_time|time_format }}</time></h2>
+            </div>
+            <div class="stats clearfix">
+                <figure class="magnitude">
+                    <div class="value">
+                        <b>{{ earthquake_instance.mag }}</b>
+                        <a href="#define-magnitude" data-definition="magnitude" class="tip" title="What does 'magnitude' mean?">Define</a>
                     </div>
-                </div>
-                <hr>
-            </ul>
+                    <figcaption>
+                        <mark>Magnitude</mark>
+                    </figcaption>
+                </figure>
+                <figure class="felt">
+                    <div class="value">
+                        <b>{{ earthquake_instance.felt|default('n/a', true) }}</b>
+                    </div>
+                    <figcaption>
+                        <mark>People Felt It</mark>
+                        <p><a href="{{ earthquake_instance.url }}#dyfi_form" target="_blank">Did you feel it too? Tell the USGS.</a></p>
+                    </figcaption>
+                </figure>
+            </div>
         </div>
-    </div>
+    </header>
+    <div class="page-cols">
+        <div class="inner bound clearfix">
+            <div class="primary">
+                <div class="dossier clearfix">
+                    <section class="report clearfix">
+                        <ul>
+                            <li class="where">
+                                <mark>{{ earthquake_instance.place|strip_and_format_state('')|safe }}</mark>
+                                <ul>
+                                    <li>Latitude: <b>{{ earthquake_instance.latitude }}</b></li>
+                                    <li>Longitude: <b>{{ earthquake_instance.longitude }}</b></li>
+                                </ul>
+                            </li>
+                            <li class="usgs">
+                                <mark><a href="{{ earthquake_instance.url }}" target="_blank">USGS Source Report</a></mark>
+                                <ul>
+                                    <li>Status: <b>{{ earthquake_instance.status }}</b></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="vicinity">
+                                <mark>Nearby Cities</mark>
+                                <ul>
+                                    {% for item in earthquake_instance.nearest_cities %}
+                                        <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="tweet">
+                                <mark><a href="#">Share on Twitter</a></mark>
+                            </li>
+                            <li class="like">
+                                <mark><a href="#">Share on Facebook</a></mark>
+                            </li>
+                        </ul>
+                    </section><!--/ .report -->
+                    <section class="map">
+                        <div class="visualization ratio">
+                            <div class="fill"></div>
+                            <b class="img-contain"><img src="http://placekitten.com/634/412" alt="" /></b>
+                        </div><!--/ .ratio -->
+                    </section>
+                </div><!--/ .dossier -->
+                <div class="triptych clearfix">
+                    <aside class="nearby">
+                        <header>
+                            <h1>Recent Incidents Near Here</h1>
+                            <h1>PLACEHOLDER DATA STILL</h1>
+                        </header>
+                        <nav class="magnitude-log">
+                            <ul>
+                                <li><a href="#">
+                                    <span>Bridgeville: October 4, 2013</span>
+                                    <mark>3.5</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Loleta: June 18, 2013</span>
+                                    <mark>4.2</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Eureka: May 31, 2013</span>
+                                    <mark>2.7</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Fortuna: February 18, 2013</span>
+                                    <mark>3.1</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Rohnerville: November 27, 2012</span>
+                                    <mark>3.8</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>McKinleyville: September 30, 2012</span>
+                                    <mark>2.9</mark></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </aside><!--/ .nearby -->
+                    <div class="charts clearfix">
+                        <aside class="depth">
+                            <header>
+                                <h1>Incident Depth</h1>
+                                <a href="#define-depth" data-definition="depth" class="tip" title="What does 'depth' mean?">Define</a>
+                            </header>
+                            <div class="column-chart from-ceiling" data-value="{{ earthquake_instance.depth }}" data-max="1000">
+                                <div class="range"><b class="fill"></b></div>
+                                <div class="marker origin"><span>Surface</span></div>
+                                <div class="marker label"><span>{{ earthquake_instance.depth }} km</span></div>
+                                <div class="marker conclusion"><span>1000 km</span></div>
+                            </div>
+                        </aside>
+                        <aside class="intensity">
+                            <header>
+                                <h1>Incident Intensity</h1>
+                                <a href="#define-intensity" data-definition="intensity" class="tip" title="What does 'intensity' mean?">Define</a>
+                            </header>
+                            <div class="column-chart from-floor" data-value="{{ earthquake_instance.cdi }}" data-max="10">
+                                <div class="range"><b class="fill"></b></div>
+                                <div class="marker origin"><span>10</span></div>
+                                <div class="marker label"><span>{{ earthquake_instance.cdi }}</span></div>
+                                <div class="marker conclusion"><span>0</span></div>
+                            </div>
+                        </aside>
+                    </div><!--/ .charts -->
+                </div><!--/ .triptych -->
+            </div>
+            <div class="supportive clearfix">
+                <aside class="resources">
+                    <h1>Socal earthquake resources</h1>
+                    <ul>
+                        {% include 'resources.html' %}
+                    </ul>
+                </aside>
+                <aside class="recents">
+                    <h1>Recent SoCal Earthquakes</h1>
+                    <nav>
+                        <ul>
+                            {% for instance in recent_instances %}
+                                <li><a href="{{ url_for('detail', id=instance.id) }}">{{ instance.place|place_format(instance.date_time) }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+        </div>
+    </div><!--/ .page-cols -->
+
+    {% include 'glossary.html' %}
+
 {% endblock %}

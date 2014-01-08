@@ -1,40 +1,75 @@
 {% extends "layout.html" %}
 
+{% block title %}{% endblock %}
+{% block description %}{% endblock %}
+{% block keywords %}{% endblock %}
+{% block og_title %}{% endblock %}
+{% block og_site_name %}{% endblock %}
+{% block og_type %}{% endblock %}
+{% block og_url %}{% endblock %}
+{% block og_description %}{% endblock %}
+{% block twitter_url %}{% endblock %}
+{% block twitter_title %}{% endblock %}
+{% block twitter_description %}{% endblock %}
+
+{% block bodyclass %}landing{% endblock %}
+
 {% block main_content %}
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h1>Earthquakes</h1>
-            <ul class="entries">
-                {% for earthquake in earthquake_instances %}
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <a href="/{{ earthquake.primary_id }}"><h2>{{ earthquake.title }}</h2></a>
-                            <ul>
-								<li>Time: {{ earthquake.date_time|datetime_format }}</li>
-                                <li>Magnitude: {{ earthquake.mag }}</li>
-                                <li>Place: {{ earthquake.place }}</li>
-                                <li>Updated: {{ earthquake.updated|datetime_format }}</li>
-                                <li>Timezone offset from UTC in minutes at the event epicenter: {{ earthquake.tz }}</li>
-                                <li>URL: {{ earthquake.url|urlize() }}</li>
-                                <li>Felt: {{ earthquake.felt }}</li>
-                                <li>CDI: {{ earthquake.cdi }}</li>
-                                <li>MMI: {{ earthquake.mmi }}</li>
-                                <li>Alert: {{ earthquake.alert }}</li>
-                                <li>Status: {{ earthquake.status }}</li>
-                                <li>Tsunami: {{ earthquake.tsunami }}</li>
-                                <li>Significant: {{ earthquake.sig }}</li>
-                                <li>Type: {{ earthquake.type }}</li>
-                                <li>Latitude: {{ earthquake.latitude }}</li>
-                                <li>Longitude: {{ earthquake.longitude }}</li>
-                                <li>Depth: {{ earthquake.depth }}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <hr>
-                {% else %}
-                    <li><em>No earthquakes thus far</em>
-                {% endfor %}
-            </ul>
+    <header class="prologue">
+        <div class="inner bound clearfix">
+            <section class="latest">
+                <header>
+                    <h1>Recent Earthquakes</h1>
+                </header>
+                <div class="roundup clearfix">
+                    {% for earthquake in recent_instances %}
+                        <article>
+                            <a href="{{ url_for('detail', id=earthquake.id) }}">
+                                <h1><span>{{ earthquake.date_time|date_format }}</span></h1>
+                                <ul>
+                                    <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
+                                    <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
+                                    <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
+                                </ul>
+                                <aside class="magnitude">{{ earthquake.mag }}</aside>
+                            </a>
+                        </article>
+                    {% else %}
+                        <h3><em>No earthquakes thus far</h3>
+                    {% endfor %}
+                </div>
+            </section><!--/ .latest -->
         </div>
-    </div>
+    </header>
+    <div class="page-cols">
+        <div class="inner bound clearfix">
+            <div class="primary">
+                <header>
+                    <h1>Earthquakes greater than 2.5</h1>
+                </header>
+                <nav class="magnitude-log">
+                    <ul>
+                        {% for earthquake in earthquake_instances %}
+                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag }}</mark></a></li>
+                        {% endfor %}
+                    </ul>
+                </nav><!--/ .magnitude-log -->
+            </div><!--/ .primary -->
+            <div class="supportive clearfix">
+                <aside class="about">
+                    <h1>What is Earthquake Tracker?</h1>
+                    <div class="prose">
+                        <p>Lorem ipsum dolor sit amet, adipiscing elit. With information sourced from <a href="#">the USGS Earthquake Database</a>, Nam blandit pharetra augue, pulvinar tincidunt arcu luctus quis. Aenean in elit aliquet, pretium massa sed, ornare purus.</p>
+                        <p>Vestibulum fringilla consectetur neque ac blandit. Nunc accumsan condimentum odio, at porttitor arcu. Ut eu erat nec orci blandit porta. Morbi rhoncus, quam sed placerat mollis, erat nunc vehicula velit, vel facilisis velit lacus ut libero. Phasellus ut adipiscing dui. Nulla quis ornare tellus. Sed nec purus mi. Curabitur non feugiat odio, et hendrerit erat. Fusce vel ante eget sapien tincidunt gravida et mattis orci.</p>
+                    </div>
+                </aside>
+                <aside class="resources">
+                    <h1>Socal earthquake resources</h1>
+                    <ul>
+                        {% include 'resources.html' %}
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </div><!--/ .page-cols -->
 {% endblock %}

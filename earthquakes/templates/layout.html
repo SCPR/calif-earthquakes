@@ -6,8 +6,45 @@
     <!-- begin header -->
     <head>
 
+        <!--
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        DELETE BEFORE LAUNCHING!
+        //////////////////////////////////////////////////////////////////////
+        ====================================================================== -->
+        <meta name="robots" content="noindex, nofollow"> <!--
+        ======================================================================
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        -->
+
         <!-- begin meta -->
-        <title>Title</title>
+        <title>{% block title %}{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="description" content="{% block description %}{% endblock %}" />
+        <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+        <meta name="author" content="89.3 KPCC" />
+        <meta property="og:title" content="{% block og_title %}{% endblock %}" />
+        <meta property="og:site_name" content="{% block og_site_name %}{% endblock %}" />
+        <meta property="og:type" content="{% block og_type %}{% endblock %}" />
+        <meta property="og:image" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+        <meta property="og:url" content="{% block og_url %}{% endblock %}" />
+        <meta property="og:description" content="{% block og_description %}{% endblock %}" />
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:url" content="{% block twitter_url %}{% endblock %}"/>
+        <meta name="twitter:domain" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"/>
+        <meta name="twitter:site" content="KPCC"/>
+        <meta name="twitter:title" content="{% block twitter_title %}{% endblock %}"/>
+        <meta name="twitter:description" content="{% block twitter_description %}{% endblock %}"/>
+        <meta name="twitter:image:src" content="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!">
+        <link rel="shortcut icon" href="http://media.scpr.org/favicon.ico" type="image/x-icon" />
         <!-- end meta -->
 
         <!-- begin css -->
@@ -15,26 +52,66 @@
             <link href="{{ ASSET_URL }}" rel="stylesheet" />
         {% endassets %}
 
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="../static-assets/js/selectivizr-min.js" type="text/javascript"></script>
+            <link href="../static-assets/styles/compiled/display-ie-6-7-8.css" media="screen" rel="stylesheet" />
+        <![endif]-->
+
+        <script type="text/javascript" src="//use.typekit.net/dkj3oci.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
         <!-- begin scripts -->
-        <script type=text/javascript>
+        <script type="text/javascript">
             var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
+        <!-- end scripts -->
+
     </head>
     <!-- end header -->
 
-    <body>
-        <div class="container">
-            <div class="presentation">
-                {% block main_content %}{% endblock %}
+    <!-- begin body -->
+    <body class="{% block bodyclass %}{% endblock %}">
+
+        <header class="masthead">
+            <div class="inner bound">
+                <h1><a href="{{ url_for('index') }}">Earthquake Tracker</a></h1>
+                <h2 class="tagline">KPCC's tool for following &amp; researching California earthquakes.</h2>
+                <h3 class="brand">
+                    <a href="http://www.scpr.org/">89.3 KPCC</a>
+                </h3>
+                <aside class="pledge">
+                    <mark><a href="#">Pledge Now</a></mark>
+                    <p>KPCC is member-supported public radio.</p>
+                </aside>
             </div>
-        </div>
+        </header>
+
+        {% block main_content %}{% endblock %}
+
+        <footer class="epilogue">
+            <div class="inner bound">
+                <h1><a href="http://www.scpr.org/" class="parent">89.3 KPCC</a> <a href="{{ url_for('index') }}" class="title">Earthquake Tracker</a></h1>
+                <nav>
+                    <ul>
+                        <li><a href="http://scpr.org/terms/">Terms &amp; Conditions</a></li>
+                        <li><a href="http://scpr.org/privacy/">Privacy</a></li>
+                        <li><a href="http://scpr.org/web_site_feedback">Website Feedback</a></li>
+                    </ul>
+                </nav>
+                <p class="legal">Copyright 2014 &copy; <a href="http://www.scpr.org/">Southern California Public Radio</a></p>
+            </div>
+        </footer><!--/ .epilogue -->
 
         <!-- begin scripts -->
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
         {% assets "scripts_all" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
         <!-- end scripts -->
 
     </body>
+    <!-- end body -->
+
 </html>
+<!-- end doc -->

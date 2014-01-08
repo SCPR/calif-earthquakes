@@ -18,6 +18,6 @@ Thumbs.db
 
 # Mine #
 .webassets-cache
-config.py
+app_config.py
 fabfile.py
 SCRATCHPAD.md

@@ -1,0 +1,107 @@
+<header class="titling">
+    <div class="inner bound clearfix">
+        <div class="vitals">
+            <h1><%= title %></h1>
+            <h2><time><%= date_time %></time></h2>
+        </div>
+        <div class="stats">
+            <%= mag %> magnitude
+            <%= felt %> people felt it
+        </div>
+    </div>
+</header>
+
+<div class="page-cols">
+    <div class="inner bound clearfix">
+        <div class="primary">
+            <div class="dossier clearfix">
+                <p>Latitude: <%= latitude %></p>
+                <p>Longitude: <%= longitude %></p>
+                <p>USGS Source Report</p>
+                <p>Status: <%= status %></p>
+                <p>Nearby Cities</p>
+
+                <%
+                    _.each(nearest_cities, function(item, key, list){
+                %>
+                        <p><%= item.distance %> km (miles) <%= item.direction %> of <strong><%= item.name %></strong></p>
+                <%
+                    });
+                %>
+
+                Share this page
+            </div><!--/ .report -->
+            <div class="triptych clearfix">
+                <aside class="nearby">
+                    <header>
+                        <h1>Recent Incidents Near Here</h1>
+                    </header>
+                    <nav>
+                        <ul>
+                            <li>Bridgeville: October 2013</li>
+                            <li>Loleta: June 2013</li>
+                            <li>Eureka: May 2013</li>
+                            <li>Fortuna: February 2013</li>
+                            <li>Rohnerville: November 2012</li>
+                            <li>McKinleyville: September 2012</li>
+                        </ul>
+                    </nav>
+                </aside>
+                <aside class="depth">
+                    <header>
+                        <h1>Incident Depth</h1>
+                    </header>
+                    <div class="column-chart from-ceiling" data-value="<%= depth %>" data-max="1000">
+                        <div class="range"><b class="fill"></b></div>
+                        <div class="marker origin"><span>Surface</span></div>
+                        <div class="marker label"><span><%= depth %> km</span></div>
+                        <div class="marker conclusion"><span>1000 km</span></div>
+                    </div>
+                </aside>
+                <aside class="intensity">
+                    <header>
+                        <h1>Incident Intensity</h1>
+                    </header>
+                    <div class="column-chart from-floor" data-value="<%= cdi %>" data-max="10">
+                        <div class="range"><b class="fill"></b></div>
+                        <div class="marker origin"><span>10</span></div>
+                        <div class="marker label"><span><%= cdi %></span></div>
+                        <div class="marker conclusion"><span>0</span></div>
+                    </div>
+                </aside>
+            </div><!--/ .triptych -->
+        </div>
+        <div class="supportive">
+            <aside class="resources">
+                <h1>Socal earthquake resources</h1>
+                <ul>
+                    <li><a href="#">Earthquake: "Drop, Cover and Hold On"</a></li>
+                    <li><a href="#">Emergency Supplies Checklist</a></li>
+                    <li><a href="#">Ever Wonder What Causes Earthquakes?</a></li>
+                    <li><a href="#">How To Secure Your Furniture</a></li>
+                    <li><a href="#">How To Strap Your Water Heater</a></li>
+                    <li><a href="#">Organizing Your Neighborhood</a></li>
+                    <li><a href="#">Preparing Children for Earthquakes</a></li>
+                    <li><a href="#">Preparing Your Family</a></li>
+                    <li><a href="#">Tips for Apartment and Mobile Home Managers</a></li>
+                    <li><a href="#">Tips for the Elderly</a></li>
+                    <li><a href="#">Tips for Pet Owners</a></li>
+                    <li><a href="#">Tips for the Physically Challenged</a></li>
+                    <li><a href="#">What To Do Before, During &amp; After Earthquake</a></li>
+                </ul>
+            </aside>
+            <aside class="recents">
+                <h1>recent socal earthquakes</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">Bridgeville: October 2013</a></li>
+                        <li><a href="#">Loleta: June 2013</a></li>
+                        <li><a href="#">Eureka: May 2013</a></li>
+                        <li><a href="#">Fortuna: February 2013</a></li>
+                        <li><a href="#">Rohnerville: November 2012</a></li>
+                        <li><a href="#">McKinleyville: September 2012</a></li>
+                    </ul>
+                </nav>
+        </div>
+    </div>
+</div><!--/ .page-cols -->
