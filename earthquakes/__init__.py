@@ -16,7 +16,7 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 
-app.config.from_object(settings_development)
+app.config['DEBUG'] = settings_development.config_settings['APPLICATION_DEBUG']
 
 app.config['ASSETS_DEBUG'] = settings_development.config_settings['ASSET_PIPELINE_DEBUG']
 
@@ -26,6 +26,7 @@ app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_for
 app.jinja_env.filters['strip_state'] = template_filters.strip_state
 app.jinja_env.filters['place_format'] = template_filters.place_format
 app.jinja_env.filters['convert_km_to_miles'] = template_filters.convert_km_to_miles
+app.jinja_env.filters['round_magnitude'] = template_filters.round_magnitude
 
 # asset pipeline
 assets = Environment(app)

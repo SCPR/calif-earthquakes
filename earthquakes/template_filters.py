@@ -45,3 +45,11 @@ def place_format(value, date):
 def convert_km_to_miles(value):
     value = value * 1.609344
     return '{0:.3g}'.format(value)
+
+def round_magnitude(value):
+    value = '{0:.2g}'.format(value)
+    if len(value) == 1:
+        value = '%s.0' % (value)
+    else:
+        value = value
+    return value

@@ -24,7 +24,7 @@
             <div class="stats clearfix">
                 <figure class="magnitude">
                     <div class="value">
-                        <b>{{ earthquake_instance.mag }}</b>
+                        <b>{{ earthquake_instance.mag|round_magnitude }}</b>
                         <a href="#define-magnitude" data-definition="magnitude" class="tip" title="What does 'magnitude' mean?">Define</a>
                     </div>
                     <figcaption>
