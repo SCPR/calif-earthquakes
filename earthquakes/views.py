@@ -14,7 +14,7 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 @app.route('/')
 def index():
     recent_instances = Earthquake.query.limit(3).all()
-    earthquake_instances = Earthquake.query.all()
+    earthquake_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).all()
     return render_template(
         'index.html',
         recent_instances=recent_instances,
