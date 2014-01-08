@@ -1,6 +1,5 @@
 App.Views.ItemView = Backbone.View.extend({
-    tagName: "div",
-    className: "row",
+    tagName: "li",
     template: _.template(template("static/templates/list-view.html")),
     events: {
         "click a": "navigate"
@@ -22,8 +21,8 @@ App.Views.ItemView = Backbone.View.extend({
 });
 
 App.Views.ListView = Backbone.View.extend({
-    tagName: "div",
-    className: "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+    tagName: "ul",
+    //className: "col-xs-12 col-sm-12 col-md-12 col-lg-12",
     initialize: function(){
         // bind the model to the anchor tag
         _.bindAll(this, "render");

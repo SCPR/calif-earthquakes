@@ -69,6 +69,6 @@ App.Router = Backbone.Router.extend({
         /* remove a view when it's no longer needed */
         this.view && (this.view.close ? this.view.close() : this.view.remove());
         this.view = view;
-        $("#earthquake-entries-container").append(this.view.render().el);
+        $(".magnitude-log").append(this.view.render().el);
     }
 });
