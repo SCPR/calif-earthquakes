@@ -24,7 +24,7 @@
                 <div class="roundup clearfix">
                     {% for earthquake in recent_instances %}
                         <article>
-                            <a href="/{{ earthquake.id }}">
+                            <a href="{{ url_for('detail', id=earthquake.id) }}">
                                 <h1><span>{{ earthquake.date_time }}</span></h1>
                                 <ul>
                                     <li class="near"><mark>{{ earthquake.title }}</mark></li>
@@ -50,7 +50,7 @@
                 <nav class="magnitude-log">
                     <ul>
                         {% for earthquake in earthquake_instances %}
-                            <li><a href="/{{ earthquake.id }}"><span>{{ earthquake.title }}</span><mark>{{ earthquake.mag }}</mark></a></li>
+                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.title }}</span><mark>{{ earthquake.mag }}</mark></a></li>
                         {% endfor %}
                     </ul>
                 </nav><!--/ .magnitude-log -->

@@ -7,10 +7,11 @@ App.Router = Backbone.Router.extend({
         is on a server and i don't know another way at this
         time need to refresh the collection when user navigates
         to the home page view */
-        //window.earthquakeCollection = new App.Collections.Earthquakes();
-        //window.earthquakeCollection.fetch({
-            //async: false,
-        //});
+        window.earthquakeCollection = new App.Collections.Earthquakes();
+
+        window.earthquakeCollection.fetch({
+            async: false,
+        });
     },
 
     routes: {
@@ -22,9 +23,9 @@ App.Router = Backbone.Router.extend({
         /* assign the window's collection to my list view
         and render it when user is on the 'home page' */
 
-        this.loadView(new App.Views.ListView({
-            collection: window.earthquakeCollection
-        }));
+        //this.loadView(new App.Views.ListView({
+            //collection: window.earthquakeCollection
+        //}));
 
         this.createMap(window.earthquakeCollection);
     },
@@ -36,9 +37,9 @@ App.Router = Backbone.Router.extend({
         user to 'bookmark' the detail view */
         this.model = window.earthquakeCollection.where({id: parseInt(id)});
 
-        this.loadView(new App.Views.DetailView({
-            model: this.model[0]
-        }));
+        //this.loadView(new App.Views.DetailView({
+            //model: this.model[0]
+        //}));
 
         this.createMap(this.model);
     },
