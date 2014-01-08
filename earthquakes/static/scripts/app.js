@@ -30,6 +30,7 @@
     };
 
     // launch the router and start the history
+    /*
     $(function(){
         window.router = new App.Router();
         Backbone.history.start({
@@ -37,5 +38,6 @@
             pushState: false,
         });
     });
+    */
 
 })();
