@@ -19,5 +19,5 @@ Thumbs.db
 # Mine #
 .webassets-cache
 settings_development.py
-fabfile.py
+#fabfile.py
 SCRATCHPAD.md
