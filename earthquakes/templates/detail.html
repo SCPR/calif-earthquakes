@@ -1,0 +1,205 @@
+{% extends "layout.html" %}
+
+{% block bodyclass %}single{% endblock %}
+
+{% block main_content %}
+    <header class="titling">
+        <div class="inner bound clearfix">
+            <div class="vitals">
+                <h1>{{ earthquake_instance.title }}</h1>
+                <h2><time>{{ earthquake_instance.date_time }}</time></h2>
+            </div>
+            <div class="stats clearfix">
+                <figure class="magnitude">
+                    <div class="value">
+                        <b>{{ earthquake_instance.mag }}</b>
+                        <a href="#define-magnitude" data-definition="magnitude" class="tip" title="What does 'magnitude' mean?">Define</a>
+                    </div>
+                    <figcaption>
+                        <mark>Magnitude</mark>
+                    </figcaption>
+                </figure>
+                <figure class="felt">
+                    <div class="value">
+                        <b>{{ earthquake_instance.felt }}</b>
+                    </div>
+                    <figcaption>
+                        <mark>People Felt It</mark>
+                        <p><a href="#">Did you feel it, too? Tell USGS.</a></p>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </header>
+    <div class="page-cols">
+        <div class="inner bound clearfix">
+            <div class="primary">
+                <div class="dossier clearfix">
+                    <section class="report clearfix">
+                        <ul>
+                            <li class="where">
+                                <mark>{{ earthquake_instance.place }}</mark>
+                                <ul>
+                                    <li>Latitude: <b>{{ earthquake_instance.latitude }}</b></li>
+                                    <li>Longitude: <b>{{ earthquake_instance.longitude }}</b></li>
+                                </ul>
+                            </li>
+                            <li class="usgs">
+                                <mark><a href="#">USGS Source Report</a></mark>
+                                <ul>
+                                    <li>Status: <b>{{ earthquake_instance.status }}</b></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="vicinity">
+                                <mark>Nearby Cities</mark>
+                                <ul>
+                                    {% for item in earthquake_instance.nearest_cities %}
+                                        <li>{{ item.distance }}km (??mi) {{ item.direction }} of <b>{{ item.name }}</b></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="tweet">
+                                <mark><a href="#">Share on Twitter</a></mark>
+                            </li>
+                            <li class="like">
+                                <mark><a href="#">Share on Facebook</a></mark>
+                            </li>
+                        </ul>
+                    </section><!--/ .report -->
+                    <section class="map">
+                        <div class="visualization ratio">
+                            <div class="fill"></div>
+                            <b class="img-contain"><img src="http://placekitten.com/634/412" alt="" /></b>
+                        </div><!--/ .ratio -->
+                    </section>
+                </div><!--/ .dossier -->
+                <div class="triptych clearfix">
+                    <aside class="nearby">
+                        <header>
+                            <h1>Recent Incidents Near Here</h1>
+                        </header>
+                        <nav class="magnitude-log">
+                            <ul>
+                                <li><a href="#">
+                                    <span>Bridgeville: October 4, 2013</span>
+                                    <mark>3.5</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Loleta: June 18, 2013</span>
+                                    <mark>4.2</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Eureka: May 31, 2013</span>
+                                    <mark>2.7</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Fortuna: February 18, 2013</span>
+                                    <mark>3.1</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>Rohnerville: November 27, 2012</span>
+                                    <mark>3.8</mark></a>
+                                </li>
+                                <li><a href="#">
+                                    <span>McKinleyville: September 30, 2012</span>
+                                    <mark>2.9</mark></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </aside><!--/ .nearby -->
+                    <div class="charts clearfix">
+                        <aside class="depth">
+                            <header>
+                                <h1>Incident Depth</h1>
+                                <a href="#define-depth" data-definition="depth" class="tip" title="What does 'depth' mean?">Define</a>
+                            </header>
+                            <div class="column-chart from-ceiling" data-value="{{ earthquake_instance.depth }}" data-max="1000">
+                                <div class="range"><b class="fill"></b></div>
+                                <div class="marker origin"><span>Surface</span></div>
+                                <div class="marker label"><span>{{ earthquake_instance.depth }} km</span></div>
+                                <div class="marker conclusion"><span>1000 km</span></div>
+                            </div>
+                        </aside>
+                        <aside class="intensity">
+                            <header>
+                                <h1>Incident Intensity</h1>
+                                <a href="#define-intensity" data-definition="intensity" class="tip" title="What does 'intensity' mean?">Define</a>
+                            </header>
+                            <div class="column-chart from-floor" data-value="{{ earthquake_instance.cdi }}" data-max="10">
+                                <div class="range"><b class="fill"></b></div>
+                                <div class="marker origin"><span>10</span></div>
+                                <div class="marker label"><span>{{ earthquake_instance.cdi }}</span></div>
+                                <div class="marker conclusion"><span>0</span></div>
+                            </div>
+                        </aside>
+                    </div><!--/ .charts -->
+                </div><!--/ .triptych -->
+            </div>
+            <div class="supportive clearfix">
+                <aside class="resources">
+                    <h1>Socal earthquake resources</h1>
+                    <ul>
+                        <li><a href="#">Earthquake: "Drop, Cover and Hold On"</a></li>
+                        <li><a href="#">Emergency Supplies Checklist</a></li>
+                        <li><a href="#">Ever Wonder What Causes Earthquakes?</a></li>
+                        <li><a href="#">How To Secure Your Furniture</a></li>
+                        <li><a href="#">How To Strap Your Water Heater</a></li>
+                        <li><a href="#">Organizing Your Neighborhood</a></li>
+                        <li><a href="#">Preparing Children for Earthquakes</a></li>
+                        <li><a href="#">Preparing Your Family</a></li>
+                        <li><a href="#">Tips for Apartment and Mobile Home Managers</a></li>
+                        <li><a href="#">Tips for the Elderly</a></li>
+                        <li><a href="#">Tips for Pet Owners</a></li>
+                        <li><a href="#">Tips for the Physically Challenged</a></li>
+                        <li><a href="#">What To Do Before, During &amp; After Earthquake</a></li>
+                    </ul>
+                </aside>
+                <aside class="recents">
+                    <h1>Recent SoCal Earthquakes</h1>
+                    <nav>
+                        <ul>
+                            <li><a href="#">Bridgeville: October 29, 2013</a></li>
+                            <li><a href="#">Loleta: June 17, 2013</a></li>
+                            <li><a href="#">Eureka: May 5, 2013</a></li>
+                            <li><a href="#">Fortuna: February 14, 2013</a></li>
+                            <li><a href="#">Rohnerville: November 30, 2012</a></li>
+                            <li><a href="#">McKinleyville: September 25, 2012</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+        </div>
+    </div><!--/ .page-cols -->
+
+    <div class="definitions">
+        <aside class="definition" id="define-magnitude" name="define-magnitude">
+            <div class="pane">
+                <dl>
+                    <dt>Magnitude</dt>
+                    <dd>The magnitude is a number that characterizes the relative size of an earthquake. Magnitude is based on measurement of the maximum motion recorded by a seismograph. Several scales have been defined, but the most commonly used are (1) local magnitude (ML), commonly referred to as "Richter magnitude," (2) surface-wave magnitude (Ms), (3) body-wave magnitude (Mb), and (4) moment magnitude (Mw). Scales 1-3 have limited range and applicability and do not satisfactorily measure the size of the largest earthquakes. The moment magnitude (Mw) scale, based on the concept of seismic moment, is uniformly applicable to all sizes of earthquakes but is more difficult to compute than the other types. All magnitude scales should yield approximately the same value for any given earthquake.</dd>
+                </dl>
+                <button>Close</button>
+            </div>
+        </aside>
+        <aside class="definition" id="define-depth" name="define-depth">
+            <div class="pane">
+                <dl>
+                    <dt>Depth</dt>
+                    <dd>Earthquakes can occur anywhere between the Earth's surface and about 700 kilometers below the surface. For scientific purposes, this earthquake depth range of 0 - 700 km is divided into three zones: shallow, intermediate, and deep. Shallow earthquakes are between 0 and 70 km deep; intermediate earthquakes, 70 - 300 km deep; and deep earthquakes, 300 - 700 km deep. In general, the term "deep-focus earthquakes" is applied to earthquakes deeper than 70 km. All earthquakes deeper than 70 km are localized within great slabs of shallow lithosphere that are sinking into the Earth's mantle.</dd>
+                </dl>
+                <button>Close</button>
+            </div>
+        </aside>
+        <aside class="definition" id="define-intensity" name="define-intensity">
+            <div class="pane">
+                <dl>
+                    <dt>Intensity</dt>
+                    <dd>The intensity is a number describing the severity of an earthquake in terms of its effects on the earth's surface and on humans and their structures. Several scales exist, but the ones most commonly used in the United States are the Modified Mercalli scale and the Rossi-Forel scale. There are many intensities for an earthquake, depending on where you are, unlike the magnitude, which is one number for each earthquake. </dd>
+                </dl>
+                <button>Close</button>
+            </div>
+        </aside>
+    </div><!--/ .definitions -->
+{% endblock %}

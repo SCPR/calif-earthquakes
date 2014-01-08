@@ -11,9 +11,26 @@ from earthquakes.models import Earthquake
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
+#@app.route('/')
+#def index():
+    #return render_template('index.html')
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    recent_instances = Earthquake.query.limit(3).all()
+    earthquake_instances = Earthquake.query.all()
+    return render_template(
+        'index.html',
+        recent_instances=recent_instances,
+        earthquake_instances=earthquake_instances
+    )
+
+@app.route('/<int:id>', methods=['GET'])
+def detail(id):
+    earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
+    return render_template('detail.html', earthquake_instance=earthquake_instance)
+
 
 '''
 @app.route('/earthquakes')

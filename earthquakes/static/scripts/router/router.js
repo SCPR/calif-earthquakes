@@ -7,10 +7,10 @@ App.Router = Backbone.Router.extend({
         is on a server and i don't know another way at this
         time need to refresh the collection when user navigates
         to the home page view */
-        window.earthquakeCollection = new App.Collections.Earthquakes();
-        window.earthquakeCollection.fetch({
-            async: false,
-        });
+        //window.earthquakeCollection = new App.Collections.Earthquakes();
+        //window.earthquakeCollection.fetch({
+            //async: false,
+        //});
     },
 
     routes: {

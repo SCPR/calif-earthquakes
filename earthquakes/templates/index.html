@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block bodyclass %}landing{% endblock %}
+
 {% block main_content %}
     <header class="prologue">
         <div class="inner bound clearfix">
@@ -8,43 +10,23 @@
                     <h1>Recent Earthquakes</h1>
                 </header>
                 <div class="roundup clearfix">
-                    <article>
-                        <a href="#">
-                            <h1>January 2, <span>2014</span></h1>
-                            <ul>
-                                <li class="near">34 km SSW of <mark>Ferndale</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>42 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">3.5</aside>
-                        </a>
-                    </article>
-                    <article>
-                        <a href="#">
-                            <h1>December 19, <span>2013</span></h1>
-                            <ul>
-                                <li class="near">34 km NE of <mark>San Luis Obispo</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>19 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">2.7</aside>
-                        </a>
-                    </article>
-                    <article>
-                        <a href="#">
-                            <h1>December 14, <span>2013</span></h1>
-                            <ul>
-                                <li class="near">34 km N of <mark>Lancaster</mark></li>
-                                <li>Intensity: <mark>6</mark> <span>(of 10)</span></li>
-                                <li>Depth: <mark>8.2 km</mark></li>
-                            </ul>
-                            <aside class="magnitude">2.9</aside>
-                        </a>
-                    </article>
+                    {% for earthquake in recent_instances %}
+                        <article>
+                            <a href="/{{ earthquake.id }}">
+                                <h1><span>{{ earthquake.date_time }}</span></h1>
+                                <ul>
+                                    <li class="near"><mark>{{ earthquake.title }}</mark></li>
+                                    <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
+                                    <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
+                                </ul>
+                                <aside class="magnitude">{{ earthquake.mag }}</aside>
+                            </a>
+                        </article>
+                    {% else %}
+                        <h3><em>No earthquakes thus far</h3>
+                    {% endfor %}
                 </div>
             </section><!--/ .latest -->
-
-
         </div>
     </header>
     <div class="page-cols">
@@ -53,11 +35,13 @@
                 <header>
                     <h1>All Incidents</h1>
                 </header>
-
-                <!--/ .magnitude-log -->
-                <nav class="magnitude-log"></nav>
-                <!--/ .magnitude-log -->
-
+                <nav class="magnitude-log">
+                    <ul>
+                        {% for earthquake in earthquake_instances %}
+                            <li><a href="/{{ earthquake.id }}"><span>{{ earthquake.title }}</span><mark>{{ earthquake.mag }}</mark></a></li>
+                        {% endfor %}
+                    </ul>
+                </nav><!--/ .magnitude-log -->
             </div><!--/ .primary -->
             <div class="supportive clearfix">
                 <aside class="about">
