@@ -14,7 +14,7 @@ def time_format(value):
 	return value
 
 def date_format(value):
-	date_format = '%B %-d, %Y'
+	date_format = '%B %-d, <span>%Y</span>'
 	value = value.strftime(date_format)
 	return value
 
