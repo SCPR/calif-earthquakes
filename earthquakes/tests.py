@@ -7,7 +7,7 @@ import config
 import requests
 import types
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 # Tests
 #Request to API returns 200 status.

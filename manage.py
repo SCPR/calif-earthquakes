@@ -5,11 +5,11 @@ import pytz
 from requests_futures.sessions import FuturesSession
 from pytz import timezone
 from datetime import tzinfo, date
-from earthquakes import app_config
+from earthquakes import settings_development
 from flask.ext.script import Manager, Command
 from concurrent import futures
 from earthquakes import app, db
-from earthquakes.models import Earthquake, NearestCity, Person, Address
+from earthquakes.models import Earthquake, NearestCity
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -30,7 +30,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app_config.config_settings['all_past_day'], headers=app_config.config_settings['headers'])
+        usgs_query_api = requests.get(settings_development.config_settings['GT_2.5_PAST_DAY'], headers=settings_development.config_settings['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
@@ -48,7 +48,7 @@ class UsgsApiQuery(Command):
         session = FuturesSession(max_workers=3)
         for detail_url in list_of_urls:
             #time.sleep(5)
-            usgs_query_details = session.get(detail_url, headers=app_config.config_settings['headers'])
+            usgs_query_details = session.get(detail_url, headers=settings_development.config_settings['API_MANAGER_HEADERS'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
             list_of_instances.append(usgs_api_details)
@@ -65,7 +65,7 @@ class UsgsApiQuery(Command):
                 nearest_cities_url = None
             if nearest_cities_url:
                 try:
-                    nearest_cities_query_details = session.get(nearest_cities_url, headers=app_config.config_settings['headers'])
+                    nearest_cities_query_details = session.get(nearest_cities_url, headers=settings_development.config_settings['headers'])
                     nearest_cities_api_details = nearest_cities_query_details.result()
                     nearest_cities_api_details = nearest_cities_api_details.json()
                     list_of_nearby_cities = []
@@ -82,7 +82,7 @@ class UsgsApiQuery(Command):
                         )
                         list_of_nearby_cities.append(city)
                 except:
-                    list_of_nearby_cities.append(None)
+                    list_of_nearby_cities = []
             else:
                 pass
             detail_instance['nearest_cities_url'] = nearest_cities_url
@@ -180,63 +180,8 @@ class InitDb(Command):
     def run(self):
         db.create_all()
 
-class TestRelations(Command):
-    def run(self):
-
-        city = NearestCity(
-            id = None,
-            distance = 46,
-            direction = "SSE",
-            name = "Lone Pine, California",
-            latitude = 36.60604,
-            longitude = -118.06287,
-            population = 2035,
-            earthquake_id = None
-        )
-
-        quake = Earthquake(
-            id = None,
-            primary_slug = 'test',
-            mag = 4.5,
-            place = '11km NNW of Jones, Oklahoma',
-            title = 'M4.5  - 11km NNW of Jones, Oklahoma',
-            date_time = datetime.datetime.utcfromtimestamp(1386439823060/1e3),
-            date_time_raw = 1386439823060,
-            updated = datetime.datetime.utcfromtimestamp(1386710939478/1e3),
-            updated_raw = 1386710939478,
-            tz = -360,
-            url = 'http://earthquake.usgs.gov/earthquakes/eventpage/usb000ldeh',
-            felt = 3638,
-            cdi = 5.7,
-            mmi = 4.47,
-            alert = 'green',
-            status = 'reviewed',
-            tsunami = None,
-            sig = 882,
-            resource_type = 'earthquake',
-            latitude = 35.6627,
-            longitude = -97.3261,
-            depth = 5,
-            net = None,
-            code = None,
-            ids = None,
-            sources = None,
-            nst = None,
-            dmin = None,
-            rms = None,
-            gap = None,
-            magType = None,
-            nearest_cities_url = 'http://earthquake.usgs.gov/product/nearby-cities/ci11410562/us/1388963699219/nearby-cities.json',
-            nearest_cities=[city]
-        )
-
-        db.session.add(quake)
-        db.session.add(city)
-        db.session.commit()
-
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('initdb', InitDb())
-manager.add_command('relations', TestRelations())
 
 if __name__ == "__main__":
     manager.run()

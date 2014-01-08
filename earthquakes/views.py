@@ -25,7 +25,11 @@ def index():
 def detail(id):
     earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
     recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
-    return render_template('detail.html', earthquake_instance=earthquake_instance, recent_instances=recent_instances)
+    return render_template(
+        'detail.html',
+        earthquake_instance=earthquake_instance,
+        recent_instances=recent_instances
+    )
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
