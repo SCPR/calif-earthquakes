@@ -50,7 +50,7 @@
                     <section class="report clearfix">
                         <ul>
                             <li class="where">
-                                <mark>{{ earthquake_instance.place }}</mark>
+                                <mark>{{ earthquake_instance.place|strip_and_format_state('')|safe }}</mark>
                                 <ul>
                                     <li>Latitude: <b>{{ earthquake_instance.latitude }}</b></li>
                                     <li>Longitude: <b>{{ earthquake_instance.longitude }}</b></li>
@@ -68,7 +68,7 @@
                                 <mark>Nearby Cities</mark>
                                 <ul>
                                     {% for item in earthquake_instance.nearest_cities %}
-                                        <li>{{ item.distance }}km (??mi) {{ item.direction }} of <b>{{ item.name }}</b></li>
+                                        <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
                                     {% endfor %}
                                 </ul>
                             </li>
