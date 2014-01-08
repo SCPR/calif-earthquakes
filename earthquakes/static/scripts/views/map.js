@@ -89,6 +89,9 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     render: function(markersCollection){
+
+        console.log(markersCollection);
+
         $(this.$el.html(this.template())).insertAfter("section.latest");
 
         $("#slider").rangeSlider({
@@ -114,15 +117,11 @@ App.Views.MapView = Backbone.View.extend({
         );
 
         //this.shpfile.addTo(this.map);
-
         //L.control.layers(null, mapOverlays).addTo(map);
 
         this.model = markersCollection.model.attributes;
         this.model.map = this.map;
-        console.log(this.model);
-
         this.markerViews = new App.Views.ClusteredMarkerView(this.model);
-
 
         //this.markerViews = this.model.get('markers').map(function(marker){
             //return new App.Views.MarkerView({model: marker, map: map}).render();
