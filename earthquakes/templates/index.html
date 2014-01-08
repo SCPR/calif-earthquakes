@@ -25,7 +25,7 @@
                     {% for earthquake in recent_instances %}
                         <article>
                             <a href="{{ url_for('detail', id=earthquake.id) }}">
-                                <h1><span>{{ earthquake.date_time }}</span></h1>
+                                <h1><span>{{ earthquake.date_time|date_format }}</span></h1>
                                 <ul>
                                     <li class="near"><mark>{{ earthquake.title }}</mark></li>
                                     <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>

@@ -12,3 +12,8 @@ def datetime_format(value):
 	value = value.replace(tzinfo=pytz.UTC).astimezone(pacific)
 	value = value.strftime(date_format)
 	return value
+
+def date_format(value):
+	date_format = '%B %d, %Y'
+	value = value.strftime(date_format)
+	return value

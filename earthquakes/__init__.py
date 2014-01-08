@@ -21,6 +21,7 @@ app.config.from_object(app_config)
 app.config['ASSETS_DEBUG'] = app_config.config_settings['DEBUG']
 
 app.jinja_env.filters['datetime_format'] = template_filters.datetime_format
+app.jinja_env.filters['date_format'] = template_filters.date_format
 
 # asset pipeline
 assets = Environment(app)
