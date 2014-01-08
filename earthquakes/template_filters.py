@@ -17,3 +17,15 @@ def date_format(value):
 	date_format = '%B %d, %Y'
 	value = value.strftime(date_format)
 	return value
+
+def strip_state(value):
+    value = value.replace(', California', '')
+    split_value = value.split('of ')
+    formatted_value = '%s of <mark>%s</mark>' % (split_value[0], split_value[1])
+    return formatted_value
+
+
+def title_format(value, date):
+    date_format = '%B %d, %Y'
+    date_string = date.strftime(date_format)
+    return value + ' what ' + date_string
