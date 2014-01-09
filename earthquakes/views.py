@@ -8,6 +8,7 @@ import flask.ext.sqlalchemy
 import flask.ext.restless
 from earthquakes import app, db
 from earthquakes.models import Earthquake
+from haversine import haversine
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
@@ -25,10 +26,26 @@ def index():
 def detail(id):
     earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
     recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+    nearby_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).all()
+    this_earthquake = (earthquake_instance.latitude, earthquake_instance.longitude)
+    list_of_incidents_near_here = []
+    for instance in nearby_instances:
+        comparision_earthquake = (instance.latitude, instance.longitude)
+        distance_evaluation = haversine(this_earthquake, comparision_earthquake)
+        if distance_evaluation < 25:
+            instance.distance = distance_evaluation
+            list_of_incidents_near_here.append(instance)
+            if len(list_of_incidents_near_here) == 6:
+                pass
+            else:
+                continue
+        else:
+            pass
     return render_template(
         'detail.html',
-        earthquake_instance=earthquake_instance,
-        recent_instances=recent_instances
+        earthquake_instance = earthquake_instance,
+        recent_instances = recent_instances,
+        nearest_instances = list_of_incidents_near_here[0:6]
     )
 
 @app.route('/full-screen-map', methods=['GET'])

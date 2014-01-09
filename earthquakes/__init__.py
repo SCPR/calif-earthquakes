@@ -27,7 +27,7 @@ app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_for
 app.jinja_env.filters['strip_state'] = template_filters.strip_state
 app.jinja_env.filters['place_format'] = template_filters.place_format
 app.jinja_env.filters['convert_km_to_miles'] = template_filters.convert_km_to_miles
-app.jinja_env.filters['round_magnitude'] = template_filters.round_magnitude
+app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_point
 
 # asset pipeline
 assets = Environment(app)

@@ -24,7 +24,7 @@
             <div class="stats clearfix">
                 <figure class="magnitude">
                     <div class="value">
-                        <b>{{ earthquake_instance.mag|round_magnitude }}</b>
+                        <b>{{ earthquake_instance.mag|round_floating_point }}</b>
                         <a href="#define-magnitude" data-definition="magnitude" class="tip" title="What does 'magnitude' mean?">Define</a>
                     </div>
                     <figcaption>
@@ -69,6 +69,8 @@
                                 <ul>
                                     {% for item in earthquake_instance.nearest_cities %}
                                         <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
+                                    {% else %}
+                                        <li>None specified</li>
                                     {% endfor %}
                                 </ul>
                             </li>
@@ -90,35 +92,19 @@
                 <div class="triptych clearfix">
                     <aside class="nearby">
                         <header>
-                            <h1>Recent Incidents Near Here</h1>
-                            <h1>PLACEHOLDER DATA STILL</h1>
+                            <h1>Recent Incidents within 20km</h1>
                         </header>
                         <nav class="magnitude-log">
                             <ul>
-                                <li><a href="#">
-                                    <span>Bridgeville: October 4, 2013</span>
-                                    <mark>3.5</mark></a>
-                                </li>
-                                <li><a href="#">
-                                    <span>Loleta: June 18, 2013</span>
-                                    <mark>4.2</mark></a>
-                                </li>
-                                <li><a href="#">
-                                    <span>Eureka: May 31, 2013</span>
-                                    <mark>2.7</mark></a>
-                                </li>
-                                <li><a href="#">
-                                    <span>Fortuna: February 18, 2013</span>
-                                    <mark>3.1</mark></a>
-                                </li>
-                                <li><a href="#">
-                                    <span>Rohnerville: November 27, 2012</span>
-                                    <mark>3.8</mark></a>
-                                </li>
-                                <li><a href="#">
-                                    <span>McKinleyville: September 30, 2012</span>
-                                    <mark>2.9</mark></a>
-                                </li>
+                                {% for instance in nearest_instances %}
+                                    <li><a href="{{ url_for('detail', id=instance.id) }}">
+                                        <span>{{ instance.place|place_format(instance.date_time) }}</span>
+                                        <mark>{{ instance.mag|round_floating_point }}</mark></a>
+                                        <span>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</span>
+                                    </li>
+                                {% else %}
+                                    <li>None specified</li>
+                                {% endfor %}
                             </ul>
                         </nav>
                     </aside><!--/ .nearby -->

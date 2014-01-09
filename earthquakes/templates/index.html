@@ -31,7 +31,7 @@
                                     <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
                                     <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
                                 </ul>
-                                <aside class="magnitude">{{ earthquake.mag|round_magnitude }}</aside>
+                                <aside class="magnitude">{{ earthquake.mag|round_floating_point }}</aside>
                             </a>
                         </article>
                     {% else %}
@@ -50,7 +50,7 @@
                 <nav class="magnitude-log">
                     <ul>
                         {% for earthquake in earthquake_instances %}
-                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag|round_magnitude }}</mark></a></li>
+                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag|round_floating_point }}</mark></a></li>
                         {% endfor %}
                     </ul>
                 </nav><!--/ .magnitude-log -->
