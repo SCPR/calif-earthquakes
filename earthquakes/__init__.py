@@ -33,31 +33,35 @@ app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_
 assets = Environment(app)
 
 js = Bundle(
-    'scripts/libs/jquery.min.js',
-    'scripts/libs/modernizr.min.js',
-    'scripts/libs/jquery-ui.js',
-    'scripts/libs/underscore-min.js',
-    'scripts/libs/backbone-min.js',
-    'scripts/libs/moment.min.js',
-    'scripts/libs/shp.min.js',
-    'scripts/libs/bootstrap.min.js',
-    'scripts/libs/leaflet.js',
-    'scripts/libs/leaflet.markercluster-src.js',
-    'scripts/libs/leaflet.shpfile.js',
-    'scripts/libs/jQRangeSlider-min.js',
-    'scripts/app.js',
-    'scripts/router/router.js',
-    'scripts/models/earthquake.js',
-    'scripts/models/map.js',
-    'scripts/models/marker.js',
-    'scripts/collections/earthquakes.js',
-    'scripts/collections/markers.js',
-    #'scripts/views/list.js',
-    #'scripts/views/details.js',
-    'scripts/views/map.js',
-    'scripts/views/clustered-marker.js',
-    filters='rjsmin',
-    output='assets/scripts/min.js',
+    Bundle(
+        'scripts/libs/jquery.min.js',
+        'scripts/libs/jquery-ui.min.js',
+        'scripts/libs/modernizr.min.js',
+        'scripts/libs/underscore-min.js',
+        'scripts/libs/backbone-min.js',
+        'scripts/libs/moment.min.js',
+        'scripts/libs/shp.min.js',
+        'scripts/libs/bootstrap.min.js',
+        'scripts/libs/leaflet.js',
+        'scripts/libs/leaflet.markercluster-src.js',
+        'scripts/libs/leaflet.shpfile.js',
+        'scripts/libs/jQRangeSlider-min.js',
+    ),
+    Bundle(
+        'scripts/app.js',
+        'scripts/router/router.js',
+        'scripts/models/earthquake.js',
+        'scripts/models/map.js',
+        'scripts/models/marker.js',
+        'scripts/collections/earthquakes.js',
+        'scripts/collections/markers.js',
+        #'scripts/views/list.js',
+        #'scripts/views/details.js',
+        'scripts/views/map.js',
+        'scripts/views/clustered-marker.js',
+        filters='rjsmin',
+    ),
+    output="assets/min.js"
 )
 assets.register('scripts_all', js)
 
@@ -69,7 +73,7 @@ css = Bundle(
     'css/MarkerCluster.Default.css',
     'css/style.css',
     filters='cssmin',
-    output='assets/css/min.css'
+    output='assets/min.css'
 )
 assets.register('css_all', css)
 
