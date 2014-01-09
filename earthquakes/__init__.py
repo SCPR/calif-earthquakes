@@ -44,14 +44,14 @@ js = Bundle(
         'scripts/libs/moment.min.js',
         'scripts/libs/shp.min.js',
         'scripts/libs/bootstrap.min.js',
+        'scripts/libs/leaflet.min.js',
+        'scripts/libs/leaflet.markercluster.min.js',
+        'scripts/libs/leaflet.shpfile.min.js',
         'scripts/libs/jQRangeSlider-min.js',
     ),
     # Unminified JS
     # Gets minified and then added to the output file.
     Bundle(
-        'scripts/libs/leaflet.js',
-        'scripts/libs/leaflet.markercluster-src.js',
-        'scripts/libs/leaflet.shpfile.js',
         'scripts/app.js',
         'scripts/router/router.js',
         'scripts/models/earthquake.js',
