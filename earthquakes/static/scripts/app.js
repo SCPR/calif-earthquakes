@@ -24,7 +24,7 @@
         window.router = new App.Router();
         Backbone.history.start({
             root: '/',
-            pushState: false,
+            pushState: true,
         });
     });
 

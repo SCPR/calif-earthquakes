@@ -8,27 +8,47 @@ App.Router = Backbone.Router.extend({
         time need to refresh the collection when user navigates
         to the home page view */
         window.earthquakeCollection = new App.Collections.Earthquakes();
-
         window.earthquakeCollection.fetch({
             async: false,
         });
     },
 
     routes: {
-        "": "listView",
-        "earthquakes/:id": "detailView"
+        "": "indexView",
+
+        "full-screen-map": "fullScreenView",
     },
 
-    listView: function(){
-        /* assign the window's collection to my list view
-        and render it when user is on the 'home page' */
 
-        //this.loadView(new App.Views.ListView({
-            //collection: window.earthquakeCollection
-        //}));
 
-        this.createMap(window.earthquakeCollection);
+
+    fullScreenView: function(){
+        console.log('fullScreenView');
+        var mapContainer = ".content-map-container";
+        this.createMap(mapContainer, window.earthquakeCollection);
     },
+
+
+
+
+
+    indexView: function(){
+        /* pass the target element and the collection to
+        a function to render the map */
+
+        console.log('indexView');
+
+        //var mapContainer = "section.latest";
+        //this.createMap(mapContainer, window.earthquakeCollection);
+    },
+
+
+
+
+
+
+
+
 
     detailView: function(id){
         /* find the model in the window's collection
@@ -41,12 +61,15 @@ App.Router = Backbone.Router.extend({
             //model: this.model[0]
         //}));
 
-        this.createMap(this.model);
+        //this.createMap(this.model);
     },
 
-    createMap: function(markers){
-        // if the mapView is on the page
-        // remove it from the page
+
+
+
+
+    createMap: function(mapContainer, markers){
+        // if mapView on page remove it
 
         if (this.mapView){
             this.mapView.remove();
@@ -56,11 +79,14 @@ App.Router = Backbone.Router.extend({
             markers: markers
         });
 
-        //console.log(this.mapModel);
+        console.log(this.mapModel);
 
         this.mapView = new App.Views.MapView({
-            model: this.mapModel
+            model: this.mapModel,
+            container: mapContainer
         });
+
+        console.log(this.mapView);
 
         return this.mapView;
 
