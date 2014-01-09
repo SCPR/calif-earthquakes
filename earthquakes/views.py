@@ -42,7 +42,7 @@ def detail(id):
         'detail.html',
         earthquake_instance = earthquake_instance,
         recent_instances = recent_instances,
-        nearest_instances = list_of_incidents_near_here
+        nearest_instances = list_of_incidents_near_here[0:6]
     )
 
 @app.route('/full-screen-map', methods=['GET'])
