@@ -1,9 +1,5 @@
 App.Views.MapView = Backbone.View.extend({
-    tagName: "section",
-
-    className: "dashboard clearfix",
-
-    template: _.template(template("static/templates/map-view.html")),
+    template: _.template(template("static/templates/full-screen-map.html")),
 
     initialize: function(markersCollection){
 
@@ -37,6 +33,7 @@ App.Views.MapView = Backbone.View.extend({
                 [40.712216, -74.22655],
                 [40.773941, -74.12544]
             ]);
+        */
 
         this.CaliforniaBoundaries = new L.Shapefile('static/data/california/california-counties.zip', {
             style: function (feature) {
@@ -49,15 +46,14 @@ App.Views.MapView = Backbone.View.extend({
                 }
             }
         });
-        */
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
         } else {
-            this.initialZoom = 6;
+            this.initialZoom = 7;
         }
 
-        this.center = new L.LatLng(34.257216,-118.131351);
+        this.center = new L.LatLng(37.335194502529724, -119.366455078125);
         this.render(markersCollection);
     },
 
@@ -89,10 +85,9 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     render: function(markersCollection){
+        //$(markersCollection.container).html(this.$el.html(this.template()));
 
-        console.log(markersCollection);
-
-        $(this.$el.html(this.template())).insertAfter(markersCollection.container);
+        $(markersCollection.container).html(this.template());
 
         $("#slider").rangeSlider({
             defaultValues: {min: 1.5, max: 3.5},

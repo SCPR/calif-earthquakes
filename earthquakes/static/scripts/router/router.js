@@ -8,7 +8,6 @@ App.Router = Backbone.Router.extend({
         time need to refresh the collection when user navigates
         to the home page view */
         window.earthquakeCollection = new App.Collections.Earthquakes();
-
         window.earthquakeCollection.fetch({
             async: false,
         });
@@ -16,15 +15,40 @@ App.Router = Backbone.Router.extend({
 
     routes: {
         "": "indexView",
-        "earthquakes/:id": "detailView"
+
+        "full-screen-map": "fullScreenView",
     },
+
+
+
+
+    fullScreenView: function(){
+        console.log('fullScreenView');
+        var mapContainer = ".content-map-container";
+        this.createMap(mapContainer, window.earthquakeCollection);
+    },
+
+
+
+
 
     indexView: function(){
         /* pass the target element and the collection to
         a function to render the map */
-        var mapContainer = "section.latest";
-        this.createMap(mapContainer, window.earthquakeCollection);
+
+        console.log('indexView');
+
+        //var mapContainer = "section.latest";
+        //this.createMap(mapContainer, window.earthquakeCollection);
     },
+
+
+
+
+
+
+
+
 
     detailView: function(id){
         /* find the model in the window's collection
@@ -40,9 +64,12 @@ App.Router = Backbone.Router.extend({
         //this.createMap(this.model);
     },
 
+
+
+
+
     createMap: function(mapContainer, markers){
-        // if the mapView is on the page
-        // remove it from the page
+        // if mapView on page remove it
 
         if (this.mapView){
             this.mapView.remove();
