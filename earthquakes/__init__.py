@@ -21,8 +21,6 @@ app = Flask(__name__, static_url_path='/static')
 app.config.from_object(settings_common)
 app.config.from_object(settings_environment)
 
-app.config['ASSETS_DEBUG'] = app.config['ASSET_PIPELINE_DEBUG']
-
 app.jinja_env.filters['time_format'] = template_filters.time_format
 app.jinja_env.filters['date_format'] = template_filters.date_format
 app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_format_state
