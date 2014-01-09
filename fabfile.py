@@ -51,6 +51,9 @@ def revert():
         restart()
 
 
+def __env_cmd(cmd):
+    return env.bin_root + cmd
+
 
 def localrun():
     ''' run the flask application '''
@@ -79,6 +82,3 @@ def generate_migration():
 def apply_migration():
     ''' apply the migration to db '''
     local('python manage.py db upgrade')
-
-def __env_cmd(cmd):
-    env.bin_root + cmd
