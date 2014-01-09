@@ -31,7 +31,6 @@ App.Views.MapView = Backbone.View.extend({
                 }
             },
         });
-        */
 
         this.CaliforniaFaults = L.imageOverlay('http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
             imageBounds = [
@@ -50,6 +49,7 @@ App.Views.MapView = Backbone.View.extend({
                 }
             }
         });
+        */
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
@@ -92,7 +92,7 @@ App.Views.MapView = Backbone.View.extend({
 
         console.log(markersCollection);
 
-        $(this.$el.html(this.template())).insertAfter("section.latest");
+        $(this.$el.html(this.template())).insertAfter(markersCollection.container);
 
         $("#slider").rangeSlider({
             defaultValues: {min: 1.5, max: 3.5},

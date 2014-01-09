@@ -1185,7 +1185,7 @@ body.landing .masthead .tagline {
 .prologue .dashboard .module {
     width: 71.396396396396%;
     float: right;
-    overflow: hidden;
+    /*overflow: hidden;*/
     position: absolute;
     top: 0;
     right: 0;
