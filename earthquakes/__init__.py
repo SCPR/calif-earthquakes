@@ -33,6 +33,8 @@ app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_
 assets = Environment(app)
 
 js = Bundle(
+    # Already-minified JS
+    # Doesn't get minified again, just added to the output file as-is
     Bundle(
         'scripts/libs/jquery.min.js',
         'scripts/libs/jquery-ui.min.js',
@@ -42,12 +44,14 @@ js = Bundle(
         'scripts/libs/moment.min.js',
         'scripts/libs/shp.min.js',
         'scripts/libs/bootstrap.min.js',
+        'scripts/libs/jQRangeSlider-min.js',
+    ),
+    # Unminified JS
+    # Gets minified and then added to the output file.
+    Bundle(
         'scripts/libs/leaflet.js',
         'scripts/libs/leaflet.markercluster-src.js',
         'scripts/libs/leaflet.shpfile.js',
-        'scripts/libs/jQRangeSlider-min.js',
-    ),
-    Bundle(
         'scripts/app.js',
         'scripts/router/router.js',
         'scripts/models/earthquake.js',
