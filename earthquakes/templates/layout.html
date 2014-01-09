@@ -64,6 +64,7 @@
         <!-- begin scripts -->
         <script type="text/javascript">
             var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            var SITE_RELATIVE_ROOT = "{{ g.SITE_RELATIVE_ROOT }}";
         </script>
         <!-- end scripts -->
 
