@@ -33,6 +33,7 @@ def detail(id):
         comparision_earthquake = (instance.latitude, instance.longitude)
         distance_evaluation = haversine(this_earthquake, comparision_earthquake)
         if distance_evaluation < 25:
+            instance.distance = distance_evaluation
             list_of_incidents_near_here.append(instance)
             if len(list_of_incidents_near_here) == 6:
                 pass
