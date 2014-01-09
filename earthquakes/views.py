@@ -31,6 +31,17 @@ def detail(id):
         recent_instances=recent_instances
     )
 
+@app.route('/full-screen-map', methods=['GET'])
+def map():
+
+    #earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
+    #recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+    return render_template(
+        'full-screen-map.html',
+        #earthquake_instance=earthquake_instance,
+        #recent_instances=recent_instances
+    )
+
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
     @wraps(view_function)

@@ -6,12 +6,14 @@ from requests_futures.sessions import FuturesSession
 from pytz import timezone
 from datetime import tzinfo, date
 from flask.ext.script import Manager, Command
+from flask.ext.migrate import Migrate, MigrateCommand
 from concurrent import futures
 from earthquakes import app, db
 from earthquakes.models import Earthquake, NearestCity
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
+migrate = Migrate(app, db)
 manager = Manager(app)
 
 class UsgsApiQuery(Command):
@@ -181,6 +183,7 @@ class InitDb(Command):
 
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('initdb', InitDb())
+manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":
     manager.run()

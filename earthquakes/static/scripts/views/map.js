@@ -19,24 +19,8 @@ App.Views.MapView = Backbone.View.extend({
             subdomains: ["otile1","otile2","otile3","otile4"]
         });
 
-        this.laCountyBoundaries = L.geoJson(losAngelesCounty, {
-            style: function (feature) {
-                return {
-                    color: '#787878',
-                    weight: 2,
-                    opacity: 1,
-                    fillColor: null,
-                    fillOpacity: 0
-                }
-            },
-            onEachFeature: function(feature, layer) {
-                layer.on('click', function (e) {
-                    console.log(feature.properties.name + ' county layer clicked');
-                });
-            }
-        });
-
-        this.laCountyFaults = L.geoJson(losAngelesCountyFaults, {
+        /*
+        this.CaliforniaFaults = new L.Shapefile('static/data/quaternary-faults/fault-areas.zip', {
             style: function (feature) {
                 return {
                     color: 'green',
@@ -46,10 +30,24 @@ App.Views.MapView = Backbone.View.extend({
                     fillOpacity: 0
                 }
             },
-            onEachFeature: function(feature, layer) {
-                layer.on('click', function (e) {
-                    console.log(feature.properties.NAME + ' fault line clicked');
-                });
+        });
+        */
+
+        this.CaliforniaFaults = L.imageOverlay('http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
+            imageBounds = [
+                [40.712216, -74.22655],
+                [40.773941, -74.12544]
+            ]);
+
+        this.CaliforniaBoundaries = new L.Shapefile('static/data/california/california-counties.zip', {
+            style: function (feature) {
+                return {
+                    color: '#787878',
+                    weight: 2,
+                    opacity: 1,
+                    fillColor: null,
+                    fillOpacity: 0
+                }
             }
         });
 
@@ -70,27 +68,30 @@ App.Views.MapView = Backbone.View.extend({
     toggleLayers: function(event){
 
         if ($('#fault-lines').is(":checked")){
-            this.map.addLayer(this.laCountyFaults);
+            this.map.addLayer(this.CaliforniaFaults);
             $("#fault-lines").attr("value", "shown");
             $("label[for='fault-lines']").text("Hide fault lines");
         } else {
-            this.map.removeLayer(this.laCountyFaults);
+            this.map.removeLayer(this.CaliforniaFaults);
             $("#fault-lines").attr("value", "hidden");
             $("label[for='fault-lines']").text("Show fault lines");
         };
 
         if ($('#county-boundaries').is(":checked")){
-            this.map.addLayer(this.laCountyBoundaries);
+            this.map.addLayer(this.CaliforniaBoundaries);
             $("#county-boundaries").attr("value", "shown");
             $("label[for='county-boundaries']").text("Hide county boundaries");
         } else {
-            this.map.removeLayer(this.laCountyBoundaries);
+            this.map.removeLayer(this.CaliforniaBoundaries);
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
     },
 
     render: function(markersCollection){
+
+        console.log(markersCollection);
+
         $(this.$el.html(this.template())).insertAfter("section.latest");
 
         $("#slider").rangeSlider({
@@ -103,7 +104,7 @@ App.Views.MapView = Backbone.View.extend({
 
         var mapOverlays = {
             "Counties": this.laCounty,
-            "Faults": this.laCountyFaults
+            "Faults": this.CaliforniaFaults
         };
 
         this.map = L.map("content-map-canvas", {
@@ -115,14 +116,12 @@ App.Views.MapView = Backbone.View.extend({
             this.stamenToner
         );
 
+        //this.shpfile.addTo(this.map);
         //L.control.layers(null, mapOverlays).addTo(map);
 
         this.model = markersCollection.model.attributes;
         this.model.map = this.map;
-        console.log(this.model);
-
         this.markerViews = new App.Views.ClusteredMarkerView(this.model);
-
 
         //this.markerViews = this.model.get('markers').map(function(marker){
             //return new App.Views.MarkerView({model: marker, map: map}).render();

@@ -58,3 +58,15 @@ def query():
 def test():
     ''' runs the test manager command '''
     local('python manage.py test')
+
+def init_migration():
+    ''' enable migrations on db '''
+    local('python manage.py db init')
+
+def generate_migration():
+    ''' generate initial db migration '''
+    local('python manage.py db migrate')
+
+def apply_migration():
+    ''' apply the migration to db '''
+    local('python manage.py db upgrade')

@@ -8,8 +8,8 @@ from flask.ext.assets import Environment, Bundle
 from flask.ext.sqlalchemy import SQLAlchemy
 import template_filters
 import webassets
-
 import settings_common
+
 settings_environment = __import__("settings_%s" % os.environ.setdefault("FLASK_ENV", "development"))
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
@@ -27,6 +27,7 @@ app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_for
 app.jinja_env.filters['strip_state'] = template_filters.strip_state
 app.jinja_env.filters['place_format'] = template_filters.place_format
 app.jinja_env.filters['convert_km_to_miles'] = template_filters.convert_km_to_miles
+app.jinja_env.filters['round_magnitude'] = template_filters.round_magnitude
 
 # asset pipeline
 assets = Environment(app)
@@ -38,12 +39,12 @@ js = Bundle(
     'scripts/libs/underscore-min.js',
     'scripts/libs/backbone-min.js',
     'scripts/libs/moment.min.js',
+    'scripts/libs/shp.min.js',
     'scripts/libs/bootstrap.min.js',
     'scripts/libs/leaflet.js',
     'scripts/libs/leaflet.markercluster-src.js',
+    'scripts/libs/leaflet.shpfile.js',
     'scripts/libs/jQRangeSlider-min.js',
-    'data/california/california-la-county.js',
-    'data/la-county-faults/la-county-faults.js',
     'scripts/app.js',
     'scripts/router/router.js',
     'scripts/models/earthquake.js',

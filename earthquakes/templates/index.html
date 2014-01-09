@@ -25,13 +25,13 @@
                     {% for earthquake in recent_instances %}
                         <article>
                             <a href="{{ url_for('detail', id=earthquake.id) }}">
-                                <h1><span>{{ earthquake.date_time|date_format }}</span></h1>
+                                <h1>{{ earthquake.date_time|date_format|safe }}</h1>
                                 <ul>
                                     <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
                                     <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
                                     <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
                                 </ul>
-                                <aside class="magnitude">{{ earthquake.mag }}</aside>
+                                <aside class="magnitude">{{ earthquake.mag|round_magnitude }}</aside>
                             </a>
                         </article>
                     {% else %}
@@ -50,7 +50,7 @@
                 <nav class="magnitude-log">
                     <ul>
                         {% for earthquake in earthquake_instances %}
-                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag }}</mark></a></li>
+                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag|round_magnitude }}</mark></a></li>
                         {% endfor %}
                     </ul>
                 </nav><!--/ .magnitude-log -->
