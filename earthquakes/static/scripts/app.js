@@ -12,7 +12,7 @@
         $.ajax({
             async: false,
             dataType: "text",
-            url: SITE_RELATIVE_ROOT + url`,
+            url: SITE_RELATIVE_ROOT + url,
             success: function(response) {
                 data = response;
             }
