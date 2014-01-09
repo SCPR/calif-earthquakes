@@ -9,7 +9,7 @@ from fabric.colors import green
 env.user            = 'archive'
 env.hosts           = ['66.226.4.228']
 env.project_root    = '/web/archive/apps/earthquakes/src'
-env.python_exe      = "/web/archive/apps/earthquakes/virtualenvs/earthquakes/bin/python"
+env.bin_root        = "/web/archive/apps/earthquakes/virtualenvs/earthquakes/bin/"
 
 def update_code():
     """
@@ -17,6 +17,13 @@ def update_code():
     """
     with cd(env.project_root):
         run('git pull')
+
+def update_dependencies():
+    """
+    Production function to update the application's dependencies
+    """
+    with cd(env.project_root):
+        run(__env_cmd("pip install -r requirements.txt"))
 
 def restart():
     """
@@ -31,6 +38,7 @@ def deploy():
     """
     with cd(env.project_root):
         update_code()
+        update_dependencies()
         restart()
 
 def revert():
@@ -39,6 +47,7 @@ def revert():
     """
     with cd(env.project_root):
         run('git reset --hard @{1}')
+        update_dependencies()
         restart()
 
 
@@ -70,3 +79,6 @@ def generate_migration():
 def apply_migration():
     ''' apply the migration to db '''
     local('python manage.py db upgrade')
+
+def __env_cmd(cmd):
+    env.bin_root + cmd
