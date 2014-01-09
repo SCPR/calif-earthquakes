@@ -1,6 +1,4 @@
-APPLICATION_DEBUG       = True
-ASSET_PIPELINE_DEBUG    = True
-ASSETS_DEBUG            = True
-
-SQLALCHEMY_DATABASE_URI     = "mysql://root:@localhost/earthquaketracker"
-SITE_RELATIVE_ROOT          = "/"
+DEBUG = True
+ASSETS_DEBUG = True
+SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost/earthquaketracker"
+SITE_RELATIVE_ROOT = "/"
