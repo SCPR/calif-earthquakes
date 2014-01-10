@@ -1,6 +1,7 @@
 Fabric==1.8.0
 Flask==0.10.1
 Flask-Assets==0.8
+Flask-Cache==0.12
 Flask-Migrate==1.1.1
 Flask-MySQL==1.2
 Flask-Restless==0.12.1
