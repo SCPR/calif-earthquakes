@@ -6,7 +6,7 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.cache import Cache
+#from flask.ext.cache import Cache
 import template_filters
 import webassets
 import settings_common
