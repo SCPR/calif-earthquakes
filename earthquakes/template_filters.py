@@ -42,6 +42,16 @@ def place_format(value, date):
     formatted_value = '%s: %s' % (split_value[1], date_string)
     return formatted_value
 
+def url_structure_format(value, date):
+    value = value.replace(', California', '')
+    split_value = value.split(' of ')
+    date_format = '%B-%-d-%Y'
+    date_string = date.strftime(date_format)
+    instance_location = str(split_value[1]).replace(' ', '-').lower()
+    instance_date = date_string.lower()
+    formatted_value = '%s-%s' % (instance_location, instance_date)
+    return formatted_value
+
 def convert_km_to_miles(value):
     value = value * 1.609344
     return '{0:.3g}'.format(value)
