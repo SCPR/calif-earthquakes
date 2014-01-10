@@ -14,7 +14,7 @@ from haversine import haversine
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 @app.route('/')
-@cache.cached(timeout=50)
+#@cache.cached(timeout=50)
 def index():
     recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
     earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()

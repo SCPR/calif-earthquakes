@@ -19,7 +19,7 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 
-cache = Cache(app, config=settings_environment.CACHE_CONFIG)
+#cache = Cache(app, config=settings_environment.CACHE_CONFIG)
 
 app.config.from_object(settings_common)
 app.config.from_object(settings_environment)
