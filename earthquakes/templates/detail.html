@@ -33,7 +33,7 @@
                 </figure>
                 <figure class="felt">
                     <div class="value">
-                        <b>{{ earthquake.felt|default('n/a', true) }}</b>
+                        <b>{{ earthquake.felt|default('0', true) }}</b>
                     </div>
                     <figcaption>
                         <mark>People Felt It</mark>
@@ -68,7 +68,7 @@
                                 <mark>Nearby Cities</mark>
                                 <ul>
                                     {% for item in earthquake.nearest_cities %}
-                                        <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
+                                        <li>{{ item.distance }} km ({{ item.distance|convert_km_to_miles }} mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
                                     {% else %}
                                         <li>None specified</li>
                                     {% endfor %}
@@ -103,7 +103,7 @@
                                 {% for instance in nearest_earthquakes %}
                                     <li><a href="{{ url_for('detail', title=instance.place|url_structure_format(instance.date_time), id=instance.id ) }}">
                                         <span>{{ instance.place|place_format(instance.date_time) }} </span>
-                                        <b>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</b>
+                                        <b>{{ instance.distance|round_floating_point }} km ({{ instance.distance|convert_km_to_miles }} mi)</b>
                                         <mark>{{ instance.mag|round_floating_point }}</mark></a>
                                     </li>
                                 {% else %}
@@ -118,10 +118,10 @@
                                 <h1>Incident Depth</h1>
                                 <a href="#define-depth" data-definition="depth" class="tip" title="What does 'depth' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-ceiling" data-value="{{ earthquake.depth }}" data-max="1000">
+                            <div class="column-chart from-ceiling" data-value="{{ earthquake.depth|default('0', true) }}" data-max="1000">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>Surface</span></div>
-                                <div class="marker label"><span>{{ earthquake.depth }} km</span></div>
+                                <div class="marker label"><span>{{ earthquake.depth|default('0', true) }} km</span></div>
                                 <div class="marker conclusion"><span>1000 km</span></div>
                             </div>
                         </aside>
@@ -130,10 +130,10 @@
                                 <h1>Incident Intensity</h1>
                                 <a href="#define-intensity" data-definition="intensity" class="tip" title="What does 'intensity' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-floor" data-value="{{ earthquake.cdi }}" data-max="10">
+                            <div class="column-chart from-floor" data-value="{{ earthquake.cdi|default('0', true)}}" data-max="10">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>10</span></div>
-                                <div class="marker label"><span>{{ earthquake.cdi }}</span></div>
+                                <div class="marker label"><span>{{ earthquake.cdi|default('0', true)}}</span></div>
                                 <div class="marker conclusion"><span>0</span></div>
                             </div>
                         </aside>

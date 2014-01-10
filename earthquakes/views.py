@@ -6,13 +6,15 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 import flask.ext.sqlalchemy
 import flask.ext.restless
-from earthquakes import app, db
+from flask.ext.cache import Cache
+from earthquakes import app, cache, db
 from earthquakes.models import Earthquake
 from haversine import haversine
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 @app.route('/')
+@cache.cached(timeout=50)
 def index():
     recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
     earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
