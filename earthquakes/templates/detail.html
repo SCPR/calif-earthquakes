@@ -75,10 +75,10 @@
                                 </ul>
                             </li>
                             <li class="tweet">
-                                <mark><a href="http://twitter.com/share?text=I found this {{ earthquake.mag }} earthquake {{ earthquake.place }} on @KPCC's Earthquake Tracker&{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}" target="_blank">Share on Twitter</a></mark>
+                                <mark><a href="http://twitter.com/share?text=Via @KPCC, a detailed look at the {{ earthquake.date_time|date_format_no_year }} earthquake near {{ earthquake.place|strip_distance_and_state }}:&{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}" target="_blank">Share on Twitter</a></mark>
                             </li>
                             <li class="like">
-                                <mark><a href="http://www.facebook.com/sharer/sharer.php?s=100&amp;p%5Btitle%5D={{ earthquake.mag }} magnitude earthquake {{ earthquake.place }}&amp;p%5Burl%5D={{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}&amp;p%5Bsummary%5D=I found this on @KPCC's Earthquake Tracker." target="_blank">Share on Facebook</a></mark>
+                                <mark><a href="http://www.facebook.com/sharer/sharer.php?s=100&amp;p%5Btitle%5D={{ earthquake.date_time|date_format_no_year }} earthquake near {{ earthquake.place|strip_distance_and_state }}&amp;p%5Burl%5D={{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}&amp;p%5Bsummary%5D=Via @KPCC, a detailed look at the {{ earthquake.date_time|date_format_no_year }} earthquake near {{ earthquake.place|strip_distance_and_state }}." target="_blank">Share on Facebook</a></mark>
                             </li>
                         </ul>
                     </section><!--/ .report -->

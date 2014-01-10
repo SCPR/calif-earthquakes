@@ -18,6 +18,11 @@ def date_format(value):
 	value = value.strftime(date_format)
 	return value
 
+def date_format_no_year(value):
+	date_format = '%B %-d'
+	value = value.strftime(date_format)
+	return value
+
 def strip_and_format_state(value, html_tag):
     value = value.replace(', California', '')
     split_value = value.split(' of ')
@@ -25,6 +30,12 @@ def strip_and_format_state(value, html_tag):
         formatted_value = '%s of <%s>%s</%s>' % (split_value[0], html_tag, split_value[1], html_tag)
     else:
         formatted_value = '%s of %s' % (split_value[0], split_value[1])
+    return formatted_value
+
+def strip_distance_and_state(value):
+    value = value.replace(', California', '')
+    split_value = value.split(' of ')
+    formatted_value = '%s' % (split_value[1])
     return formatted_value
 
 def strip_state(value):

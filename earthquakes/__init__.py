@@ -26,7 +26,9 @@ app.config.from_object(settings_environment)
 
 app.jinja_env.filters['time_format'] = template_filters.time_format
 app.jinja_env.filters['date_format'] = template_filters.date_format
+app.jinja_env.filters['date_format_no_year'] = template_filters.date_format_no_year
 app.jinja_env.filters['strip_and_format_state'] = template_filters.strip_and_format_state
+app.jinja_env.filters['strip_distance_and_state'] = template_filters.strip_distance_and_state
 app.jinja_env.filters['strip_state'] = template_filters.strip_state
 app.jinja_env.filters['place_format'] = template_filters.place_format
 app.jinja_env.filters['url_structure_format'] = template_filters.url_structure_format
