@@ -15,11 +15,11 @@ def time_format(value):
 
 def date_format(value, html_tag):
     if html_tag:
-        date_format = '%B %-d, <span>%Y</span>'
+        date_format = '%B %-d, <' + html_tag + '>%Y</' + html_tag + '>'
     else:
         date_format = '%B %-d, %Y'
-	value = value.strftime(date_format)
-	return value
+    value = value.strftime(date_format)
+    return value
 
 def date_format_no_year(value):
 	date_format = '%B %-d'
