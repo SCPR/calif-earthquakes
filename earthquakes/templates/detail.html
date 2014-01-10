@@ -18,13 +18,13 @@
     <header class="titling">
         <div class="inner bound clearfix">
             <div class="vitals">
-                <h1>{{ earthquake_instance.place|place_format(earthquake_instance.date_time) }}</h1>
-                <h2><time>{{ earthquake_instance.date_time|time_format }}</time></h2>
+                <h1>{{ earthquake.place|place_format(earthquake.date_time) }}</h1>
+                <h2><time>{{ earthquake.date_time|time_format }}</time></h2>
             </div>
             <div class="stats clearfix">
                 <figure class="magnitude">
                     <div class="value">
-                        <b>{{ earthquake_instance.mag|round_floating_point }}</b>
+                        <b>{{ earthquake.mag|round_floating_point }}</b>
                         <a href="#define-magnitude" data-definition="magnitude" class="tip" title="What does 'magnitude' mean?">Define</a>
                     </div>
                     <figcaption>
@@ -33,11 +33,11 @@
                 </figure>
                 <figure class="felt">
                     <div class="value">
-                        <b>{{ earthquake_instance.felt|default('n/a', true) }}</b>
+                        <b>{{ earthquake.felt|default('n/a', true) }}</b>
                     </div>
                     <figcaption>
                         <mark>People Felt It</mark>
-                        <p><a href="{{ earthquake_instance.url }}#dyfi_form" target="_blank">Did you feel it too? Tell the USGS.</a></p>
+                        <p><a href="{{ earthquake.url }}#dyfi_form" target="_blank">Did you feel it too? Tell the USGS.</a></p>
                     </figcaption>
                 </figure>
             </div>
@@ -50,16 +50,16 @@
                     <section class="report clearfix">
                         <ul>
                             <li class="where">
-                                <mark>{{ earthquake_instance.place|strip_and_format_state('')|safe }}</mark>
+                                <mark>{{ earthquake.place|strip_and_format_state('')|safe }}</mark>
                                 <ul>
-                                    <li>Latitude: <b>{{ earthquake_instance.latitude }}</b></li>
-                                    <li>Longitude: <b>{{ earthquake_instance.longitude }}</b></li>
+                                    <li>Latitude: <b>{{ earthquake.latitude }}</b></li>
+                                    <li>Longitude: <b>{{ earthquake.longitude }}</b></li>
                                 </ul>
                             </li>
                             <li class="usgs">
-                                <mark><a href="{{ earthquake_instance.url }}" target="_blank">USGS Source Report</a></mark>
+                                <mark><a href="{{ earthquake.url }}" target="_blank">USGS Source Report</a></mark>
                                 <ul>
-                                    <li>Status: <b>{{ earthquake_instance.status }}</b></li>
+                                    <li>Status: <b>{{ earthquake.status }}</b></li>
                                 </ul>
                             </li>
                         </ul>
@@ -67,7 +67,7 @@
                             <li class="vicinity">
                                 <mark>Nearby Cities</mark>
                                 <ul>
-                                    {% for item in earthquake_instance.nearest_cities %}
+                                    {% for item in earthquake.nearest_cities %}
                                         <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
                                     {% else %}
                                         <li>None specified</li>
@@ -96,8 +96,8 @@
                         </header>
                         <nav class="magnitude-log">
                             <ul>
-                                {% for instance in nearest_instances %}
-                                    <li><a href="{{ url_for('detail', id=instance.id) }}">
+                                {% for instance in nearest_earthquakes %}
+                                    <li><a href="{{ url_for('detail', title=instance.place|url_structure_format(instance.date_time), id=instance.id ) }}">
                                         <span>{{ instance.place|place_format(instance.date_time) }}</span>
                                         <mark>{{ instance.mag|round_floating_point }}</mark></a>
                                         <span>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</span>
@@ -114,10 +114,10 @@
                                 <h1>Incident Depth</h1>
                                 <a href="#define-depth" data-definition="depth" class="tip" title="What does 'depth' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-ceiling" data-value="{{ earthquake_instance.depth }}" data-max="1000">
+                            <div class="column-chart from-ceiling" data-value="{{ earthquake.depth }}" data-max="1000">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>Surface</span></div>
-                                <div class="marker label"><span>{{ earthquake_instance.depth }} km</span></div>
+                                <div class="marker label"><span>{{ earthquake.depth }} km</span></div>
                                 <div class="marker conclusion"><span>1000 km</span></div>
                             </div>
                         </aside>
@@ -126,10 +126,10 @@
                                 <h1>Incident Intensity</h1>
                                 <a href="#define-intensity" data-definition="intensity" class="tip" title="What does 'intensity' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-floor" data-value="{{ earthquake_instance.cdi }}" data-max="10">
+                            <div class="column-chart from-floor" data-value="{{ earthquake.cdi }}" data-max="10">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>10</span></div>
-                                <div class="marker label"><span>{{ earthquake_instance.cdi }}</span></div>
+                                <div class="marker label"><span>{{ earthquake.cdi }}</span></div>
                                 <div class="marker conclusion"><span>0</span></div>
                             </div>
                         </aside>
@@ -147,8 +147,8 @@
                     <h1>Recent SoCal Earthquakes</h1>
                     <nav>
                         <ul>
-                            {% for instance in recent_instances %}
-                                <li><a href="{{ url_for('detail', id=instance.id) }}">{{ instance.place|place_format(instance.date_time) }}</a></li>
+                            {% for instance in recent_earthquakes %}
+                                <li><a href="{{ url_for('detail', title=instance.place|url_structure_format(instance.date_time), id=instance.id ) }}">{{ instance.place|place_format(instance.date_time) }}</a></li>
                             {% endfor %}
                         </ul>
                     </nav>

@@ -14,38 +14,62 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
+    recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
     earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
     return render_template(
         'index.html',
-        recent_instances=recent_instances,
-        earthquake_instances=earthquake_instances
+        recent_earthquakes = recent_earthquakes,
+        earthquake_instances = earthquake_instances
     )
 
-@app.route('/<int:id>', methods=['GET'])
-def detail(id):
-    earthquake_instance = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
-    recent_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
-    nearby_instances = Earthquake.query.order_by(Earthquake.date_time.desc()).all()
-    this_earthquake = (earthquake_instance.latitude, earthquake_instance.longitude)
-    list_of_incidents_near_here = []
-    for instance in nearby_instances:
+@app.route('/<string:title>/<int:id>/', methods=['GET'])
+def detail(title, id):
+
+    recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+
+    earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
+
+    # this earthquakes lat and long
+    this_earthquake = (earthquake.latitude, earthquake.longitude)
+
+    # return all earthquakes except this one
+    earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time.desc()).all()
+
+    # list to hold earthquakes found
+    list_of_nearby_earthquakes = []
+
+    # loop through our list of earthquakes
+    for instance in earthquake_instances:
+
+        # build a comparison
         comparision_earthquake = (instance.latitude, instance.longitude)
-        distance_evaluation = haversine(this_earthquake, comparision_earthquake)
-        if distance_evaluation < 25:
-            instance.distance = distance_evaluation
-            list_of_incidents_near_here.append(instance)
-            if len(list_of_incidents_near_here) == 6:
+
+        # calculate the distance
+        evaluated_distance = haversine(this_earthquake, comparision_earthquake)
+
+        # if less than
+        if evaluated_distance < 25:
+
+            # add param to object
+            instance.distance = evaluated_distance
+
+            # move along if we have six
+            if len(list_of_nearby_earthquakes) == 6:
                 pass
+
             else:
-                continue
+                # append if we don't
+                list_of_nearby_earthquakes.append(instance)
+
+        # move along if not
         else:
             pass
+
     return render_template(
         'detail.html',
-        earthquake_instance = earthquake_instance,
-        recent_instances = recent_instances,
-        nearest_instances = list_of_incidents_near_here[0:6]
+        recent_earthquakes = recent_earthquakes,
+        earthquake = earthquake,
+        nearest_earthquakes = list_of_nearby_earthquakes
     )
 
 @app.route('/full-screen-map', methods=['GET'])

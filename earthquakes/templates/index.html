@@ -22,9 +22,9 @@
                     <h1>Recent Earthquakes</h1>
                 </header>
                 <div class="roundup clearfix">
-                    {% for earthquake in recent_instances %}
+                    {% for earthquake in recent_earthquakes %}
                         <article>
-                            <a href="{{ url_for('detail', id=earthquake.id) }}">
+                            <a href="{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}">
                                 <h1>{{ earthquake.date_time|date_format|safe }}</h1>
                                 <ul>
                                     <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
@@ -50,7 +50,7 @@
                 <nav class="magnitude-log">
                     <ul>
                         {% for earthquake in earthquake_instances %}
-                            <li><a href="{{ url_for('detail', id=earthquake.id) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag|round_floating_point }}</mark></a></li>
+                            <li><a href="{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}"><span>{{ earthquake.place|place_format(earthquake.date_time) }}</span><mark>{{ earthquake.mag|round_floating_point }}</mark></a></li>
                         {% endfor %}
                     </ul>
                 </nav><!--/ .magnitude-log -->
