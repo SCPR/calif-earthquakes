@@ -6,6 +6,7 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.cache import Cache
 import template_filters
 import webassets
 import settings_common
@@ -17,6 +18,8 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
+
+cache = Cache(app, config=settings_environment.CACHE_CONFIG)
 
 app.config.from_object(settings_common)
 app.config.from_object(settings_environment)
