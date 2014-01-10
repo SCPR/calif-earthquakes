@@ -7,10 +7,10 @@ from flask import Flask, jsonify, render_template, request, \
 import flask.ext.sqlalchemy
 import flask.ext.restless
 
-#from flask.ext.cache import Cache
-#from earthquakes import app, cache, db
+from flask.ext.cache import Cache
+from earthquakes import app, cache, db
 
-from earthquakes import app, db
+#from earthquakes import app, db
 from earthquakes.models import Earthquake
 from haversine import haversine
 

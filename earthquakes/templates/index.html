@@ -1,16 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}{% endblock %}
-{% block description %}{% endblock %}
-{% block keywords %}{% endblock %}
-{% block og_title %}{% endblock %}
-{% block og_site_name %}{% endblock %}
-{% block og_type %}{% endblock %}
-{% block og_url %}{% endblock %}
-{% block og_description %}{% endblock %}
-{% block twitter_url %}{% endblock %}
-{% block twitter_title %}{% endblock %}
-{% block twitter_description %}{% endblock %}
+{% block title %}Earthquake Tracker | 89.3 KPCC{% endblock %}
+{% block description %}89.3 KPCC's Earthquake Tracker is a tool for following and researching California earthquakes.{% endblock %}
+{% block keywords %}KPCC, Southern California Public Radio, 89.3, 89.3 KPCC, Southern California, Pasadena, Los Angeles, Earthquakes, Earthquake Tracker, News{% endblock %}
+{% block og_title %}Earthquake Tracker | 89.3 KPCC{% endblock %}
+{% block og_url %}http://projects.scpr.org/earthquakes{% endblock %}
+{% block og_description %}89.3 KPCC's Earthquake Tracker is a tool for following and researching California earthquakes.{% endblock %}
+{% block twitter_description %}89.3 KPCC's Earthquake Tracker is a tool for following and researching California earthquakes.{% endblock %}
+{% block twitter_title %}Earthquake Tracker | 89.3 KPCC{% endblock %}
+{% block twitter_url %}http://projects.scpr.org/earthquakes{% endblock %}
 
 {% block bodyclass %}landing{% endblock %}
 
@@ -25,7 +23,7 @@
                     {% for earthquake in recent_earthquakes %}
                         <article>
                             <a href="{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}">
-                                <h1>{{ earthquake.date_time|date_format|safe }}</h1>
+                                <h1>{{ earthquake.date_time|date_format('span')|safe }}</h1>
                                 <ul>
                                     <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
                                     <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
