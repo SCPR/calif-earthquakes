@@ -58,6 +58,10 @@ def api_query():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py query"))
 
+def api_query():
+    with cd(env.project_root):
+        run(__env_cmd("python manage.py query"))
+
 def __env_cmd(cmd):
     return env.bin_root + cmd
 
