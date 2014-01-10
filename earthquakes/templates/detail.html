@@ -68,7 +68,7 @@
                                 <mark>Nearby Cities</mark>
                                 <ul>
                                     {% for item in earthquake.nearest_cities %}
-                                        <li>{{ item.distance }}km ({{ item.distance|convert_km_to_miles }}mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
+                                        <li>{{ item.distance }} km ({{ item.distance|convert_km_to_miles }} mi) {{ item.direction }} of <b>{{ item.name|strip_state }}</b></li>
                                     {% else %}
                                         <li>None specified</li>
                                     {% endfor %}
@@ -103,7 +103,7 @@
                                 {% for instance in nearest_earthquakes %}
                                     <li><a href="{{ url_for('detail', title=instance.place|url_structure_format(instance.date_time), id=instance.id ) }}">
                                         <span>{{ instance.place|place_format(instance.date_time) }} </span>
-                                        <b>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</b>
+                                        <b>{{ instance.distance|round_floating_point }} km ({{ instance.distance|convert_km_to_miles }} mi)</b>
                                         <mark>{{ instance.mag|round_floating_point }}</mark></a>
                                     </li>
                                 {% else %}
