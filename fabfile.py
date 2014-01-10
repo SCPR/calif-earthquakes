@@ -50,7 +50,7 @@ def revert():
         update_dependencies()
         restart()
 
-def api_query():
+def queryserver():
     """
     Production to query the USGS api and ingest to db
     """
@@ -73,7 +73,7 @@ def init():
     """
     local('python manage.py initdb')
 
-def query():
+def querylocal():
     ''' query the usgs api and write data '''
     local('python manage.py query')
 
