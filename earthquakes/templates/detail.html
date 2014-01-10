@@ -118,10 +118,10 @@
                                 <h1>Incident Depth</h1>
                                 <a href="#define-depth" data-definition="depth" class="tip" title="What does 'depth' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-ceiling" data-value="{{ earthquake.depth }}" data-max="1000">
+                            <div class="column-chart from-ceiling" data-value="{{ earthquake.depth|default('0', true) }}" data-max="1000">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>Surface</span></div>
-                                <div class="marker label"><span>{{ earthquake.depth }} km</span></div>
+                                <div class="marker label"><span>{{ earthquake.depth|default('0', true) }} km</span></div>
                                 <div class="marker conclusion"><span>1000 km</span></div>
                             </div>
                         </aside>
@@ -130,10 +130,10 @@
                                 <h1>Incident Intensity</h1>
                                 <a href="#define-intensity" data-definition="intensity" class="tip" title="What does 'intensity' mean?">Define</a>
                             </header>
-                            <div class="column-chart from-floor" data-value="{{ earthquake.cdi }}" data-max="10">
+                            <div class="column-chart from-floor" data-value="{{ earthquake.cdi|default('0', true)}}" data-max="10">
                                 <div class="range"><b class="fill"></b></div>
                                 <div class="marker origin"><span>10</span></div>
-                                <div class="marker label"><span>{{ earthquake.cdi }}</span></div>
+                                <div class="marker label"><span>{{ earthquake.cdi|default('0', true)}}</span></div>
                                 <div class="marker conclusion"><span>0</span></div>
                             </div>
                         </aside>
