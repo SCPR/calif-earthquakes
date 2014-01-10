@@ -75,10 +75,10 @@
                                 </ul>
                             </li>
                             <li class="tweet">
-                                <mark><a href="#">Share on Twitter</a></mark>
+                                <mark><a href="http://twitter.com/share?text=I found this {{ earthquake.mag }} earthquake {{ earthquake.place }} on @KPCC's Earthquake Tracker&{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}" target="_blank">Share on Twitter</a></mark>
                             </li>
                             <li class="like">
-                                <mark><a href="#">Share on Facebook</a></mark>
+                                <mark><a href="http://www.facebook.com/sharer/sharer.php?s=100&amp;p%5Btitle%5D={{ earthquake.mag }} magnitude earthquake {{ earthquake.place }}&amp;p%5Burl%5D={{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}&amp;p%5Bsummary%5D=I found this on @KPCC's Earthquake Tracker." target="_blank">Share on Facebook</a></mark>
                             </li>
                         </ul>
                     </section><!--/ .report -->
@@ -92,15 +92,15 @@
                 <div class="triptych clearfix">
                     <aside class="nearby">
                         <header>
-                            <h1>Recent Incidents within 20km</h1>
+                            <h1>Recent earthquakes within 20km</h1>
                         </header>
                         <nav class="magnitude-log">
                             <ul>
                                 {% for instance in nearest_earthquakes %}
                                     <li><a href="{{ url_for('detail', title=instance.place|url_structure_format(instance.date_time), id=instance.id ) }}">
-                                        <span>{{ instance.place|place_format(instance.date_time) }}</span>
+                                        <span>{{ instance.place|place_format(instance.date_time) }} </span>
+                                        <b>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</b>
                                         <mark>{{ instance.mag|round_floating_point }}</mark></a>
-                                        <span>{{ instance.distance|round_floating_point }}km ({{ instance.distance|convert_km_to_miles }}mi)</span>
                                     </li>
                                 {% else %}
                                     <li>None specified</li>

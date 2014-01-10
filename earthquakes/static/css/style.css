@@ -439,10 +439,28 @@ body {
     border-bottom: 1px solid #c2c2c2;
     line-height: 1;
 }
+
+.magnitude-log li span, .magnitude-log li b {
+    display: block;
+}
+
+.magnitude-log li b {
+    padding-top: 3px;
+    font-weight: normal;
+    color: #a7a7a7;
+    text-transform: uppercase;
+    font-size: 0.8125em;
+}
+
 .magnitude-log li a:hover span {
     color: black;
     border-bottom-color: black;
 }
+
+.magnitude-log li a:hover b {
+    color: #9e4100;
+}
+
 .magnitude-log li mark {
     display: block;
     width: 39px;
