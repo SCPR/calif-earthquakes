@@ -3,3 +3,8 @@ ASSETS_DEBUG = True
 SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost/earthquaketracker"
 SITE_RELATIVE_ROOT = "/"
 SITE_URL = "http://localhost:5000"
+
+CACHE_CONFIG = {
+    "host":"localhost",
+    "db":"2",
+}

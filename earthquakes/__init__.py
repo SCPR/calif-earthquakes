@@ -6,7 +6,7 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.cache import Cache
+from werkzeug.contrib.cache import RedisCache
 import template_filters
 import webassets
 import settings_common
@@ -19,10 +19,13 @@ PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 
 app = Flask(__name__, static_url_path='/static')
 
-cache = Cache(app, config=settings_environment.CACHE_CONFIG)
-
 app.config.from_object(settings_common)
 app.config.from_object(settings_environment)
+
+cache = RedisCache(
+    host=app.config['CACHE_CONFIG']['host'],
+    db=app.config['CACHE_CONFIG']['db']
+)
 
 app.jinja_env.filters['time_format'] = template_filters.time_format
 app.jinja_env.filters['date_format'] = template_filters.date_format
