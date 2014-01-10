@@ -50,17 +50,27 @@ def revert():
         update_dependencies()
         restart()
 
+def api_query():
+    """
+    Production to query the USGS api and ingest to db
+    """
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py query"))
 
 def __env_cmd(cmd):
     return env.bin_root + cmd
 
-
 def localrun():
-    ''' run the flask application '''
+    """
+    run the flask application
+    """
     local('python runserver.py')
 
 def init():
-    ''' initialize the database '''
+    """
+    initialize the database
+    """
     local('python manage.py initdb')
 
 def query():
