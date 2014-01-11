@@ -27,16 +27,10 @@ App.Views.MapView = Backbone.View.extend({
                 }
             },
         });
-
-        this.CaliforniaFaults = L.imageOverlay('http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
-            imageBounds = [
-                [40.712216, -74.22655],
-                [40.773941, -74.12544]
-            ]);
         */
 
-        /*
-        this.CaliforniaBoundaries = new L.Shapefile('static/data/california/california-counties.zip', {
+
+        this.CaliforniaBoundaries = L.geoJson(californiaCounties, {
             style: function (feature) {
                 return {
                     color: '#787878',
@@ -45,9 +39,18 @@ App.Views.MapView = Backbone.View.extend({
                     fillColor: null,
                     fillOpacity: 0
                 }
+            },
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function (e) {
+                    console.log(feature.properties.name + ' county layer clicked');
+                });
             }
         });
-        */
+
+
+
+
+
 
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
@@ -72,6 +75,9 @@ App.Views.MapView = Backbone.View.extend({
 
         // triggers search me
         "click a.searchMe": "searchMe",
+
+        // changes radius value
+        "change #search-radius": "navigate",
 
         // used to toggle layers
         "click [type='checkbox']": "toggleLayers",
@@ -118,41 +124,36 @@ App.Views.MapView = Backbone.View.extend({
         console.log('search me');
     },
 
-
     navigate: function(){
         var latitude = $("input[id='latitudeSearch']").val();
         var longitude = $("input[id='longitudeSearch']").val();
-
         var searchRadius = $("select[id='search-radius']").val();
 
-
-        console.log(searchRadius);
-
-
         if (latitude === '' && longitude === ''){
-            alert('nothing there')
+            alert('Please enter an address or search by location')
 
         } else {
-            var locationParams = latitude + ", " + longitude;
             this.userLocationCenter = new L.LatLng(latitude, longitude);
-            this.userLocationMarker = L.marker([latitude, longitude]).addTo(this.map);
-            this.map.setView(this.userLocationCenter, 12);
-
+            this.userLocationMarker = L.marker([latitude, longitude]);
             this.userRadius = L.circle([latitude, longitude], searchRadius, {
-                opacity: 0.5,
-                weight: 2,
-                color: '#4b58a6',
-                fillColor: '#4b58a6',
-                fillOpacity: 0.5
-            }).addTo(this.map);
+                clickable: false,
+                opacity: 0.3,
+                weight: 1,
+                color: '#ec792b',
+                fillColor: '#ec792b',
+                fillOpacity: 0.3
+            });
+
+            // add our user layers
+            this.userLayer = new L.layerGroup();
+            this.userLayer.addLayer(this.userLocationMarker).addLayer(this.userRadius);
+            this.userLayer.addTo(this.map);
+
+            // pan map to user layer and sets to radius of user
+            this.map.fitBounds(this.userRadius.getBounds());
 
         }
     },
-
-
-
-
-
 
     toggleLayers: function(event){
 
@@ -167,6 +168,9 @@ App.Views.MapView = Backbone.View.extend({
             $("#fault-lines").attr("value", "hidden");
             $("label[for='fault-lines']").text("Show fault lines");
         };
+        */
+
+
 
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaBoundaries);
@@ -177,7 +181,6 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
-        */
 
     },
 
@@ -211,9 +214,9 @@ App.Views.MapView = Backbone.View.extend({
         //this.shpfile.addTo(this.map);
         //L.control.layers(null, mapOverlays).addTo(map);
 
-        //this.model = markersCollection.model.attributes;
-        //this.model.map = this.map;
-        //this.markerViews = new App.Views.ClusteredMarkerView(this.model);
+        this.model = markersCollection.model.attributes;
+        this.model.map = this.map;
+        this.markerViews = new App.Views.ClusteredMarkerView(this.model);
 
         //this.markerViews = this.model.get('markers').map(function(marker){
             //return new App.Views.MarkerView({model: marker, map: map}).render();
