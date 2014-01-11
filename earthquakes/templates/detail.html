@@ -4,7 +4,7 @@
 {% block description %}A {{ earthquake.mag|round_floating_point }} earthquake struck {{ earthquake.place }} at {{ earthquake.date_time|time_format }} on {{ earthquake.date_time|date_format('') }}.{% endblock %}
 {% block keywords %}KPCC, Southern California Public Radio, 89.3, 89.3 KPCC, Southern California, Pasadena, Los Angeles, Earthquakes, Earthquake Tracker, News{% endblock %}
 {% block og_title %}{{ earthquake.place|place_format(earthquake.date_time) }} | 89.3 KPCC{% endblock %}
-{% block og_url %}http://projects.scpr.org/earthquakes{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}{% endblock %}
+{% block og_url %}{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}{% endblock %}
 {% block og_description %}A {{ earthquake.mag|round_floating_point }} earthquake struck {{ earthquake.place }} at {{ earthquake.date_time|time_format }} on {{ earthquake.date_time|date_format('') }}.{% endblock %}
 {% block twitter_description %}A {{ earthquake.mag|round_floating_point }} earthquake struck {{ earthquake.place }} at {{ earthquake.date_time|time_format }} on {{ earthquake.date_time|date_format('') }}.{% endblock %}
 {% block twitter_title %}{{ earthquake.place|place_format(earthquake.date_time) }} ({{ earthquake.mag|round_floating_point }} magnitude earthquake) | 89.3 KPCC{% endblock %}
