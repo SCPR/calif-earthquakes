@@ -11,6 +11,7 @@ env.hosts           = ['66.226.4.228']
 env.project_root    = '/web/archive/apps/earthquakes/src'
 env.bin_root        = "/web/archive/apps/earthquakes/virtualenvs/earthquakes/bin/"
 
+# server commands
 def update_code():
     """
     Production function to update the code on the remote server
@@ -50,7 +51,7 @@ def revert():
         update_dependencies()
         restart()
 
-def queryserver():
+def server_query():
     """
     Production to query the USGS api and ingest to db
     """
@@ -58,12 +59,34 @@ def queryserver():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py query"))
 
-def api_query():
+def server_migration_init():
+    """
+    enable migrations on db
+    """
     with cd(env.project_root):
-        run(__env_cmd("python manage.py query"))
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py db init"))
+
+def server_migration_migrate():
+    """
+    generate initial db migration
+    """
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py db migrate"))
+
+def server_migration_upgrade():
+    """
+    apply the migration to db
+    """
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py db upgrade"))
 
 def __env_cmd(cmd):
     return env.bin_root + cmd
+
+# local commands
 
 def localrun():
     """
@@ -71,13 +94,13 @@ def localrun():
     """
     local('python runserver.py')
 
-def init():
+def localinit():
     """
     initialize the database
     """
     local('python manage.py initdb')
 
-def querylocal():
+def localquery():
     ''' query the usgs api and write data '''
     local('python manage.py query')
 
@@ -85,14 +108,14 @@ def test():
     ''' runs the test manager command '''
     local('python manage.py test')
 
-def init_migration():
+def local_migration_init():
     ''' enable migrations on db '''
     local('python manage.py db init')
 
-def generate_migration():
+def local_migration_migrate():
     ''' generate initial db migration '''
     local('python manage.py db migrate')
 
-def apply_migration():
+def local_migration_upgrade():
     ''' apply the migration to db '''
     local('python manage.py db upgrade')
