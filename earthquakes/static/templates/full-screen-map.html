@@ -3,7 +3,8 @@
         <h1>Browse Earthquakes</h1>
     </header>
     <div class="roundup clearfix">
-        <form class="filters" action="">
+
+            <!--
             <div class="control">
                 <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
                 <label for="fault-lines">Show fault lines</label>
@@ -28,14 +29,27 @@
                 <div id="slider"></div>
                 <label for="slider">Date range picker</label>
             </div>
+            -->
 
-            <div class="location">
-                Location text field
+            <div id="address-search">
+                <a class="searchMe" href="javascript:void(0)">Use my address</a>
+            </div>
+            <div id="location-search">
+                <a class="findMe" href="javascript:void(0)">Use my location</a>
             </div>
 
-            <div class="submit">
-                <button value="go">Filter results</button>
+            <form class="filters" action="">
+
+
+            <div>
+                <input type="text" class="form-control" id="addressSearch" placeholder="Start typing your address...">
+                <button type="button" class="btn btn-primary btn-group btn-group-justified" id="submit">Go find them!</button>
             </div>
+
+
+            <input type="text" class="form-control" name="lat" id="latitudeSearch">
+            <input type="text" class="form-control" name="lng" id="longitudeSearch">
+
         </form>
     </div>
 </section>
