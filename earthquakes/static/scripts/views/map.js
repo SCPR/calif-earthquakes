@@ -123,6 +123,12 @@ App.Views.MapView = Backbone.View.extend({
         var latitude = $("input[id='latitudeSearch']").val();
         var longitude = $("input[id='longitudeSearch']").val();
 
+        var searchRadius = $("select[id='search-radius']").val();
+
+
+        console.log(searchRadius);
+
+
         if (latitude === '' && longitude === ''){
             alert('nothing there')
 
@@ -132,7 +138,7 @@ App.Views.MapView = Backbone.View.extend({
             this.userLocationMarker = L.marker([latitude, longitude]).addTo(this.map);
             this.map.setView(this.userLocationCenter, 12);
 
-            this.userRadius = L.circle([latitude, longitude], 805, {
+            this.userRadius = L.circle([latitude, longitude], searchRadius, {
                 opacity: 0.5,
                 weight: 2,
                 color: '#4b58a6',
