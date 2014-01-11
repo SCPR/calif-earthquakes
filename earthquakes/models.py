@@ -120,7 +120,7 @@ class Earthquake(db.Model):
             'gap': self.gap,
             'magType': self.magType,
             'nearest_cities_url': self.nearest_cities_url,
-            #'nearest_cities': self.nearest_cities,
+            'nearest_cities': self.nearest_cities,
         }
 
     @property
@@ -155,3 +155,25 @@ class NearestCity(db.Model):
 
     def __repr__(self):
         return '<name %r>' % self.name
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'distance': self.distance,
+            'direction': self.direction,
+            'name': self.name,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'population': self.population,
+            'earthquake_id': self.earthquake_id
+        }
+
+    @property
+    def serialize_many2many(self):
+       '''
+       Return object's relations in easily serializeable format.
+       NB! Calls many2many's serialize property.
+       '''
+       return [item.serialize for item in self.many2many]
