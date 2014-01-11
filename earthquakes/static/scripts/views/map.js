@@ -103,8 +103,6 @@ App.Views.MapView = Backbone.View.extend({
 
     findMe: function(){
         console.log('find me');
-
-
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 $("input[id='latitudeSearch']").val(position.coords.latitude);
@@ -114,8 +112,6 @@ App.Views.MapView = Backbone.View.extend({
         } else {
             alert("Sorry, we could not find your location.");
         }
-
-
     },
 
     searchMe: function(){
@@ -124,36 +120,27 @@ App.Views.MapView = Backbone.View.extend({
 
 
     navigate: function(){
-
-        console.log('navigate');
-
         var latitude = $("input[id='latitudeSearch']").val();
         var longitude = $("input[id='longitudeSearch']").val();
 
-        console.log(latitude);
-
         if (latitude === '' && longitude === ''){
             alert('nothing there')
+
         } else {
             var locationParams = latitude + ", " + longitude;
-
-
-            this.userLocationMarker = L.marker([latitude, longitude]).addTo(this.map);
-
-            //this.userLocationCenter = new L.LatLng(parseFloat(latitude), parseFloat(longitude));
-
             this.userLocationCenter = new L.LatLng(latitude, longitude);
-
-
+            this.userLocationMarker = L.marker([latitude, longitude]).addTo(this.map);
             this.map.setView(this.userLocationCenter, 12);
 
+            this.userRadius = L.circle([latitude, longitude], 805, {
+                opacity: 0.5,
+                weight: 2,
+                color: '#4b58a6',
+                fillColor: '#4b58a6',
+                fillOpacity: 0.5
+            }).addTo(this.map);
 
         }
-
-
-
-
-
     },
 
 
