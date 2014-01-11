@@ -72,7 +72,6 @@ js = Bundle(
         #'scripts/views/details.js',
         'scripts/views/map.js',
         'scripts/views/clustered-marker.js',
-        'scripts/views/selectivizr.js',
         filters='rjsmin',
     ),
     output="assets/min.js"
