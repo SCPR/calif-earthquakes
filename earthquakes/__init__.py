@@ -90,6 +90,21 @@ css = Bundle(
 )
 assets.register('css_all', css)
 
+# ie scripts
+ie_js = Bundle(
+    # js to make ie play nice
+    'scripts/selectivizr.js',
+    output="assets/ie-scripts.js"
+)
+assets.register('scripts_ie', ie_js)
+
+ie_css = Bundle(
+    'css/ie-lt9.css',
+    filters='cssmin',
+    output='assets/ie-lt9.css'
+)
+assets.register('css_ie', ie_css)
+
 # configure database
 db = SQLAlchemy(app)
 
