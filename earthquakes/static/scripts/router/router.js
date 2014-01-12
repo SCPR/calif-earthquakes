@@ -15,12 +15,8 @@ App.Router = Backbone.Router.extend({
 
     routes: {
         "": "indexView",
-
         "full-screen-map": "fullScreenView",
     },
-
-
-
 
     fullScreenView: function(){
         console.log('fullScreenView');
@@ -28,47 +24,13 @@ App.Router = Backbone.Router.extend({
         this.createMap(mapContainer, window.earthquakeCollection);
     },
 
-
-
-
-
     indexView: function(){
-        /* pass the target element and the collection to
-        a function to render the map */
-
         console.log('indexView');
-
-        //var mapContainer = "section.latest";
-        //this.createMap(mapContainer, window.earthquakeCollection);
+        var mapContainer = ".content-map-container";
+        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/full-screen-map.html');
     },
 
-
-
-
-
-
-
-
-
-    detailView: function(id){
-        /* find the model in the window's collection
-        that matches the primary id and render the
-        detail view using that model. This allows the
-        user to 'bookmark' the detail view */
-        this.model = window.earthquakeCollection.where({id: parseInt(id)});
-
-        //this.loadView(new App.Views.DetailView({
-            //model: this.model[0]
-        //}));
-
-        //this.createMap(this.model);
-    },
-
-
-
-
-
-    createMap: function(mapContainer, markers){
+    createMap: function(mapContainer, markers, template){
         // if mapView on page remove it
 
         if (this.mapView){
@@ -79,23 +41,16 @@ App.Router = Backbone.Router.extend({
             markers: markers
         });
 
-        console.log(this.mapModel);
+        //console.log(this.mapModel);
 
         this.mapView = new App.Views.MapView({
             model: this.mapModel,
-            container: mapContainer
+            container: mapContainer,
+            template: template
         });
 
         console.log(this.mapView);
-
         return this.mapView;
 
-    },
-
-    loadView: function(view){
-        /* remove a view when it's no longer needed */
-        this.view && (this.view.close ? this.view.close() : this.view.remove());
-        this.view = view;
-        $(".magnitude-log").append(this.view.render().el);
     }
 });

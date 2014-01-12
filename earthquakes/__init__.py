@@ -69,7 +69,7 @@ core_js = Bundle(
         'scripts/models/marker.js',
         'scripts/collections/earthquakes.js',
         'scripts/collections/markers.js',
-        'scripts/views/full-screen-map.js',
+        'scripts/views/map.js',
         'scripts/views/clustered-marker.js',
         filters='rjsmin',
     ),
