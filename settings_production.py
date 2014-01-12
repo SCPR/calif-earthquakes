@@ -1,5 +1,5 @@
-DEBUG = True
-ASSETS_DEBUG = True
+DEBUG = False
+ASSETS_DEBUG = False
 SITE_RELATIVE_ROOT = "/earthquakes/"
 SITE_URL = "http://projects.scpr.org%s" % SITE_RELATIVE_ROOT
 

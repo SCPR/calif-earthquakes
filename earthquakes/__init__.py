@@ -41,6 +41,9 @@ app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_
 # asset pipeline
 assets = Environment(app)
 
+# rebuild the assets
+assets.config['auto_build'] = True
+
 core_js = Bundle(
     # already-minified js
     # added to output as-is
