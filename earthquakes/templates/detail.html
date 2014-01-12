@@ -166,8 +166,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            console.log(SITE_RELATIVE_ROOT);
-            //var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
+            var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
+            console.log(urlQuery);
+
             //fn.retrieveData(urlQuery);
 
         });
