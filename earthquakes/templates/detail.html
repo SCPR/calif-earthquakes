@@ -163,9 +163,7 @@
 
 {% block extra_js %}
     <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
-
     <script type="text/javascript">
-
         $(document).ready(function() {
             var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
             fn.retrieveData(urlQuery);
@@ -204,7 +202,17 @@
                 );
 
                 var earthquakeLocationLayer = new L.layerGroup();
-                var earthquakeLocationMarker = L.marker(mapCenter);
+
+                //var earthquakeLocationMarker = L.marker(mapCenter);
+
+                var earthquakeLocationMarker = L.circle([data.latitude, data.longitude], 20000, {
+                    clickable: false,
+                    opacity: 0.3,
+                    weight: 1,
+                    color: '#ec792b',
+                    fillOpacity: 0.3
+                });
+
                 earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
 
                 if (data.nearest_cities.length) {
@@ -219,5 +227,4 @@
 
         };
     </script>
-
 {% endblock %}
