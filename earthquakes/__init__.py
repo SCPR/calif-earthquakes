@@ -83,6 +83,7 @@ core_css = Bundle(
     'css/MarkerCluster.css',
     'css/MarkerCluster.Default.css',
     'css/style.css',
+    'css/map-application.css',
     filters='cssmin',
     output='assets/min.css'
 )
@@ -110,14 +111,6 @@ map_app_js = Bundle(
     output="assets/map-app.js"
 )
 assets.register('map_app_js', map_app_js)
-
-map_app_css = Bundle(
-    # css for the mapping applications
-    'css/full-screen-map.css',
-    filters='cssmin',
-    output='assets/map-app.css'
-)
-assets.register('map_app_css', map_app_css)
 
 # configure database
 db = SQLAlchemy(app)

@@ -56,7 +56,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     bindEvent: function(marker, attributes){
         marker.on('click', function(){
-            var html = _.template(template("static/templates/full-screen-details.html"), attributes);
+            var html = _.template(template("static/templates/details-full-view.html"), attributes);
             $(".data-display").html(html);
         });
     }

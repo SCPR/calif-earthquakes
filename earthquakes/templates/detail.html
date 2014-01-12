@@ -10,12 +10,6 @@
 {% block twitter_title %}{{ earthquake.place|place_format(earthquake.date_time) }} ({{ earthquake.mag|round_floating_point }} magnitude earthquake) | 89.3 KPCC{% endblock %}
 {% block twitter_url %}http://projects.scpr.org{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}{% endblock %}
 
-{% block extra_css %}
-    {% assets "map_app_css" %}
-        <link href="{{ ASSET_URL }}" rel="stylesheet" />
-    {% endassets %}
-{% endblock %}
-
 {% block bodyclass %}single{% endblock %}
 
 {% block main_content %}
