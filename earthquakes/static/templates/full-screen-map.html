@@ -1,81 +1,48 @@
 <section class="latest">
-    <header>
-        <h1>Browse Earthquakes</h1>
-    </header>
-    <div class="roundup clearfix">
-
-        <p>Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></p>
-
-        <!--
-        <div id="address-search">
-            <a class="searchMe" href="javascript:void(0)">Use my address</a>
-        </div>
-        <div id="location-search">
-            <a class="findMe" href="javascript:void(0)">Use my location</a>
-        </div>
-        -->
-
-        <form class="filters" action="">
-            <div>
-                <input type="text" class="form-control" id="addressSearch" placeholder="Start typing your address...">
-                <button type="button" class="btn btn-primary btn-group btn-group-justified" id="submit">Submit</button>
+    <div class="controls">
+        <header>
+            <h1>Browse Earthquakes</h1>
+        </header>
+        <form class="filters">
+            <div class="control stacked location">
+                <div class="pairing text">
+                    <label for="location">Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></label>
+                    <input type="text" id="addressSearch" placeholder="Start typing your address...">
+                    <div id="location-awareness-input">
+                        <input type="text" class="no-show" name="lat" id="latitudeSearch">
+                        <input type="text" class="no-show" name="lng" id="longitudeSearch">
+                    </div>
+                </div>
+                <div class="pairing radius">
+                    <label for="radius">Search Radius</label>
+                    <select name="search-radius" id="search-radius">
+                        <option value="3220">2 miles</option>
+                        <option value="8047">5 miles</option>
+                        <option value="16093">10 miles</option>
+                        <option value="24140">15 miles</option>
+                        <option value="32186">20 miles</option>
+                        <option value="80467">50 miles</option>
+                        <option value="160934">100 miles</option>
+                    </select>
+                </div>
+            </div><!--/ .location -->
+            <div class="control submit clearfix">
+                <button type="button" id="submit">Submit</button>
             </div>
-
-            <div>
-                <input type="text" class="no-show" name="lat" id="latitudeSearch">
-                <input type="text" class="no-show" name="lng" id="longitudeSearch">
-            </div>
-
         </form>
 
-        <select id="search-radius">
-            <option value="3220">2 miles</option>
-            <option value="8047">5 miles</option>
-            <option value="16093">10 miles</option>
-            <option value="24140">15 miles</option>
-            <option value="32186">20 miles</option>
-            <option value="80467">50 miles</option>
-            <option value="160934">100 miles</option>
-        </select>
-
-
-        <div class="control">
-            <input type="checkbox" value="show" name="county-boundaries" id="county-boundaries">
-            <label for="county-boundaries">Show county boundaries</label>
-        </div>
-
-        <div class="control">
-            <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
+        <div class="control toggle faultlines">
+            <input type="checkbox" id="fault-lines" name="fault-lines" value="show">
             <label for="fault-lines">Show fault lines</label>
         </div>
 
-        <!--
-
-
-
-        <div class="magnitude">
-            <label for="slider">Filter by magnitude</label>
-            <div id="slider"></div>
+        <div class="control toggle counties">
+            <input type="checkbox" id="county-boundaries" name="county-boundaries" value="show">
+            <label for="county-boundaries">Show county boundaries</label>
         </div>
-
-
-        <div class="intensity">
-            <div id="slider"></div>
-            <label for="slider">Intensity slider</label>
-        </div>
-
-        <div class="dates">
-            <div id="slider"></div>
-            <label for="slider">Date range picker</label>
-        </div>
-        -->
 
     </div>
-
-    <div class="data-display clearfix">
-        <h2>what?</h2>
-    </div>
-
+    <div class="data-display clearfix"></div>
 </section>
 <section class="dashboard clearfix">
     <div id="content-map-canvas" class="initial"></div>

@@ -24,7 +24,7 @@ App.Views.MapView = Backbone.View.extend({
         });
 
         this.CaliforniaFaultLines = new L.TileLayer('static/data/map-tiles/{z}/{x}/{y}.png');
-        */
+
 
         this.CaliforniaCountyBoundaries = L.geoJson(californiaCounties, {
             style: function (feature) {
@@ -42,6 +42,8 @@ App.Views.MapView = Backbone.View.extend({
                 });
             }
         });
+
+        */
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
@@ -180,20 +182,14 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
+
         */
+
 
     },
 
     render: function(markersCollection){
         $(markersCollection.container).html(this.$el.html(this.template()));
-
-        $("#slider").rangeSlider({
-            defaultValues: {min: 1.5, max: 3.5},
-            bounds: {min: 1, max: 5},
-            step: .1
-        }).bind("valuesChanging", function(e, data){
-            console.log("Something moved. min: " + data.values.min + " max: " + data.values.max);
-        });
 
         this.map = L.map("content-map-canvas", {
             scrollWheelZoom: false,

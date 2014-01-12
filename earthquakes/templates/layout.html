@@ -50,16 +50,18 @@
         <!-- end meta -->
 
         <!-- begin css -->
-        {% assets "css_all" %}
+        {% assets "core_css" %}
             <link href="{{ ASSET_URL }}" rel="stylesheet" />
         {% endassets %}
 
+        {% block extra_css %}{% endblock %}
+
         <!--[if lt IE 9]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-            {% assets "scripts_ie" %}
+            {% assets "ie_js" %}
                 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
             {% endassets %}
-            {% assets "css_ie" %}
+            {% assets "ie_css" %}
                 <link href="{{ ASSET_URL }}" rel="stylesheet" />
             {% endassets %}
         <![endif]-->
@@ -112,7 +114,7 @@
         </footer><!--/ .epilogue -->
 
         <!-- begin scripts -->
-        {% assets "scripts_all" %}
+        {% assets "core_js" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
 
