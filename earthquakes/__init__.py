@@ -106,7 +106,7 @@ assets.register('ie_css', ie_css)
 
 map_app_js = Bundle(
     # js for the mapping applications
-    #'data/california/california-counties.js',
+    'data/california/california-counties.js',
     filters='rjsmin',
     output="assets/map-app.js"
 )
