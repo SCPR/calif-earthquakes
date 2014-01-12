@@ -1,7 +1,6 @@
 App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     initialize: function(markersCollection) {
-
         // if else gymnastics to set marker icon based on params
 
         /*
@@ -56,40 +55,9 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
     },
 
     bindEvent: function(marker, attributes){
-
         marker.on('click', function(){
-            console.log(attributes);
+            var html = _.template(template("static/templates/full-screen-details.html"), attributes);
+            $(".data-display").html(html);
         });
-
-        //var that = this;
-        //this.marker.on('click', function(){
-
-            //console.log(that.model.attributes);
-
-            // gymnastics to do something with marker data onclick
-            /*
-            $('#content-background').css({'opacity' : '0.7'}).fadeIn('fast');
-            $('#content-display').html(that.template(that.model.attributes)).append('<button type="button"class="btn btn-danger btn-group btn-group-justified" id="close">Close</button>').fadeIn('slow');
-
-            $('#close').click(function(){
-                $('#content-display').fadeOut('fast');
-                $('#content-background').fadeOut('fast');
-            });
-
-        	$('#content-background').click(function(){
-        		$('#content-background').fadeOut('slow');
-        		$('#content-display').fadeOut('slow');
-        	});
-
-        	$(document).keydown(function(e){
-        		if(e.keyCode==27) {
-        			$('#content-background').fadeOut('slow');
-        			$('#content-display').fadeOut('slow');
-        		}
-        	});
-            */
-
-        //});
-
     }
 });

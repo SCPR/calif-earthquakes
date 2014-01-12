@@ -41,9 +41,9 @@ app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_
 # asset pipeline
 assets = Environment(app)
 
-js = Bundle(
-    # Already-minified JS
-    # Doesn't get minified again, just added to the output file as-is
+core_js = Bundle(
+    # already-minified js
+    # added to output as-is
     Bundle(
         'scripts/libs/jquery.min.js',
         'scripts/libs/jquery-ui.min.js',
@@ -52,14 +52,12 @@ js = Bundle(
         'scripts/libs/backbone-min.js',
         'scripts/libs/moment.min.js',
         'scripts/libs/shp.min.js',
-        'scripts/libs/bootstrap.min.js',
         'scripts/libs/leaflet.min.js',
         'scripts/libs/leaflet.markercluster.min.js',
         'scripts/libs/leaflet.shpfile.min.js',
-        'scripts/libs/jQRangeSlider-min.js',
     ),
-    # Unminified JS
-    # Gets minified and then added to the output file.
+    # unminified js
+    # gets minified and added to the output file
     Bundle(
         'scripts/app.js',
         'scripts/router/router.js',
@@ -68,19 +66,16 @@ js = Bundle(
         'scripts/models/marker.js',
         'scripts/collections/earthquakes.js',
         'scripts/collections/markers.js',
-        #'scripts/views/list.js',
-        #'scripts/views/details.js',
-        'scripts/views/map.js',
+        'scripts/views/full-screen-map.js',
         'scripts/views/clustered-marker.js',
         filters='rjsmin',
     ),
     output="assets/min.js"
 )
-assets.register('scripts_all', js)
+assets.register('core_js', core_js)
 
-css = Bundle(
+core_css = Bundle(
     'css/jquery-ui.css',
-    'css/iThing.css',
     'css/leaflet.min.css',
     'css/MarkerCluster.css',
     'css/MarkerCluster.Default.css',
@@ -88,31 +83,38 @@ css = Bundle(
     filters='cssmin',
     output='assets/min.css'
 )
-assets.register('css_all', css)
+assets.register('core_css', core_css)
 
-# ie scripts
 ie_js = Bundle(
     # js to make ie play nice
     'scripts/selectivizr.js',
     output="assets/ie-scripts.js"
 )
-assets.register('scripts_ie', ie_js)
+assets.register('ie_js', ie_js)
 
 ie_css = Bundle(
+    # css to make ie play nice
     'css/ie-lt9.css',
     filters='cssmin',
     output='assets/ie-lt9.css'
 )
-assets.register('css_ie', ie_css)
+assets.register('ie_css', ie_css)
 
-# data scripts
-data_js = Bundle(
-    # js to make ie play nice
-    'data/california/california-counties.js',
+map_app_js = Bundle(
+    # js for the mapping applications
+    #'data/california/california-counties.js',
     filters='rjsmin',
-    output="assets/data-scripts.js"
+    output="assets/map-app.js"
 )
-assets.register('scripts_data', data_js)
+assets.register('map_app_js', map_app_js)
+
+map_app_css = Bundle(
+    # css for the mapping applications
+    'css/full-screen-map.css',
+    filters='cssmin',
+    output='assets/map-app.css'
+)
+assets.register('map_app_css', map_app_css)
 
 # configure database
 db = SQLAlchemy(app)

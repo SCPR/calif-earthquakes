@@ -119,7 +119,7 @@ mark {
 }
 
 input {
-    /*-webkit-appearance: none;*/
+    -webkit-appearance: none;
     border-radius: 0;
 }
 
@@ -1200,6 +1200,119 @@ body.landing .masthead .tagline {
     margin-bottom: 20px;
 }
 
+.prologue .dashboard .controls .control {
+    margin-bottom: 8px;
+}
+.prologue .dashboard .controls .control label, .prologue .dashboard .controls .control input {
+    font-weight: 700;
+    color: #9e4100;
+    font-size: 0.75em;
+    font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
+}
+
+.prologue .dashboard .controls .control input {
+    color: #d15904;
+}
+
+.prologue .dashboard .controls .control input[type="checkbox"] {
+    border: 1px solid blue;
+    -webkit-appearance: checkbox;
+}
+
+.prologue .dashboard .controls .control p {
+    margin-bottom: 8px;
+}
+
+.prologue .dashboard .controls .control p label, .prologue .dashboard .controls .control p input {
+    display: inline-block;
+}
+
+.prologue .dashboard .controls .control.stacked {
+    padding-top: 8px;
+}
+
+.prologue .dashboard .controls .control.stacked p input {
+    border: none;
+    background: none;
+    padding: 0;
+    width: 5em;
+}
+
+.prologue .dashboard .controls .control.stacked label {
+    font-size: 0.6875em;
+    text-transform: uppercase;
+    color: #7e7e7e;
+}
+
+.prologue .dashboard .controls .control.toggle {
+    background: #ecd2a2;
+    border-radius: 5px;
+    padding: 1px 5px 4px;
+    margin-left: -5px;
+}
+
+.prologue .dashboard .controls .control.location {
+    padding-top: 15px;
+}
+
+.prologue .dashboard .controls .control.location .pairing.text {
+    margin-bottom: 8px;
+}
+
+.prologue .dashboard .controls .control.location .pairing.text label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.prologue .dashboard .controls .control.location input[type="text"] {
+    display: block;
+    border: 1px solid gray;
+    box-sizing: border-box;
+    padding: 3px;
+    width: 100%;
+    font-weight: normal;
+}
+
+.prologue .dashboard .controls .control.submit, .prologue .dashboard .controls .control.more-options {
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 11px;
+}
+
+.prologue .dashboard .controls .control.submit button, .prologue .dashboard .controls .control.more-options button {
+    display: block;
+    padding: 6px 9px;
+    cursor: pointer;
+    float: right;
+    text-align: center;
+    border: none;
+    background: #9e4100;
+    color: white;
+    font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
+    font-weight: 700;
+    font-size: 0.9375em;
+    text-transform: uppercase;
+}
+
+.prologue .dashboard .controls .control.submit button:hover, .prologue .dashboard .controls .control.more-options button:hover {
+    background: #ec7c2d;
+}
+
+.prologue .dashboard .controls .control.more-options {
+    padding-top: 10px;
+    margin-top: 17px;
+    margin-bottom: 0;
+}
+
+.prologue .dashboard .controls .control.more-options button {
+    background: #838383;
+    font-size: 0.6875em;
+}
+
+.prologue .dashboard .controls .control.more-options button:hover {
+    background: #adadad;
+}
+
 .prologue .dashboard .module {
     width: 71.396396396396%;
     float: right;
@@ -1210,6 +1323,7 @@ body.landing .masthead .tagline {
     height: 100%;
     box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.17);
     background: gray;
+    min-height: 250px;
 }
 
 @media screen and (max-width: 1200px) {
@@ -1298,6 +1412,28 @@ body.landing .masthead .tagline {
     }
 }
 
+@media screen and (max-width: 630px) {
+    .prologue .dashboard .controls {
+        width: 100%;
+        float: none;
+        margin: 0 auto;
+        max-width: 350px;
+    }
+    .prologue .dashboard .controls form {
+        margin: 0 0 0 0;
+    }
+    .prologue .dashboard .module {
+        width: 100%;
+        float: none;
+        position: relative;
+    }
+}
+
+
+
+
+
+
 @media screen and (max-width: 519px) {
     .prologue .latest article {
         text-align: left;
@@ -1376,26 +1512,4 @@ body.landing .page-cols .primary .magnitude-log ul {
     body.landing .page-cols>.inner {
         background-image: none;
     }
-}
-
-.map #content-map-canvas {
-    width: 100%;
-    height: 411px;
-    z-index: 10;
-}
-
-#content-map-container {
-    width: 100%;
-    height: 100%;
-    background: #ffffff;
-}
-
-#content-map-canvas {
-    width: 100%;
-    height: 1000px;
-    z-index: 10;
-}
-
-#content-map-canvas img {
-    max-width: none;
 }

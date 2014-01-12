@@ -1,0 +1,146 @@
+/* added for full-screen map application */
+
+.prologue .content-map-container .controls .control {
+    margin-bottom: 8px;
+}
+.prologue .content-map-container .controls .control label, .prologue .content-map-container .controls .control input {
+    font-weight: 700;
+    color: #9e4100;
+    font-size: 0.75em;
+    font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
+}
+
+.prologue .content-map-container .controls .control input {
+    color: #d15904;
+}
+
+.prologue .content-map-container .controls .control input[type="checkbox"] {
+    border: 1px solid blue;
+    -webkit-appearance: checkbox;
+}
+
+.prologue .content-map-container .controls .control p {
+    margin-bottom: 8px;
+}
+
+.prologue .content-map-container .controls .control p label, .prologue .content-map-container .controls .control p input {
+    display: inline-block;
+}
+
+.prologue .content-map-container .controls .control.stacked {
+    padding-top: 8px;
+}
+
+.prologue .content-map-container .controls .control.stacked p input {
+    border: none;
+    background: none;
+    padding: 0;
+    width: 5em;
+}
+
+.prologue .content-map-container .controls .control.stacked label {
+    font-size: 0.6875em;
+    text-transform: uppercase;
+    color: #7e7e7e;
+}
+
+.prologue .content-map-container .controls .control.toggle {
+    background: #ecd2a2;
+    border-radius: 5px;
+    padding: 1px 5px 4px;
+    margin-left: -5px;
+}
+
+.prologue .content-map-container .controls .control.location {
+    padding-top: 15px;
+}
+
+.prologue .content-map-container .controls .control.location .pairing.text {
+    margin-bottom: 8px;
+}
+
+.prologue .content-map-container .controls .control.location .pairing.text label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.prologue .content-map-container .controls .control.location input[type="text"] {
+    display: block;
+    border: 1px solid gray;
+    box-sizing: border-box;
+    padding: 3px;
+    width: 100%;
+    font-weight: normal;
+}
+
+.prologue .content-map-container .controls .control.submit, .prologue .content-map-container .controls .control.more-options {
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 11px;
+}
+
+.prologue .content-map-container .controls .control.submit button, .prologue .content-map-container .controls .control.more-options button {
+    display: block;
+    padding: 6px 9px;
+    cursor: pointer;
+    /*float: right;*/
+    width: 100%;
+    text-align: center;
+    border: none;
+    background: #9e4100;
+    color: white;
+    font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
+    font-weight: 700;
+    font-size: 0.9375em;
+    text-transform: uppercase;
+}
+
+.prologue .content-map-container .controls .control.submit button:hover, .prologue .content-map-container .controls .control.more-options button:hover {
+    background: #ec7c2d;
+}
+
+.prologue .content-map-container .controls .control.more-options {
+    padding-top: 10px;
+    margin-top: 17px;
+    margin-bottom: 0;
+}
+
+.prologue .content-map-container .controls .control.more-options button {
+    background: #838383;
+    font-size: 0.6875em;
+}
+
+.prologue .content-map-container .controls .control.more-options button:hover {
+    background: #adadad;
+}
+
+
+.prologue .latest a {
+    text-decoration: underline;
+}
+
+.prologue #location-awareness-input .no-show {
+    display: none;
+}
+
+.map #content-map-canvas {
+    width: 100%;
+    height: 411px;
+    z-index: 10;
+}
+
+#content-map-container {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+}
+
+#content-map-canvas {
+    width: 100%;
+    height: 1100px;
+    z-index: 10;
+}
+
+#content-map-canvas img {
+    max-width: none;
+}
