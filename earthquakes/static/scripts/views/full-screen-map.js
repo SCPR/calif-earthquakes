@@ -22,6 +22,8 @@ App.Views.MapView = Backbone.View.extend({
                 }
             },
         });
+
+        this.CaliforniaFaultLines = new L.TileLayer('static/data/map-tiles/{z}/{x}/{y}.png');
         */
 
         this.CaliforniaCountyBoundaries = L.geoJson(californiaCounties, {
@@ -157,7 +159,6 @@ App.Views.MapView = Backbone.View.extend({
 
         console.log('toggle me');
 
-
         /*
         if ($('#fault-lines').is(":checked")){
             this.map.addLayer(this.CaliforniaFaultLines);
@@ -168,7 +169,7 @@ App.Views.MapView = Backbone.View.extend({
             $("#fault-lines").attr("value", "hidden");
             $("label[for='fault-lines']").text("Show fault lines");
         };
-        */
+
 
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaCountyBoundaries);
@@ -179,6 +180,8 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
+        */
+
     },
 
     render: function(markersCollection){
