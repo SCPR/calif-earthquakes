@@ -14,10 +14,10 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    #cached = cache.get("view/index")
+    cached = cache.get("view/index")
 
-    #if cached is not None:
-        #return cached
+    if cached is not None:
+        return cached
 
     recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
     earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
@@ -27,12 +27,16 @@ def index():
         earthquake_instances = earthquake_instances
     )
 
-    #cache.set("view/index", tmplt)
+    cache.set("view/index", tmplt)
     return tmplt
 
 
 @app.route('/<string:title>/<int:id>/', methods=['GET'])
 def detail(title, id):
+    cached = cache.get("view/detail")
+
+    if cached is not None:
+        return cached
 
     recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
 
@@ -74,12 +78,16 @@ def detail(title, id):
         else:
             pass
 
-    return render_template(
+
+    tmplt = render_template(
         'detail.html',
         recent_earthquakes = recent_earthquakes,
         earthquake = earthquake,
         nearest_earthquakes = list_of_nearby_earthquakes
     )
+
+    cache.set("view/detail", tmplt)
+    return tmplt
 
 @app.route('/full-screen-map', methods=['GET'])
 def map():
