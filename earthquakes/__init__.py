@@ -104,13 +104,13 @@ ie_css = Bundle(
 )
 assets.register('ie_css', ie_css)
 
-map_app_js = Bundle(
+#map_app_js = Bundle(
     # js for the mapping applications
-    'data/california/california-counties.js',
-    filters='rjsmin',
-    output="assets/map-app.js"
-)
-assets.register('map_app_js', map_app_js)
+    #'data/california/california-counties.js',
+    #filters='rjsmin',
+    #output="assets/map-app.js"
+#)
+#assets.register('map_app_js', map_app_js)
 
 # configure database
 db = SQLAlchemy(app)
