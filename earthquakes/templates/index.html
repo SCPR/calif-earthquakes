@@ -37,6 +37,56 @@
                     {% endfor %}
                 </div>
             </section><!--/ .latest -->
+            <section class="dashboard clearfix">
+                <div class="controls">
+                    <header>
+                        <h1>Browse Earthquakes</h1>
+                    </header>
+                    <form class="filters">
+                        <div class="control stacked location">
+                            <div class="pairing text">
+                                <label for="location">Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></label>
+                                <input type="text" id="addressSearch" placeholder="Start typing your address...">
+                                <div id="location-awareness-input">
+                                    <input type="text" class="no-show" name="lat" id="latitudeSearch">
+                                    <input type="text" class="no-show" name="lng" id="longitudeSearch">
+                                </div>
+                            </div>
+                            <div class="pairing radius">
+                                <label for="radius">Search Radius</label>
+                                <select name="search-radius" id="search-radius">
+                                    <option value="3220">2 miles</option>
+                                    <option value="8047">5 miles</option>
+                                    <option value="16093">10 miles</option>
+                                    <option value="24140">15 miles</option>
+                                    <option value="32186">20 miles</option>
+                                    <option value="80467">50 miles</option>
+                                    <option value="160934">100 miles</option>
+                                </select>
+                            </div>
+                        </div><!--/ .location -->
+                        <div class="control submit clearfix">
+                            <button type="button" id="submit">Submit</button>
+                        </div>
+                        <div class="control toggle faultlines">
+                            <input type="checkbox" id="fault-lines" name="fault-lines" value="show">
+                            <label for="fault-lines">Show fault lines</label>
+                        </div>
+                        <div class="control toggle counties">
+                            <input type="checkbox" id="county-boundaries" name="county-boundaries" value="show">
+                            <label for="county-boundaries">Show county boundaries</label>
+                        </div>
+                        <!--
+                        <div class="control more-options clearfix">
+                            <button>Explore the map further</button>
+                        </div>
+                        -->
+                    </form>
+                </div>
+                <figure class="module">
+                    map module goes here
+                </figure>
+            </section>
         </div>
     </header>
     <div class="page-cols">

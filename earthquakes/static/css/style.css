@@ -1283,7 +1283,8 @@ body.landing .masthead .tagline {
     display: block;
     padding: 6px 9px;
     cursor: pointer;
-    float: right;
+    /*float: right;*/
+    width: 100%;
     text-align: center;
     border: none;
     background: #9e4100;

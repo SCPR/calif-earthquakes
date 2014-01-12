@@ -14,10 +14,10 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    cached = cache.get("view/index")
+    #cached = cache.get("view/index")
 
-    if cached is not None:
-        return cached
+    #if cached is not None:
+        #return cached
 
     recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
     earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
@@ -27,7 +27,7 @@ def index():
         earthquake_instances = earthquake_instances
     )
 
-    cache.set("view/index", tmplt)
+    #cache.set("view/index", tmplt)
     return tmplt
 
 
