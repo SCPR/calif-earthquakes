@@ -70,7 +70,8 @@
         <!-- begin scripts -->
         <script type="text/javascript">
             var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-            SITE_RELATIVE_ROOT = "{{ config.SITE_RELATIVE_ROOT }}";
+            var SITE_RELATIVE_ROOT = "{{ config.SITE_RELATIVE_ROOT }}";
+            var SITE_URL = "{{ config.SITE_URL }}";
         </script>
         <!-- end scripts -->
 
@@ -111,7 +112,6 @@
         </footer><!--/ .epilogue -->
 
         <!-- begin scripts -->
-        <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
         {% assets "scripts_all" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}

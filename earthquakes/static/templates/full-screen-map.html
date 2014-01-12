@@ -3,40 +3,70 @@
         <h1>Browse Earthquakes</h1>
     </header>
     <div class="roundup clearfix">
+
+            <div id="address-search">
+                <a class="searchMe" href="javascript:void(0)">Use my address</a>
+            </div>
+            <div id="location-search">
+                <a class="findMe" href="javascript:void(0)">Use my location</a>
+            </div>
+
         <form class="filters" action="">
-            <div class="control">
-                <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
-                <label for="fault-lines">Show fault lines</label>
+
+            <div>
+                <input type="text" class="form-control" id="addressSearch" placeholder="Start typing your address...">
+                <button type="button" class="btn btn-primary btn-group btn-group-justified" id="submit">Go find them!</button>
             </div>
 
-            <div class="control">
-                <input type="checkbox" value="show" name="county-boundaries" id="county-boundaries">
-                <label for="county-lines">Show county boundaries</label>
+            <div>
+                <input type="text" class="form-control" name="lat" id="latitudeSearch">
+                <input type="text" class="form-control" name="lng" id="longitudeSearch">
             </div>
 
-            <div class="magnitude">
-                <div id="slider"></div>
-                <label for="slider">Magnitude slider</label>
-            </div>
-
-            <div class="intensity">
-                <div id="slider"></div>
-                <label for="slider">Intensity slider</label>
-            </div>
-
-            <div class="dates">
-                <div id="slider"></div>
-                <label for="slider">Date range picker</label>
-            </div>
-
-            <div class="location">
-                Location text field
-            </div>
-
-            <div class="submit">
-                <button value="go">Filter results</button>
-            </div>
         </form>
+
+
+        <select id="search-radius">
+            <option value="3220">2 miles</option>
+            <option value="8047">5 miles</option>
+            <option value="16093">10 miles</option>
+            <option value="24140">15 miles</option>
+            <option value="32186">20 miles</option>
+            <option value="80467">50 miles</option>
+            <option value="160934">100 miles</option>
+        </select>
+
+
+        <div class="control">
+            <input type="checkbox" value="show" name="county-boundaries" id="county-boundaries">
+            <label for="county-boundaries">Show county boundaries</label>
+        </div>
+
+        <!--
+        <div class="control">
+            <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
+            <label for="fault-lines">Show fault lines</label>
+        </div>
+
+        <div class="magnitude">
+            <div id="slider"></div>
+            <label for="slider">Magnitude slider</label>
+        </div>
+
+        <div class="intensity">
+            <div id="slider"></div>
+            <label for="slider">Intensity slider</label>
+        </div>
+
+        <div class="dates">
+            <div id="slider"></div>
+            <label for="slider">Date range picker</label>
+        </div>
+        -->
+
+
+
+
     </div>
 </section>
 <section class="dashboard clearfix">

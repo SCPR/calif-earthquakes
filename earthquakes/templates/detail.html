@@ -84,9 +84,7 @@
                         <div class="visualization ratio">
                             <div class="fill"></div>
                             <b class="img-contain">
-                                <!--
-                                <img src="" alt="" />
-                                -->
+                                <div id="content-map-canvas" class="detail-view"></div>
                             </b>
                         </div><!--/ .ratio -->
                     </section>
@@ -161,4 +159,72 @@
 
     {% include 'glossary.html' %}
 
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
+            fn.retrieveData(urlQuery);
+        });
+
+        var fn = {
+            retrieveData: function(urlQuery){
+                $.getJSON(urlQuery, fn.createMap);
+            },
+
+            createMap: function(data){
+                var stamenTonerBaseLayer = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
+                    attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>",
+                	subdomains: "abcd",
+                	minZoom: 0,
+                	maxZoom: 17
+                });
+
+                var initialZoom;
+
+                if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
+                    initialZoom = 3;
+                } else {
+                    initialZoom = 9;
+                }
+
+                var mapCenter = new L.LatLng(data.latitude, data.longitude);
+
+                var map = L.map("content-map-canvas", {
+                    scrollWheelZoom: false,
+                    zoomControl: true
+                }).setView(
+                    mapCenter, initialZoom
+                ).addLayer(
+                    stamenTonerBaseLayer
+                );
+
+                var earthquakeLocationLayer = new L.layerGroup();
+
+                //var earthquakeLocationMarker = L.marker(mapCenter);
+
+                var earthquakeLocationMarker = L.circle([data.latitude, data.longitude], 20000, {
+                    clickable: false,
+                    opacity: 0.3,
+                    weight: 1,
+                    color: '#ec792b',
+                    fillOpacity: 0.3
+                });
+
+                earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
+
+                if (data.nearest_cities.length) {
+                    for(var i=0; i<data.nearest_cities.length; i++){
+                        earthquakeLocationLayer.addLayer(L.marker([data.nearest_cities[i].latitude, data.nearest_cities[i].longitude]))
+                    }
+                }
+
+                earthquakeLocationLayer.addTo(map);
+
+            }
+
+        };
+    </script>
 {% endblock %}

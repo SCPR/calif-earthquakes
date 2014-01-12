@@ -27,15 +27,10 @@ App.Views.MapView = Backbone.View.extend({
                 }
             },
         });
-
-        this.CaliforniaFaults = L.imageOverlay('http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
-            imageBounds = [
-                [40.712216, -74.22655],
-                [40.773941, -74.12544]
-            ]);
         */
 
-        this.CaliforniaBoundaries = new L.Shapefile('static/data/california/california-counties.zip', {
+
+        this.CaliforniaBoundaries = L.geoJson(californiaCounties, {
             style: function (feature) {
                 return {
                     color: '#787878',
@@ -44,8 +39,19 @@ App.Views.MapView = Backbone.View.extend({
                     fillColor: null,
                     fillOpacity: 0
                 }
+            },
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function (e) {
+                    console.log(feature.properties.name + ' county layer clicked');
+                });
             }
         });
+
+
+
+
+
+
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
@@ -58,11 +64,101 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     events: {
+        // hits the navigate function when the submit button is pressed
+        "click button#submit": "navigate",
+
+        // triggers address search funtion when key input
+        "keyup :input": "addressSearch",
+
+        // triggers geolocation when anchor tag clicked
+        "click a.findMe": "findMe",
+
+        // triggers search me
+        "click a.searchMe": "searchMe",
+
+        // changes radius value
+        "change #search-radius": "navigate",
+
+        // used to toggle layers
         "click [type='checkbox']": "toggleLayers",
+    },
+
+    // adds lat and lng to form fields
+    // retrieve values when enter pressed
+    addressSearch: function(e){
+        $("input[id='addressSearch']").focus(function(){
+            console.log('key input');
+        });
+
+        $("input[id='addressSearch']").geocomplete({
+            details: "form"
+        });
+
+        var latitude = $("input[id='latitudeSearch']").val();
+        var longitude = $("input[id='longitudeSearch']").val();
+
+    	if(e.keyCode != 13) {
+    	    return false;
+    	} else if (e.keyCode === 13 && latitude === '' && longitude === '') {
+    	    return false;
+    	} else {
+            this.navigate();
+    	}
+    },
+
+
+    findMe: function(){
+        console.log('find me');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                $("input[id='latitudeSearch']").val(position.coords.latitude);
+                $("input[id='longitudeSearch']").val(position.coords.longitude);
+                $("button#submit").trigger("click");
+            }, null);
+        } else {
+            alert("Sorry, we could not find your location.");
+        }
+    },
+
+    searchMe: function(){
+        console.log('search me');
+    },
+
+    navigate: function(){
+        var latitude = $("input[id='latitudeSearch']").val();
+        var longitude = $("input[id='longitudeSearch']").val();
+        var searchRadius = $("select[id='search-radius']").val();
+
+        if (latitude === '' && longitude === ''){
+            alert('Please enter an address or search by location')
+
+        } else {
+            this.userLocationCenter = new L.LatLng(latitude, longitude);
+            this.userLocationMarker = L.marker([latitude, longitude]);
+            this.userRadius = L.circle([latitude, longitude], searchRadius, {
+                clickable: false,
+                opacity: 0.3,
+                weight: 1,
+                color: '#ec792b',
+                fillColor: '#ec792b',
+                fillOpacity: 0.3
+            });
+
+            // add our user layers
+            this.userLayer = new L.layerGroup();
+            this.userLayer.addLayer(this.userLocationMarker).addLayer(this.userRadius);
+            this.userLayer.addTo(this.map);
+
+            // pan map to user layer and sets to radius of user
+            this.map.fitBounds(this.userRadius.getBounds());
+
+        }
     },
 
     toggleLayers: function(event){
 
+        console.log('toggle me');
+        /*
         if ($('#fault-lines').is(":checked")){
             this.map.addLayer(this.CaliforniaFaults);
             $("#fault-lines").attr("value", "shown");
@@ -72,6 +168,9 @@ App.Views.MapView = Backbone.View.extend({
             $("#fault-lines").attr("value", "hidden");
             $("label[for='fault-lines']").text("Show fault lines");
         };
+        */
+
+
 
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaBoundaries);
@@ -82,12 +181,13 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
+
     },
 
     render: function(markersCollection){
         //$(markersCollection.container).html(this.$el.html(this.template()));
 
-        $(markersCollection.container).html(this.template());
+        $(markersCollection.container).html(this.$el.html(this.template()));
 
         $("#slider").rangeSlider({
             defaultValues: {min: 1.5, max: 3.5},

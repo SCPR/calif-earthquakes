@@ -105,6 +105,15 @@ ie_css = Bundle(
 )
 assets.register('css_ie', ie_css)
 
+# data scripts
+data_js = Bundle(
+    # js to make ie play nice
+    'data/california/california-counties.js',
+    filters='rjsmin',
+    output="assets/data-scripts.js"
+)
+assets.register('scripts_data', data_js)
+
 # configure database
 db = SQLAlchemy(app)
 
