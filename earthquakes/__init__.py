@@ -70,7 +70,7 @@ js = Bundle(
         'scripts/collections/markers.js',
         #'scripts/views/list.js',
         #'scripts/views/details.js',
-        'scripts/views/map.js',
+        'scripts/views/full-screen-map.js',
         'scripts/views/clustered-marker.js',
         filters='rjsmin',
     ),

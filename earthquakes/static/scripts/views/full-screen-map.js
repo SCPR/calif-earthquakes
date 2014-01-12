@@ -10,11 +10,6 @@ App.Views.MapView = Backbone.View.extend({
         	maxZoom: 17
         });
 
-        this.mapQuest = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
-            attribution: "Tiles, data, imagery and map information provided by <a href='http://www.mapquest.com' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png'>, <a href='http://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> and OpenStreetMap contributors.",
-            subdomains: ["otile1","otile2","otile3","otile4"]
-        });
-
         /*
         this.CaliforniaFaults = new L.Shapefile('static/data/quaternary-faults/fault-areas.zip', {
             style: function (feature) {
@@ -29,8 +24,7 @@ App.Views.MapView = Backbone.View.extend({
         });
         */
 
-
-        this.CaliforniaBoundaries = L.geoJson(californiaCounties, {
+        this.CaliforniaCountyBoundaries = L.geoJson(californiaCounties, {
             style: function (feature) {
                 return {
                     color: '#787878',
@@ -42,16 +36,10 @@ App.Views.MapView = Backbone.View.extend({
             },
             onEachFeature: function(feature, layer) {
                 layer.on('click', function (e) {
-                    console.log(feature.properties.name + ' county layer clicked');
+                    console.log(feature.properties.NAMELSAD10 + ' county layer clicked');
                 });
             }
         });
-
-
-
-
-
-
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
@@ -133,26 +121,37 @@ App.Views.MapView = Backbone.View.extend({
             alert('Please enter an address or search by location')
 
         } else {
-            this.userLocationCenter = new L.LatLng(latitude, longitude);
-            this.userLocationMarker = L.marker([latitude, longitude]);
-            this.userRadius = L.circle([latitude, longitude], searchRadius, {
-                clickable: false,
-                opacity: 0.3,
-                weight: 1,
-                color: '#ec792b',
-                fillColor: '#ec792b',
-                fillOpacity: 0.3
-            });
-
-            // add our user layers
-            this.userLayer = new L.layerGroup();
-            this.userLayer.addLayer(this.userLocationMarker).addLayer(this.userRadius);
-            this.userLayer.addTo(this.map);
-
-            // pan map to user layer and sets to radius of user
-            this.map.fitBounds(this.userRadius.getBounds());
-
+            if (this.map.hasLayer(this.userLayer)){
+                this.map.removeLayer(this.userLayer);
+                this.addUserLayerToMap(latitude, longitude, searchRadius);
+            } else {
+                this.addUserLayerToMap(latitude, longitude, searchRadius);
+            }
         }
+    },
+
+    addUserLayerToMap: function(latitude, longitude, searchRadius){
+
+        // create our user layers
+        this.userLocationCenter = new L.LatLng(latitude, longitude);
+        this.userLocationMarker = L.marker([latitude, longitude]);
+        this.userRadius = L.circle([latitude, longitude], searchRadius, {
+            clickable: false,
+            opacity: 0.3,
+            weight: 1,
+            color: '#ec792b',
+            fillColor: '#ec792b',
+            fillOpacity: 0.3
+        });
+
+        // add our user layers
+        this.userLayer = new L.layerGroup();
+        this.userLayer.addLayer(this.userLocationMarker).addLayer(this.userRadius);
+        this.userLayer.addTo(this.map);
+
+        // pan map to user layer and sets to radius of user
+        this.map.fitBounds(this.userRadius.getBounds());
+
     },
 
     toggleLayers: function(event){
@@ -173,11 +172,11 @@ App.Views.MapView = Backbone.View.extend({
 
 
         if ($('#county-boundaries').is(":checked")){
-            this.map.addLayer(this.CaliforniaBoundaries);
+            this.map.addLayer(this.CaliforniaCountyBoundaries);
             $("#county-boundaries").attr("value", "shown");
             $("label[for='county-boundaries']").text("Hide county boundaries");
         } else {
-            this.map.removeLayer(this.CaliforniaBoundaries);
+            this.map.removeLayer(this.CaliforniaCountyBoundaries);
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
@@ -185,22 +184,7 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     render: function(markersCollection){
-        //$(markersCollection.container).html(this.$el.html(this.template()));
-
         $(markersCollection.container).html(this.$el.html(this.template()));
-
-        $("#slider").rangeSlider({
-            defaultValues: {min: 1.5, max: 3.5},
-            bounds: {min: 1, max: 5},
-            step: .1
-        }).bind("valuesChanging", function(e, data){
-            console.log("Something moved. min: " + data.values.min + " max: " + data.values.max);
-        });
-
-        var mapOverlays = {
-            "Counties": this.laCounty,
-            "Faults": this.CaliforniaFaults
-        };
 
         this.map = L.map("content-map-canvas", {
             scrollWheelZoom: false,

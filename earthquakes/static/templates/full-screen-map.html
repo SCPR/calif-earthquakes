@@ -4,27 +4,29 @@
     </header>
     <div class="roundup clearfix">
 
-            <div id="address-search">
-                <a class="searchMe" href="javascript:void(0)">Use my address</a>
-            </div>
-            <div id="location-search">
-                <a class="findMe" href="javascript:void(0)">Use my location</a>
-            </div>
+        <p>Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></p>
+
+        <!--
+        <div id="address-search">
+            <a class="searchMe" href="javascript:void(0)">Use my address</a>
+        </div>
+        <div id="location-search">
+            <a class="findMe" href="javascript:void(0)">Use my location</a>
+        </div>
+        -->
 
         <form class="filters" action="">
-
             <div>
                 <input type="text" class="form-control" id="addressSearch" placeholder="Start typing your address...">
-                <button type="button" class="btn btn-primary btn-group btn-group-justified" id="submit">Go find them!</button>
+                <button type="button" class="btn btn-primary btn-group btn-group-justified" id="submit">Submit</button>
             </div>
 
             <div>
-                <input type="text" class="form-control" name="lat" id="latitudeSearch">
-                <input type="text" class="form-control" name="lng" id="longitudeSearch">
+                <input type="text" class="no-show" name="lat" id="latitudeSearch">
+                <input type="text" class="no-show" name="lng" id="longitudeSearch">
             </div>
 
         </form>
-
 
         <select id="search-radius">
             <option value="3220">2 miles</option>
@@ -42,16 +44,19 @@
             <label for="county-boundaries">Show county boundaries</label>
         </div>
 
+
         <!--
         <div class="control">
             <input type="checkbox" value="hidden" name="fault-lines" id="fault-lines">
             <label for="fault-lines">Show fault lines</label>
         </div>
 
+
         <div class="magnitude">
+            <label for="slider">Filter by magnitude</label>
             <div id="slider"></div>
-            <label for="slider">Magnitude slider</label>
         </div>
+
 
         <div class="intensity">
             <div id="slider"></div>

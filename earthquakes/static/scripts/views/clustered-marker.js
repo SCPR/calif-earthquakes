@@ -2,6 +2,16 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     initialize: function(markersCollection) {
 
+
+        $("#slider").rangeSlider({
+            defaultValues: {min: 1.5, max: 3.5},
+            bounds: {min: 1, max: 5},
+            step: .1
+        }).bind("valuesChanging", function(e, data){
+            console.log("Something moved. min: " + data.values.min + " max: " + data.values.max);
+        });
+
+
         // if else gymnastics to set marker icon based on params
 
         /*
