@@ -11,7 +11,7 @@ App.Views.MapView = Backbone.View.extend({
         });
 
         /*
-        this.CaliforniaFaults = new L.Shapefile('static/data/quaternary-faults/fault-areas.zip', {
+        this.CaliforniaFaultLines = new L.Shapefile('static/data/quaternary-faults/fault-areas.zip', {
             style: function (feature) {
                 return {
                     color: 'green',
@@ -62,7 +62,7 @@ App.Views.MapView = Backbone.View.extend({
         "click a.findMe": "findMe",
 
         // triggers search me
-        "click a.searchMe": "searchMe",
+        //"click a.searchMe": "searchMe",
 
         // changes radius value
         "change #search-radius": "navigate",
@@ -94,7 +94,6 @@ App.Views.MapView = Backbone.View.extend({
     	}
     },
 
-
     findMe: function(){
         console.log('find me');
         if (navigator.geolocation) {
@@ -108,18 +107,18 @@ App.Views.MapView = Backbone.View.extend({
         }
     },
 
+    /*
     searchMe: function(){
         console.log('search me');
     },
+    */
 
     navigate: function(){
         var latitude = $("input[id='latitudeSearch']").val();
         var longitude = $("input[id='longitudeSearch']").val();
         var searchRadius = $("select[id='search-radius']").val();
-
         if (latitude === '' && longitude === ''){
             alert('Please enter an address or search by location')
-
         } else {
             if (this.map.hasLayer(this.userLayer)){
                 this.map.removeLayer(this.userLayer);
@@ -157,19 +156,19 @@ App.Views.MapView = Backbone.View.extend({
     toggleLayers: function(event){
 
         console.log('toggle me');
+
+
         /*
         if ($('#fault-lines').is(":checked")){
-            this.map.addLayer(this.CaliforniaFaults);
+            this.map.addLayer(this.CaliforniaFaultLines);
             $("#fault-lines").attr("value", "shown");
             $("label[for='fault-lines']").text("Hide fault lines");
         } else {
-            this.map.removeLayer(this.CaliforniaFaults);
+            this.map.removeLayer(this.CaliforniaFaultLines);
             $("#fault-lines").attr("value", "hidden");
             $("label[for='fault-lines']").text("Show fault lines");
         };
         */
-
-
 
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaCountyBoundaries);
@@ -180,11 +179,18 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
-
     },
 
     render: function(markersCollection){
         $(markersCollection.container).html(this.$el.html(this.template()));
+
+        $("#slider").rangeSlider({
+            defaultValues: {min: 1.5, max: 3.5},
+            bounds: {min: 1, max: 5},
+            step: .1
+        }).bind("valuesChanging", function(e, data){
+            console.log("Something moved. min: " + data.values.min + " max: " + data.values.max);
+        });
 
         this.map = L.map("content-map-canvas", {
             scrollWheelZoom: false,
@@ -195,16 +201,8 @@ App.Views.MapView = Backbone.View.extend({
             this.stamenToner
         );
 
-        //this.shpfile.addTo(this.map);
-        //L.control.layers(null, mapOverlays).addTo(map);
-
         this.model = markersCollection.model.attributes;
         this.model.map = this.map;
         this.markerViews = new App.Views.ClusteredMarkerView(this.model);
-
-        //this.markerViews = this.model.get('markers').map(function(marker){
-            //return new App.Views.MarkerView({model: marker, map: map}).render();
-        //});
-
     }
 });
