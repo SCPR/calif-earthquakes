@@ -10,6 +10,12 @@
 {% block twitter_title %}{{ earthquake.place|place_format(earthquake.date_time) }} ({{ earthquake.mag|round_floating_point }} magnitude earthquake) | 89.3 KPCC{% endblock %}
 {% block twitter_url %}http://projects.scpr.org{{ url_for('detail', title=earthquake.place|url_structure_format(earthquake.date_time), id=earthquake.id ) }}{% endblock %}
 
+{% block extra_css %}
+    {% assets "map_app_css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet" />
+    {% endassets %}
+{% endblock %}
+
 {% block bodyclass %}single{% endblock %}
 
 {% block main_content %}
@@ -176,9 +182,6 @@
 
             createMap: function(data){
 
-                console.log(data);
-
-                /*
                 var stamenTonerBaseLayer = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
                     attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>",
                 	subdomains: "abcd",
@@ -205,17 +208,21 @@
                     stamenTonerBaseLayer
                 );
 
+                console.log(map);
+
                 var earthquakeLocationLayer = new L.layerGroup();
 
-                //var earthquakeLocationMarker = L.marker(mapCenter);
+                var earthquakeLocationMarker = L.marker(mapCenter);
 
-                var earthquakeLocationMarker = L.circle([data.latitude, data.longitude], 20000, {
+                /*
+                var earthquakeLocationMarker = L.circleMarker([data.latitude, data.longitude], 200, {
                     clickable: false,
                     opacity: 0.3,
                     weight: 1,
                     color: '#ec792b',
                     fillOpacity: 0.3
                 });
+                */
 
                 earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
 
@@ -226,7 +233,6 @@
                 }
 
                 earthquakeLocationLayer.addTo(map);
-            */
             }
 
         };
