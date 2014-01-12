@@ -79,7 +79,7 @@ class Earthquake(db.Model):
 
     def resource_uri(self):
         ''' take database record and add resource_uri '''
-        url_prefix = "%s/api/earthquakes" % app.config["SITE_URL"]
+        url_prefix = "%sapi/earthquakes" % app.config["SITE_URL"]
         return "%s/%s" % (url_prefix, self.id)
 
     def __repr__(self):
