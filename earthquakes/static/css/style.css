@@ -109,7 +109,7 @@ mark {
     bottom: 0;
     right: 0;
     background: #f0f0f0;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .ratio .img-contain img {
@@ -1317,7 +1317,7 @@ body.landing .masthead .tagline {
 .prologue .dashboard .module {
     width: 71.396396396396%;
     float: right;
-    /*overflow: hidden;*/
+    overflow: hidden;
     position: absolute;
     top: 0;
     right: 0;
@@ -1429,11 +1429,6 @@ body.landing .masthead .tagline {
         position: relative;
     }
 }
-
-
-
-
-
 
 @media screen and (max-width: 519px) {
     .prologue .latest article {
