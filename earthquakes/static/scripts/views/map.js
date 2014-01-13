@@ -2,10 +2,6 @@ App.Views.MapView = Backbone.View.extend({
 
     initialize: function(markersCollection){
 
-        if (L.Browser.touch) {
-            L.control.touchHover().addTo(map);
-        }
-
         this.template = _.template(template(markersCollection.template)),
 
         this.stamenToner = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
@@ -20,6 +16,7 @@ App.Views.MapView = Backbone.View.extend({
         this.CaliforniaCountyBoundaries = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-county-boundaries/{z}/{x}/{y}.png');
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
+            L.control.touchHover().addTo(this.map);
             this.initialZoom = 6;
         } else {
             this.initialZoom = markersCollection.initialZoom;
