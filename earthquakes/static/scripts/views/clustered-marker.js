@@ -41,17 +41,19 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     addCollectionToMap: function(arrayOfModels){
         this.markerCluster = L.markerClusterGroup({
-            disableClusteringAtZoom: 15
+            disableClusteringAtZoom: 16,
+            zoomToBoundsOnClick: true,
+            showCoverageOnHover: false
         });
 
         for(var i=0; i<arrayOfModels.length; i++){
             this.marker = L.marker(L.latLng(arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude));
             this.bindEvent(this.marker, arrayOfModels[i].attributes);
-            this.marker.addTo(this.map);
-            //this.markerCluster.addLayer(this.marker);
+            //this.marker.addTo(this.map);
+            this.markerCluster.addLayer(this.marker);
         };
 
-        //this.map.addLayer(this.markerCluster);
+        this.map.addLayer(this.markerCluster);
     },
 
     bindEvent: function(marker, attributes){
