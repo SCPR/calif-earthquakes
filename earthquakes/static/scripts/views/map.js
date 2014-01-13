@@ -29,6 +29,9 @@ App.Views.MapView = Backbone.View.extend({
         // hits the navigate function when the submit button is pressed
         "click button#submit": "navigate",
 
+        // hits the navigate function when the submit button is pressed
+        "click button#reset": "resetUserView",
+
         // triggers address search funtion when key input
         "keyup :input": "addressSearch",
 
@@ -98,7 +101,22 @@ App.Views.MapView = Backbone.View.extend({
         }
     },
 
+    resetUserView: function(){
+        $("div.submit").html("<button type='button' id='submit'>Submit</button>");
+
+        if (this.map.hasLayer(this.userLayer)){
+            this.map.removeLayer(this.userLayer);
+        }
+
+        $("input[id='latitudeSearch']").val('');
+        $("input[id='longitudeSearch']").val('');
+        $("input[id='accuracySearch']").val('');
+
+    },
+
     addUserLayerToMap: function(latitude, longitude, accuracy, searchRadius){
+
+        $("div.submit").html("<button type='button' id='reset'>Reset</button>");
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
