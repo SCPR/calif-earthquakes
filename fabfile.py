@@ -119,3 +119,11 @@ def local_migration_migrate():
 def local_migration_upgrade():
     ''' apply the migration to db '''
     local('python manage.py db upgrade')
+
+def local_drop_earthquakes():
+    ''' deletes all instances of the Earthquake model in the table '''
+    local('python manage.py drop_earthquakes')
+
+def local_drop_nearby_cities():
+    ''' deletes all instances of the NearbyCities model in the table '''
+    local('python manage.py drop_cities')

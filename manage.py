@@ -183,8 +183,26 @@ class InitDb(Command):
     def run(self):
         db.create_all()
 
+class dropEarthquakesRows(Command):
+    "deletes all instances of the Earthquake model in the table"
+    def run(self):
+        database_rows = len(Earthquake.query.all())
+        Earthquake.query.delete()
+        db.session.commit()
+        logging.debug('deleted %s records' % (database_rows))
+
+class dropNearbyCitiesRows(Command):
+    "deletes all instances of the NearbyCities model in the table"
+    def run(self):
+        database_rows = len(NearestCity.query.all())
+        NearestCity.query.delete()
+        db.session.commit()
+        logging.debug('deleted %s records' % (database_rows))
+
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('initdb', InitDb())
+manager.add_command('drop_earthquakes', dropEarthquakesRows())
+manager.add_command('drop_cities', dropNearbyCitiesRows())
 manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":
