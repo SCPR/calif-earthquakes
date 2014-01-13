@@ -201,7 +201,13 @@
                     stamenTonerBaseLayer
                 );
 
-                console.log(map);
+                var myIcon = L.Icon.extend({
+                    imagePath: null,
+                    iconSize: [38, 95],
+                    iconAnchor: [22, 94],
+                    popupAnchor: [-3, -76]
+                });
+
 
                 var earthquakeLocationLayer = new L.layerGroup();
 

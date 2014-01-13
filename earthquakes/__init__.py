@@ -56,7 +56,7 @@ core_js = Bundle(
         'scripts/libs/moment.min.js',
         #'scripts/libs/shp.min.js',
         'scripts/libs/leaflet.min.js',
-        #'scripts/libs/leaflet.markercluster.min.js',
+        'scripts/libs/leaflet.markercluster.min.js',
         #'scripts/libs/leaflet.shpfile.min.js',
     ),
     # unminified js
