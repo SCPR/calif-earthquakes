@@ -20,7 +20,7 @@ App.Router = Backbone.Router.extend({
 
     fullScreenView: function(){
         var mapContainer = ".content-map-container";
-        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-full-view.html', 6);
+        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-full-view.html', 7);
     },
 
     indexView: function(){
