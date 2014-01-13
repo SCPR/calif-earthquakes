@@ -26,7 +26,7 @@
                                 <h1>{{ earthquake.date_time|date_format('span')|safe }}</h1>
                                 <ul>
                                     <li class="near">{{ earthquake.place|strip_and_format_state('mark')|safe }}</li>
-                                    <li>Intensity: <mark>{{ earthquake.cdi }}</mark> <span>(of 10)</span></li>
+                                    <li>Intensity: <mark>{{ earthquake.cdi|default('0', true)}}</mark> <span>(of 10)</span></li>
                                     <li>Depth: <mark>{{ earthquake.depth }} km</mark></li>
                                 </ul>
                                 <aside class="magnitude">{{ earthquake.mag|round_floating_point }}</aside>
