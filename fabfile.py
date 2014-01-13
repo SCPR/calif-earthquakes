@@ -83,6 +83,18 @@ def server_migration_upgrade():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py db upgrade"))
 
+def server_drop_earthquakes():
+    ''' deletes all instances of the Earthquake model in the table '''
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py drop_earthquakes"))
+
+def server_drop_nearby_cities():
+    ''' deletes all instances of the NearbyCities model in the table '''
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py drop_cities"))
+
 def __env_cmd(cmd):
     return env.bin_root + cmd
 
