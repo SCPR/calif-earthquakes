@@ -164,7 +164,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         $(document).ready(function() {
-            var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
+            var urlQuery = SITE_URL + '/api/earthquake/' + {{ earthquake.id }}
             fn.retrieveData(urlQuery);
         });
 
