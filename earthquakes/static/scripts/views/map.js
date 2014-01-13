@@ -190,7 +190,7 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     render: function(markersCollection){
-        $(markersCollection.container).html('what');
+        $(markersCollection.container).html(this.$el.html(this.template()));
 
         this.map = L.map("content-map-canvas", {
             scrollWheelZoom: false,
