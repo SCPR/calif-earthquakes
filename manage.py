@@ -31,140 +31,150 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app.config['ALL_PAST_DAY'], headers=app.config['API_MANAGER_HEADERS'])
+        usgs_query_api = requests.get(app.config['ALL_PAST_THIRTY'], headers=app.config['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
-        list_of_details_urls = []
+        list_of_urls = []
         for item in usgs_api_data['features']:
             if 'California' in item['properties']['place']:
                 usgs_details_link = str(item['properties']['detail'])
-                list_of_details_urls.append(usgs_details_link)
+                list_of_urls.append(usgs_details_link)
             else:
                 logging.debug('passing this one by')
                 pass
-        self.retrieve_details_from(list_of_details_urls)
+        self.retrieve_details_from(list_of_urls)
 
     "performs request on local earthquake details url and returns the data"
-    def retrieve_details_from(self, list_of_details_urls):
-        logging.debug('Beginning to process %s records' % (len(list_of_details_urls)))
-        session = FuturesSession(max_workers=1)
-        for detail_instance in list_of_details_urls:
-            usgs_query_details = session.get(detail_instance, headers=app.config['API_MANAGER_HEADERS'])
+    def retrieve_details_from(self, list_of_urls):
+        list_of_instances = []
+        session = FuturesSession(max_workers=3)
+        for detail_url in list_of_urls:
+            #time.sleep(5)
+            usgs_query_details = session.get(detail_url, headers=app.config['API_MANAGER_HEADERS'])
             usgs_api_details = usgs_query_details.result()
             usgs_api_details = usgs_api_details.json()
-            nearest_cities_url = usgs_api_details['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
-            nearest_cities_list = self.retrieve_nearby_cities_from(nearest_cities_url)
-            usgs_api_details['nearest_cities_url'] = nearest_cities_url
-            usgs_api_details['nearest_cities'] = nearest_cities_list
-            self.write_to_db(usgs_api_details)
-        logging.debug('Finished processing %s records' % (len(list_of_details_urls)))
+            list_of_instances.append(usgs_api_details)
+        self.retrieve_nearby_cities_from(list_of_instances)
 
     "performs request on local earthquake nearby cities url and returns the data"
-    def retrieve_nearby_cities_from(self, nearest_cities_url):
+    def retrieve_nearby_cities_from(self, list_of_instances):
         session = FuturesSession(max_workers=1)
-        list_of_nearby_cities = []
-        if nearest_cities_url:
-            nearest_cities_query_details = session.get(nearest_cities_url, headers=app.config['API_MANAGER_HEADERS'])
-            nearest_cities_api_details = nearest_cities_query_details.result()
-            nearest_cities_api_details = nearest_cities_api_details.json()
-            for nearby_city in nearest_cities_api_details:
-                city = NearestCity(
-                    id = None,
-                    distance = nearby_city['distance'],
-                    direction = nearby_city['direction'],
-                    name = nearby_city['name'],
-                    latitude = nearby_city['latitude'],
-                    longitude = nearby_city['longitude'],
-                    population = nearby_city['population'],
-                    earthquake_id = None
-                )
-                list_of_nearby_cities.append(city)
-        else:
-            pass
-        return list_of_nearby_cities
+        for detail_instance in list_of_instances:
+            #time.sleep(5)
+            try:
+                nearest_cities_url = detail_instance['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
+            except:
+                nearest_cities_url = None
+            if nearest_cities_url:
+                try:
+                    nearest_cities_query_details = session.get(nearest_cities_url, headers=app.config['headers'])
+                    nearest_cities_api_details = nearest_cities_query_details.result()
+                    nearest_cities_api_details = nearest_cities_api_details.json()
+                    list_of_nearby_cities = []
+                    for nearby_city in nearest_cities_api_details:
+                        city = NearestCity(
+                            id = None,
+                            distance = nearby_city['distance'],
+                            direction = nearby_city['direction'],
+                            name = nearby_city['name'],
+                            latitude = nearby_city['latitude'],
+                            longitude = nearby_city['longitude'],
+                            population = nearby_city['population'],
+                            earthquake_id = None
+                        )
+                        list_of_nearby_cities.append(city)
+                except:
+                    list_of_nearby_cities = []
+            else:
+                pass
+            detail_instance['nearest_cities_url'] = nearest_cities_url
+            detail_instance['nearest_cities'] = list_of_nearby_cities
+        self.write(list_of_instances)
 
     "write class instances to the database"
-    def write_to_db(self, item):
-        comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
-        comparison_updated_raw = item['properties']['updated']
-        instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
-        if instance is None:
-            logging.debug('creating new record')
-            quake = Earthquake(
-                id = None,
-                primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
-                mag = item['properties']['mag'],
-                place = item['properties']['place'],
-                title = item['properties']['title'],
-                date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
-                date_time_raw = item['properties']['time'],
-                updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
-                updated_raw = item['properties']['updated'],
-                tz = item['properties']['tz'],
-                url = item['properties']['url'],
-                felt = item['properties']['felt'],
-                cdi = item['properties']['cdi'],
-                mmi = item['properties']['mmi'],
-                alert = item['properties']['alert'],
-                status = item['properties']['status'],
-                tsunami = item['properties']['tsunami'],
-                sig = item['properties']['sig'],
-                resource_type = item['properties']['type'],
-                latitude = item['geometry']['coordinates'][1],
-                longitude = item['geometry']['coordinates'][0],
-                depth = item['geometry']['coordinates'][2],
-                net = item['properties']['net'],
-                code = item['properties']['code'],
-                ids = item['properties']['ids'],
-                sources = item['properties']['sources'],
-                nst = item['properties']['nst'],
-                dmin = item['properties']['dmin'],
-                rms = item['properties']['rms'],
-                gap = item['properties']['gap'],
-                magType = item['properties']['magType'],
-                nearest_cities_url = item['nearest_cities_url'],
-                nearest_cities=item['nearest_cities']
-            )
-            db.session.add(quake)
-            for city in item['nearest_cities']:
-                db.session.add(city)
-        else:
-            if instance.updated_raw == comparison_updated_raw:
-                logging.debug('compared and found record exists and doesnt need to be updated')
-                pass
+    def write(self, list_of_instances):
+        for item in list_of_instances:
+            comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
+            comparison_updated_raw = item['properties']['updated']
+            instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
+            if instance is None:
+                logging.debug('creating new record')
+                quake = Earthquake(
+                    id = None,
+                    primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time']),
+                    mag = item['properties']['mag'],
+                    place = item['properties']['place'],
+                    title = item['properties']['title'],
+                    date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3),
+                    date_time_raw = item['properties']['time'],
+                    updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3),
+                    updated_raw = item['properties']['updated'],
+                    tz = item['properties']['tz'],
+                    url = item['properties']['url'],
+                    felt = item['properties']['felt'],
+                    cdi = item['properties']['cdi'],
+                    mmi = item['properties']['mmi'],
+                    alert = item['properties']['alert'],
+                    status = item['properties']['status'],
+                    tsunami = item['properties']['tsunami'],
+                    sig = item['properties']['sig'],
+                    resource_type = item['properties']['type'],
+                    latitude = item['geometry']['coordinates'][1],
+                    longitude = item['geometry']['coordinates'][0],
+                    depth = item['geometry']['coordinates'][2],
+                    net = item['properties']['net'],
+                    code = item['properties']['code'],
+                    ids = item['properties']['ids'],
+                    sources = item['properties']['sources'],
+                    nst = item['properties']['nst'],
+                    dmin = item['properties']['dmin'],
+                    rms = item['properties']['rms'],
+                    gap = item['properties']['gap'],
+                    magType = item['properties']['magType'],
+                    nearest_cities_url = item['nearest_cities_url'],
+                    nearest_cities=item['nearest_cities']
+                )
+                db.session.add(quake)
+                for city in item['nearest_cities']:
+                    db.session.add(city)
             else:
-                logging.debug('compared and have updated this record')
-                instance.primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
-                instance.mag = item['properties']['mag']
-                instance.place = item['properties']['place']
-                instance.title = item['properties']['title']
-                instance.date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3)
-                instance.date_time_raw = item['properties']['time']
-                instance.updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3)
-                instance.updated_raw = item['properties']['updated']
-                instance.tz = item['properties']['tz']
-                instance.url = item['properties']['url']
-                instance.felt = item['properties']['felt']
-                instance.cdi = item['properties']['cdi']
-                instance.mmi = item['properties']['mmi']
-                instance.alert = item['properties']['alert']
-                instance.status = item['properties']['status']
-                instance.tsunami = item['properties']['tsunami']
-                instance.sig = item['properties']['sig']
-                instance.resource_type = item['properties']['type']
-                instance.latitude = item['geometry']['coordinates'][1]
-                instance.longitude = item['geometry']['coordinates'][0]
-                instance.depth = item['geometry']['coordinates'][2]
-                instance.net = item['properties']['net']
-                instance.code = item['properties']['code']
-                instance.ids = item['properties']['ids']
-                instance.sources = item['properties']['sources']
-                instance.nst = item['properties']['nst']
-                instance.dmin = item['properties']['dmin']
-                instance.rms = item['properties']['rms']
-                instance.gap = item['properties']['gap']
-                instance.magType = item['properties']['magType']
-                instance.nearest_cities_url = item['nearest_cities_url']
-        db.session.commit()
+                if instance.updated_raw == comparison_updated_raw:
+                    logging.debug('compared and found record exists and doesnt need to be updated')
+                    pass
+                else:
+                    logging.debug('compared and have updated this record')
+                    instance.primary_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
+                    instance.mag = item['properties']['mag']
+                    instance.place = item['properties']['place']
+                    instance.title = item['properties']['title']
+                    instance.date_time = datetime.datetime.utcfromtimestamp(item['properties']['time']/1e3)
+                    instance.date_time_raw = item['properties']['time']
+                    instance.updated = datetime.datetime.utcfromtimestamp(item['properties']['updated']/1e3)
+                    instance.updated_raw = item['properties']['updated']
+                    instance.tz = item['properties']['tz']
+                    instance.url = item['properties']['url']
+                    instance.felt = item['properties']['felt']
+                    instance.cdi = item['properties']['cdi']
+                    instance.mmi = item['properties']['mmi']
+                    instance.alert = item['properties']['alert']
+                    instance.status = item['properties']['status']
+                    instance.tsunami = item['properties']['tsunami']
+                    instance.sig = item['properties']['sig']
+                    instance.resource_type = item['properties']['type']
+                    instance.latitude = item['geometry']['coordinates'][1]
+                    instance.longitude = item['geometry']['coordinates'][0]
+                    instance.depth = item['geometry']['coordinates'][2]
+                    instance.net = item['properties']['net']
+                    instance.code = item['properties']['code']
+                    instance.ids = item['properties']['ids']
+                    instance.sources = item['properties']['sources']
+                    instance.nst = item['properties']['nst']
+                    instance.dmin = item['properties']['dmin']
+                    instance.rms = item['properties']['rms']
+                    instance.gap = item['properties']['gap']
+                    instance.magType = item['properties']['magType']
+                    instance.nearest_cities_url = item['nearest_cities_url']
+            db.session.commit()
+        logging.debug('Processed %s records' % (len(list_of_instances)))
 
 class InitDb(Command):
     "sets up the database based on models"
