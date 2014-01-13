@@ -5,7 +5,7 @@ import pytz
 from requests_futures.sessions import FuturesSession
 from pytz import timezone
 from datetime import tzinfo, date
-from flask.ext.script import Manager, Command
+from flask.ext.script import Manager, Command, Option
 from flask.ext.migrate import Migrate, MigrateCommand
 from concurrent import futures
 from earthquakes import app, db
@@ -17,6 +17,10 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 
 class UsgsApiQuery(Command):
+
+    option_list = (
+        Option('--api_url', '-api_url', dest='api_url'),
+    )
 
     "mimics django's get or create function"
     def get_or_create(self, session, model, **kwargs):
@@ -30,8 +34,8 @@ class UsgsApiQuery(Command):
             return instance
 
     "performs request on earthquake api url and returns the data"
-    def run(self):
-        usgs_query_api = requests.get(app.config['ALL_PAST_HOUR'], headers=app.config['API_MANAGER_HEADERS'])
+    def run(self, api_url):
+        usgs_query_api = requests.get(app.config[api_url], headers=app.config['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
@@ -199,10 +203,20 @@ class dropNearbyCitiesRows(Command):
         db.session.commit()
         logging.debug('deleted %s records' % (database_rows))
 
+class local_test_argument(Command):
+    "sets up the database based on models"
+    option_list = (
+        Option('--api_url', '-api_url', dest='api_url'),
+    )
+    def run(self, api_url):
+        logging.debug(app.config[api_url])
+        logging.debug("%s" % (api_url))
+
 manager.add_command('query', UsgsApiQuery())
 manager.add_command('initdb', InitDb())
 manager.add_command('drop_earthquakes', dropEarthquakesRows())
 manager.add_command('drop_cities', dropNearbyCitiesRows())
+manager.add_command('local_test_argument', local_test_argument)
 manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from __future__ import with_statement
-import os
+import os, logging
 import time, datetime
 from fabric.operations import prompt
 from fabric.api import *
@@ -10,6 +10,8 @@ env.user            = 'archive'
 env.hosts           = ['66.226.4.228']
 env.project_root    = '/web/archive/apps/earthquakes/src'
 env.bin_root        = "/web/archive/apps/earthquakes/virtualenvs/earthquakes/bin/"
+
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
 # server commands
 def update_code():
@@ -51,13 +53,13 @@ def revert():
         update_dependencies()
         restart()
 
-def server_query():
+def server_query(api_url=''):
     """
     Production to query the USGS api and ingest to db
     """
     with cd(env.project_root):
         run("export FLASK_ENV=production")
-        run(__env_cmd("python manage.py query"))
+        run(__env_cmd("python manage.py query --api_url " + api_url))
 
 def server_migration_init():
     """
@@ -112,9 +114,9 @@ def localinit():
     """
     local('python manage.py initdb')
 
-def localquery():
+def localquery(api_url=''):
     ''' query the usgs api and write data '''
-    local('python manage.py query')
+    local('python manage.py query --api_url ' + api_url)
 
 def test():
     ''' runs the test manager command '''
@@ -139,3 +141,7 @@ def local_drop_earthquakes():
 def local_drop_nearby_cities():
     ''' deletes all instances of the NearbyCities model in the table '''
     local('python manage.py drop_cities')
+
+def local_test_argument(api_url=''):
+    logging.debug(api_url)
+    local('python manage.py local_test_argument --api_url ' + api_url)
