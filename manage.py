@@ -50,9 +50,12 @@ class UsgsApiQuery(Command):
         for detail_url in list_of_urls:
             #time.sleep(5)
             usgs_query_details = session.get(detail_url, headers=app.config['API_MANAGER_HEADERS'])
-            usgs_api_details = usgs_query_details.result()
-            usgs_api_details = usgs_api_details.json()
-            list_of_instances.append(usgs_api_details)
+            try:
+                usgs_api_details = usgs_query_details.result()
+                usgs_api_details = usgs_api_details.json()
+                list_of_instances.append(usgs_api_details)
+            except:
+                pass
         self.retrieve_nearby_cities_from(list_of_instances)
 
     "performs request on local earthquake nearby cities url and returns the data"
