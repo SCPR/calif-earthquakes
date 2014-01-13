@@ -17,6 +17,9 @@
                 data = response;
             }
         });
+
+        console.log('window.template');
+
         return data;
     };
 
