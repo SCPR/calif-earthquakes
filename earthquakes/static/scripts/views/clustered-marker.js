@@ -56,21 +56,12 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     bindEvent: function(marker, attributes){
 
-        if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
-            marker.on("mouseover", function(){
-                marker.bindPopup(
-                    "<p>" + moment(attributes.date_time).format('ddd., MMM., D, YYYY, h:mm a') + "<br />" +
-                    "Location: " + attributes.place + "<br />" +
-                    "Mag: " + attributes.mag + "</p>").openPopup();
-            });
-        } else {
-            marker.on("click", function(){
-                marker.bindPopup(
-                    "<p>" + moment(attributes.date_time).format('ddd., MMM., D, YYYY, h:mm a') + "<br />" +
-                    "Location: " + attributes.place + "<br />" +
-                    "Mag: " + attributes.mag + "</p>").openPopup();
-            });
-        }
+        marker.on("click", function(){
+            marker.bindPopup(
+                "<p>" + moment(attributes.date_time).format('ddd., MMM., D, YYYY, h:mm a') + "<br />" +
+                "Location: " + attributes.place + "<br />" +
+                "Mag: " + attributes.mag + "</p>").openPopup();
+        });
 
         /*
         marker.on('click', function(){
