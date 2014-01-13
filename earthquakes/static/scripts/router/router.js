@@ -19,18 +19,16 @@ App.Router = Backbone.Router.extend({
     },
 
     fullScreenView: function(){
-        console.log('fullScreenView');
         var mapContainer = ".content-map-container";
-        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-full-view.html');
+        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-full-view.html', 6);
     },
 
     indexView: function(){
-        console.log('indexView');
         var mapContainer = ".content-map-container";
-        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-index-view.html');
+        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-index-view.html', 5);
     },
 
-    createMap: function(mapContainer, markers, template){
+    createMap: function(mapContainer, markers, template, initialZoom){
         // if mapView on page remove it
 
         if (this.mapView){
@@ -44,10 +42,10 @@ App.Router = Backbone.Router.extend({
         this.mapView = new App.Views.MapView({
             model: this.mapModel,
             container: mapContainer,
-            template: template
+            template: template,
+            initialZoom: initialZoom
         });
 
-        console.log(this.mapView);
         return this.mapView;
     }
 });

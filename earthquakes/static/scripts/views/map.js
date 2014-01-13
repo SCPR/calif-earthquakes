@@ -49,7 +49,7 @@ App.Views.MapView = Backbone.View.extend({
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
         } else {
-            this.initialZoom = 7;
+            this.initialZoom = markersCollection.initialZoom;
         }
 
         this.center = new L.LatLng(37.335194502529724, -119.366455078125);
