@@ -132,21 +132,17 @@ App.Views.MapView = Backbone.View.extend({
         if ($('#fault-lines').is(":checked")){
             this.map.addLayer(this.CaliforniaFaultLines);
             $("#fault-lines").attr("value", "shown");
-            $("label[for='fault-lines']").text("Hide fault lines");
         } else {
             this.map.removeLayer(this.CaliforniaFaultLines);
             $("#fault-lines").attr("value", "hidden");
-            $("label[for='fault-lines']").text("Show fault lines");
         };
 
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaCountyBoundaries);
             $("#county-boundaries").attr("value", "shown");
-            $("label[for='county-boundaries']").text("Hide county boundaries");
         } else {
             this.map.removeLayer(this.CaliforniaCountyBoundaries);
             $("#county-boundaries").attr("value", "hidden");
-            $("label[for='county-boundaries']").text("Show county boundaries");
         };
 
     },
