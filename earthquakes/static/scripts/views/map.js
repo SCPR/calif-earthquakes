@@ -96,19 +96,10 @@ App.Views.MapView = Backbone.View.extend({
 
     addUserLayerToMap: function(latitude, longitude, searchRadius){
 
-        var myIcon = L.Icon.extend({
-            iconUrl: 'http://projects.scpr.org/earthquakes/static/i/bluedot.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76]
-        });
-
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
-        this.userLocationMarker = L.marker([latitude, longitude], {
-            icon: new myIcon({
-                iconUrl: 'http://projects.scpr.org/earthquakes/static/i/bluedot.png'
-            })
+        this.userLocationMarker = L.userMarker([latitude, longitude], {
+            pulsing: true
         });
 
         this.userRadius = L.circle([latitude, longitude], searchRadius, {
