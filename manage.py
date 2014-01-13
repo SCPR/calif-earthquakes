@@ -31,7 +31,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app.config['ALL_PAST_THIRTY'], headers=app.config['API_MANAGER_HEADERS'])
+        usgs_query_api = requests.get(app.config['ALL_PAST_DAY'], headers=app.config['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
