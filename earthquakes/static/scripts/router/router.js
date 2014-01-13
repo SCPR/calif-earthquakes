@@ -2,7 +2,6 @@ App.Router = Backbone.Router.extend({
 
     initialize: function(){
 
-
         console.log('router');
 
         /* initialize the collection to the application and
@@ -18,7 +17,7 @@ App.Router = Backbone.Router.extend({
     },
 
     routes: {
-        "": "indexView",
+        SITE_RELATIVE_ROOT: "indexView",
         "full-screen-map": "fullScreenView",
     },
 
