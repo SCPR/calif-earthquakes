@@ -115,14 +115,13 @@
 }
 
 
-.prologue .latest a {
+.prologue a.findMe {
     text-decoration: underline;
 }
 
 .prologue #location-awareness-input .no-show {
     display: none;
 }
-
 
 /* backbone places the map here */
 #content-map-container {
