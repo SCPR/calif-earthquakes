@@ -89,7 +89,7 @@ def detail(title, id):
     cache.set("view/detail", tmplt)
     return tmplt
 
-@app.route('/full-screen-map', methods=['GET'])
+@app.route('/explore-the-map', methods=['GET'])
 def map():
     return render_template(
         'full-screen-map.html',

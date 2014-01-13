@@ -15,7 +15,7 @@ App.Router = Backbone.Router.extend({
 
     routes: {
         "": "indexView",
-        "full-screen-map": "fullScreenView",
+        "explore-the-map": "fullScreenView",
     },
 
     fullScreenView: function(){
