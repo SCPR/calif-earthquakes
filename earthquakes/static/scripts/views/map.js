@@ -46,7 +46,6 @@ App.Views.MapView = Backbone.View.extend({
     // retrieve values when enter pressed
     addressSearch: function(e){
         $("input[id='addressSearch']").focus(function(){
-            console.log('key input');
         });
 
         $("input[id='addressSearch']").geocomplete({
@@ -66,11 +65,15 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     findMe: function(){
-        console.log('find me');
+
+        //this.map.locate();
+        //this.map.on('locationfound', this.addUserLayerToMap);
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 $("input[id='latitudeSearch']").val(position.coords.latitude);
                 $("input[id='longitudeSearch']").val(position.coords.longitude);
+                $("input[id='accuracySearch']").val(position.coords.accuracy);
                 $("button#submit").trigger("click");
             }, null);
         } else {
@@ -81,25 +84,28 @@ App.Views.MapView = Backbone.View.extend({
     navigate: function(){
         var latitude = $("input[id='latitudeSearch']").val();
         var longitude = $("input[id='longitudeSearch']").val();
+        var accuracy = $("input[id='accuracySearch']").val();
         var searchRadius = $("select[id='search-radius']").val();
         if (latitude === '' && longitude === ''){
             alert('Please enter an address or search by location')
         } else {
             if (this.map.hasLayer(this.userLayer)){
                 this.map.removeLayer(this.userLayer);
-                this.addUserLayerToMap(latitude, longitude, searchRadius);
+                this.addUserLayerToMap(latitude, longitude, accuracy, searchRadius);
             } else {
-                this.addUserLayerToMap(latitude, longitude, searchRadius);
+                this.addUserLayerToMap(latitude, longitude, accuracy, searchRadius);
             }
         }
     },
 
-    addUserLayerToMap: function(latitude, longitude, searchRadius){
+    addUserLayerToMap: function(latitude, longitude, accuracy, searchRadius){
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
         this.userLocationMarker = L.userMarker([latitude, longitude], {
-            pulsing: true
+            pulsing: true,
+            smallIcon: true,
+            accuracy: accuracy
         });
 
         this.userRadius = L.circle([latitude, longitude], searchRadius, {
