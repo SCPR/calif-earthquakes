@@ -62,8 +62,8 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
         marker.on("click", function(){
             marker.bindPopup(
-                "<p>" + moment(attributes.date_time).format('ddd., MMM., D, YYYY, h:mm a') + "<br />" +
-                "Location: " + attributes.place + "<br />" +
+                "<p>" + moment(attributes.date_time).format('MMMM D, YYYY') + "<br />" +
+                attributes.place + "<br />" +
                 "Mag: " + attributes.mag + "</p>").openPopup();
         });
 
