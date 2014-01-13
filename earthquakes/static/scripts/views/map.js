@@ -138,7 +138,9 @@ App.Views.MapView = Backbone.View.extend({
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
+
         this.userLocationMarker = L.marker([latitude, longitude]);
+
         this.userRadius = L.circle([latitude, longitude], searchRadius, {
             clickable: false,
             opacity: 0.3,

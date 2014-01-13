@@ -1,9 +1,6 @@
 App.Router = Backbone.Router.extend({
 
     initialize: function(){
-
-        console.log('router');
-
         /* initialize the collection to the application and
         fetch data here backbone docs says you shouldn't use
         fetch to populate collection on page load but my data
