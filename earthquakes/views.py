@@ -74,7 +74,6 @@ def detail(title, id):
         else:
             pass
 
-
     tmplt = render_template(
         'detail.html',
         recent_earthquakes = recent_earthquakes,
