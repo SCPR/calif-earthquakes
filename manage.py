@@ -31,7 +31,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self):
-        usgs_query_api = requests.get(app.config['ALL_PAST_THIRTY'], headers=app.config['API_MANAGER_HEADERS'])
+        usgs_query_api = requests.get(app.config['ALL_PAST_DAY'], headers=app.config['API_MANAGER_HEADERS'])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data['features']:
@@ -62,35 +62,33 @@ class UsgsApiQuery(Command):
     def retrieve_nearby_cities_from(self, list_of_instances):
         session = FuturesSession(max_workers=1)
         for detail_instance in list_of_instances:
-            #time.sleep(5)
             try:
                 nearest_cities_url = detail_instance['properties']['products']['nearby-cities'][0]['contents']['nearby-cities.json']['url']
             except:
                 nearest_cities_url = None
-            if nearest_cities_url:
-                try:
-                    nearest_cities_query_details = session.get(nearest_cities_url, headers=app.config['headers'])
-                    nearest_cities_api_details = nearest_cities_query_details.result()
-                    nearest_cities_api_details = nearest_cities_api_details.json()
-                    list_of_nearby_cities = []
-                    for nearby_city in nearest_cities_api_details:
-                        city = NearestCity(
-                            id = None,
-                            distance = nearby_city['distance'],
-                            direction = nearby_city['direction'],
-                            name = nearby_city['name'],
-                            latitude = nearby_city['latitude'],
-                            longitude = nearby_city['longitude'],
-                            population = nearby_city['population'],
-                            earthquake_id = None
-                        )
-                        list_of_nearby_cities.append(city)
-                except:
-                    list_of_nearby_cities = []
+            if nearest_cities_url is not None:
+                nearest_cities_query_details = session.get(nearest_cities_url, headers=app.config['API_MANAGER_HEADERS'])
+                nearest_cities_api_details = nearest_cities_query_details.result()
+                nearest_cities_api_details = nearest_cities_api_details.json()
+                list_of_nearby_cities = []
+                for nearby_city in nearest_cities_api_details:
+                    city = NearestCity(
+                        id = None,
+                        distance = nearby_city['distance'],
+                        direction = nearby_city['direction'],
+                        name = nearby_city['name'],
+                        latitude = nearby_city['latitude'],
+                        longitude = nearby_city['longitude'],
+                        population = nearby_city['population'],
+                        earthquake_id = None
+                    )
+                    list_of_nearby_cities.append(city)
+                logging.debug(list_of_nearby_cities)
+                detail_instance['nearest_cities_url'] = nearest_cities_url
+                detail_instance['nearest_cities'] = list_of_nearby_cities
             else:
                 pass
-            detail_instance['nearest_cities_url'] = nearest_cities_url
-            detail_instance['nearest_cities'] = list_of_nearby_cities
+        logging.debug(list_of_instances)
         self.write(list_of_instances)
 
     "write class instances to the database"
@@ -138,6 +136,7 @@ class UsgsApiQuery(Command):
                 )
                 db.session.add(quake)
                 for city in item['nearest_cities']:
+                    logging.debug(city)
                     db.session.add(city)
             else:
                 if instance.updated_raw == comparison_updated_raw:
