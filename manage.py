@@ -46,7 +46,7 @@ class UsgsApiQuery(Command):
     "performs request on local earthquake details url and returns the data"
     def retrieve_details_from(self, list_of_details_urls):
         logging.debug('Beginning to process %s records' % (len(list_of_details_urls)))
-        session = FuturesSession(max_workers=2)
+        session = FuturesSession(max_workers=1)
         for detail_instance in list_of_details_urls:
             usgs_query_details = session.get(detail_instance, headers=app.config['API_MANAGER_HEADERS'])
             usgs_api_details = usgs_query_details.result()

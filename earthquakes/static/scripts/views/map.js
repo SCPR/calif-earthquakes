@@ -48,7 +48,7 @@ App.Views.MapView = Backbone.View.extend({
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 3;
         } else {
-            this.initialZoom = 7;
+            this.initialZoom = markersCollection.initialZoom;
         }
 
         this.center = new L.LatLng(37.335194502529724, -119.366455078125);
@@ -137,7 +137,9 @@ App.Views.MapView = Backbone.View.extend({
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
+
         this.userLocationMarker = L.marker([latitude, longitude]);
+
         this.userRadius = L.circle([latitude, longitude], searchRadius, {
             clickable: false,
             opacity: 0.3,

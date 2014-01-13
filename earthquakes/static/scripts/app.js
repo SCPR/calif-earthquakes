@@ -12,7 +12,7 @@
         $.ajax({
             async: false,
             dataType: "text",
-            url: SITE_RELATIVE_ROOT + url,
+            url: SITE_URL + "/" + url,
             success: function(response) {
                 data = response;
             }
@@ -23,7 +23,7 @@
     $(function(){
         window.router = new App.Router();
         Backbone.history.start({
-            root: '/',
+            root: SITE_RELATIVE_ROOT,
             pushState: true,
         });
     });

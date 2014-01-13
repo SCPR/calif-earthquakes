@@ -115,14 +115,13 @@
 }
 
 
-.prologue .latest a {
+.prologue a.findMe {
     text-decoration: underline;
 }
 
 .prologue #location-awareness-input .no-show {
     display: none;
 }
-
 
 /* backbone places the map here */
 #content-map-container {
@@ -132,7 +131,7 @@
 }
 
 /* index page map */
-.prologue #content-map-canvas {
+.prologue .dashboard #content-map-canvas {
     width: 100%;
     height: 334px;
     z-index: 10;
@@ -146,7 +145,7 @@
 }
 
 /* full screen map */
-#content-map-canvas {
+.full-screen-map .dashboard #content-map-canvas {
     width: 100%;
     height: 1100px;
     z-index: 10;

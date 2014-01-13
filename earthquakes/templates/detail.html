@@ -164,7 +164,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         $(document).ready(function() {
-            var urlQuery = SITE_URL + 'api/earthquake/' + {{ earthquake.id }}
+            var urlQuery = SITE_URL + '/api/earthquake/' + {{ earthquake.id }}
             fn.retrieveData(urlQuery);
         });
 
@@ -187,7 +187,7 @@
                 if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
                     initialZoom = 3;
                 } else {
-                    initialZoom = 9;
+                    initialZoom = 8;
                 }
 
                 var mapCenter = new L.LatLng(data.latitude, data.longitude);
@@ -201,7 +201,13 @@
                     stamenTonerBaseLayer
                 );
 
-                console.log(map);
+                var myIcon = L.Icon.extend({
+                    imagePath: null,
+                    iconSize: [38, 95],
+                    iconAnchor: [22, 94],
+                    popupAnchor: [-3, -76]
+                });
+
 
                 var earthquakeLocationLayer = new L.layerGroup();
 

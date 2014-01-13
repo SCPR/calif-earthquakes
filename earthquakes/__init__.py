@@ -54,10 +54,10 @@ core_js = Bundle(
         'scripts/libs/underscore-min.js',
         'scripts/libs/backbone-min.js',
         'scripts/libs/moment.min.js',
-        'scripts/libs/shp.min.js',
+        #'scripts/libs/shp.min.js',
         'scripts/libs/leaflet.min.js',
         'scripts/libs/leaflet.markercluster.min.js',
-        'scripts/libs/leaflet.shpfile.min.js',
+        #'scripts/libs/leaflet.shpfile.min.js',
     ),
     # unminified js
     # gets minified and added to the output file
