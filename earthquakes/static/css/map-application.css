@@ -135,16 +135,12 @@
     width: 100%;
     height: 100%;
     z-index: 10;
-
-    box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.17);
-    background: gray;
-
 }
 
 /* detail page map */
 .map #content-map-canvas {
     width: 100%;
-    height: 411px;
+    height: 100%;
     z-index: 10;
 }
 
