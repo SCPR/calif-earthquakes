@@ -81,6 +81,7 @@ core_css = Bundle(
     'css/leaflet.min.css',
     'css/MarkerCluster.css',
     'css/MarkerCluster.Default.css',
+    'css/leaflet.usermarker.css',
     'css/style.css',
     'css/map-application.css',
     filters='cssmin',
