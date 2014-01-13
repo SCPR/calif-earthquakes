@@ -56,7 +56,6 @@ core_js = Bundle(
         'scripts/libs/moment.min.js',
         'scripts/libs/leaflet.min.js',
         'scripts/libs/leaflet.markercluster.min.js',
-        'scripts/libs/leaflet.usermarker.min.js',
     ),
     # unminified js
     # gets minified and added to the output file
@@ -70,6 +69,7 @@ core_js = Bundle(
         'scripts/collections/markers.js',
         'scripts/views/map.js',
         'scripts/views/clustered-marker.js',
+        'scripts/libs/leaflet.usermarker.min.js',
         filters='rjsmin',
     ),
     output="assets/min.js"
