@@ -2,6 +2,10 @@ App.Views.MapView = Backbone.View.extend({
 
     initialize: function(markersCollection){
 
+        if (L.Browser.touch) {
+            L.control.touchHover().addTo(map);
+        }
+
         this.template = _.template(template(markersCollection.template)),
 
         this.stamenToner = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {

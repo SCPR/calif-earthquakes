@@ -62,6 +62,7 @@ core_js = Bundle(
     # unminified js
     # gets minified and added to the output file
     Bundle(
+        'scripts/libs/Control.TouchHover.js',
         'scripts/app.js',
         'scripts/router/router.js',
         'scripts/models/earthquake.js',
