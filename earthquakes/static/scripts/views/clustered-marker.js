@@ -25,6 +25,8 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
         // create this.collection
         this.collection = markersCollection;
 
+        $("#quantity").html(this.collection.markers.length);
+
         // create this.map
         this.map = this.collection.map;
 
