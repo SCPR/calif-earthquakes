@@ -21,7 +21,7 @@ App.Views.MapView = Backbone.View.extend({
             this.initialZoom = markersCollection.initialZoom;
         }
 
-        this.center = new L.LatLng(37.2719, 119.2702);
+        this.center = new L.LatLng(37.335194502529724, -119.366455078125);
         this.render(markersCollection);
     },
 
