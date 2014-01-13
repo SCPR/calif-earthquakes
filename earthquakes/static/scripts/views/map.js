@@ -151,8 +151,7 @@ App.Views.MapView = Backbone.View.extend({
             scrollWheelZoom: false,
             zoomControl: true,
             minZoom: 6,
-        	maxZoom: 12,
-        	maxBounds: [[32.5343, -124.4096], [42.0095, -114.1308]]
+        	maxZoom: 12
         }).setView(
             this.center, this.initialZoom
         ).addLayer(
