@@ -7,46 +7,16 @@ App.Views.MapView = Backbone.View.extend({
         this.stamenToner = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
             attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>",
         	subdomains: "abcd",
-        	minZoom: 0,
-        	maxZoom: 17
+        	minZoom: 6,
+        	maxZoom: 12
         });
 
-        /*
-        this.CaliforniaFaultLines = new L.Shapefile('static/data/quaternary-faults/fault-areas.zip', {
-            style: function (feature) {
-                return {
-                    color: 'green',
-                    weight: 2,
-                    opacity: 1,
-                    fillColor: null,
-                    fillOpacity: 0
-                }
-            },
-        });
+        this.CaliforniaFaultLines = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-faultlines/{z}/{x}/{y}.png');
 
-        this.CaliforniaCountyBoundaries = L.geoJson(californiaCounties, {
-            style: function (feature) {
-                return {
-                    color: '#787878',
-                    weight: 2,
-                    opacity: 1,
-                    fillColor: null,
-                    fillOpacity: 0
-                }
-            },
-            onEachFeature: function(feature, layer) {
-                layer.on('click', function (e) {
-                    console.log(feature.properties.NAMELSAD10 + ' county layer clicked');
-                });
-            }
-        });
-
-        */
-
-        this.CaliforniaFaultLines = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/test-faultlines/{z}/{x}/{y}.png');
+        this.CaliforniaCountyBoundaries = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-county-boundaries/{z}/{x}/{y}.png');
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
-            this.initialZoom = 3;
+            this.initialZoom = 6;
         } else {
             this.initialZoom = markersCollection.initialZoom;
         }
@@ -64,9 +34,6 @@ App.Views.MapView = Backbone.View.extend({
 
         // triggers geolocation when anchor tag clicked
         "click a.findMe": "findMe",
-
-        // triggers search me
-        //"click a.searchMe": "searchMe",
 
         // changes radius value
         "change #search-radius": "navigate",
@@ -110,12 +77,6 @@ App.Views.MapView = Backbone.View.extend({
             alert("Sorry, we could not find your location.");
         }
     },
-
-    /*
-    searchMe: function(){
-        console.log('search me');
-    },
-    */
 
     navigate: function(){
         var latitude = $("input[id='latitudeSearch']").val();
@@ -161,8 +122,6 @@ App.Views.MapView = Backbone.View.extend({
 
     toggleLayers: function(event){
 
-        console.log('toggle me');
-
         if ($('#fault-lines').is(":checked")){
             this.map.addLayer(this.CaliforniaFaultLines);
             $("#fault-lines").attr("value", "shown");
@@ -173,8 +132,6 @@ App.Views.MapView = Backbone.View.extend({
             $("label[for='fault-lines']").text("Show fault lines");
         };
 
-        /*
-
         if ($('#county-boundaries').is(":checked")){
             this.map.addLayer(this.CaliforniaCountyBoundaries);
             $("#county-boundaries").attr("value", "shown");
@@ -184,9 +141,6 @@ App.Views.MapView = Backbone.View.extend({
             $("#county-boundaries").attr("value", "hidden");
             $("label[for='county-boundaries']").text("Show county boundaries");
         };
-
-        */
-
 
     },
 

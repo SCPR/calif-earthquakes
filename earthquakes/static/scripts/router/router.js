@@ -25,7 +25,7 @@ App.Router = Backbone.Router.extend({
 
     indexView: function(){
         var mapContainer = ".content-map-container";
-        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-index-view.html', 5);
+        this.createMap(mapContainer, window.earthquakeCollection, 'static/templates/map-index-view.html', 6);
     },
 
     createMap: function(mapContainer, markers, template, initialZoom){
