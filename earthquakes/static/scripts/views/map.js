@@ -21,7 +21,7 @@ App.Views.MapView = Backbone.View.extend({
             this.initialZoom = markersCollection.initialZoom;
         }
 
-        this.center = new L.LatLng(37.335194502529724, -119.366455078125);
+        this.center = new L.LatLng(37.2719, 119.2702);
         this.render(markersCollection);
     },
 
@@ -149,7 +149,10 @@ App.Views.MapView = Backbone.View.extend({
 
         this.map = L.map("content-map-canvas", {
             scrollWheelZoom: false,
-            zoomControl: true
+            zoomControl: true,
+            minZoom: 6,
+        	maxZoom: 12,
+        	maxBounds: [[32.5343, -124.4096], [42.0095, -114.1308]]
         }).setView(
             this.center, this.initialZoom
         ).addLayer(
