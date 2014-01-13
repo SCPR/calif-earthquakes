@@ -30,7 +30,7 @@ App.Views.MapView = Backbone.View.extend({
         "click button#submit": "navigate",
 
         // hits the navigate function when the submit button is pressed
-        "click button#reset": "resetUserView",
+        //"click button#reset": "resetUserView",
 
         // triggers address search funtion when key input
         "keyup :input": "addressSearch",
@@ -101,6 +101,7 @@ App.Views.MapView = Backbone.View.extend({
         }
     },
 
+    /*
     resetUserView: function(){
         $("div.submit").html("<button type='button' id='submit'>Submit</button>");
 
@@ -113,6 +114,7 @@ App.Views.MapView = Backbone.View.extend({
         $("input[id='accuracySearch']").val('');
 
     },
+    */
 
     addUserLayerToMap: function(latitude, longitude, accuracy, searchRadius){
 
