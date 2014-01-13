@@ -12,7 +12,7 @@
         $.ajax({
             async: false,
             dataType: "text",
-            url: url,
+            url: SITE_URL + url,
             success: function(response) {
                 data = response;
             }
