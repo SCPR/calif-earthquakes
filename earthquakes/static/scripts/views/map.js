@@ -116,7 +116,7 @@ App.Views.MapView = Backbone.View.extend({
 
     addUserLayerToMap: function(latitude, longitude, accuracy, searchRadius){
 
-        $("div.submit").html("<button type='button' id='reset'>Reset</button>");
+        $("div.submit").html("<button type='button' id='reset'>Remove Location</button>");
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
