@@ -178,23 +178,25 @@
                 var stamenTonerBaseLayer = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
                     attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>",
                 	subdomains: "abcd",
-                	minZoom: 0,
-                	maxZoom: 17
+                	minZoom: 6,
+                	maxZoom: 12
                 });
 
                 var initialZoom;
 
                 if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
-                    initialZoom = 3;
+                    initialZoom = 6;
                 } else {
-                    initialZoom = 8;
+                    initialZoom = 10;
                 }
 
                 var mapCenter = new L.LatLng(data.latitude, data.longitude);
 
                 var map = L.map("content-map-canvas", {
                     scrollWheelZoom: false,
-                    zoomControl: true
+                    zoomControl: true,
+                    minZoom: 6,
+                	maxZoom: 12
                 }).setView(
                     mapCenter, initialZoom
                 ).addLayer(
@@ -212,6 +214,8 @@
 
                 var earthquakeLocationMarker = new L.marker(mapCenter);
 
+                console.log(data);
+
                 /*
                 var earthquakeLocationMarker = L.circleMarker([data.latitude, data.longitude], 200, {
                     clickable: false,
@@ -224,11 +228,20 @@
 
                 earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
 
+                earthquakeLocationMarker.on("click", function(){
+                    earthquakeLocationMarker.bindPopup(
+                        "<p>" + moment(data.date_time).format('MMMM D, YYYY') + "<br />" +
+                        data.place + "<br />" +
+                        "Mag: " + data.mag + "</p>").openPopup();
+                });
+
+                /*
                 if (data.nearest_cities.length) {
                     for(var i=0; i<data.nearest_cities.length; i++){
                         earthquakeLocationLayer.addLayer(L.marker([data.nearest_cities[i].latitude, data.nearest_cities[i].longitude]))
                     }
                 }
+                */
 
                 earthquakeLocationLayer.addTo(map);
             }
