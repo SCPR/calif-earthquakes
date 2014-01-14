@@ -29,60 +29,70 @@ def index():
 
 @app.route('/<string:title>/<int:id>/', methods=['GET'])
 def detail(title, id):
-    #cached = cache.get("view/detail")
 
-    #if cached is not None:
-        #return cached
+    # set the cache key
+    identifier = 'detail_view_for_%d' % id
 
-    recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+    # see if theres a key
+    cached = cache.get(identifier)
 
-    earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
+    # if it does, return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
 
-    # this earthquakes lat and long
-    this_earthquake = (earthquake.latitude, earthquake.longitude)
+    # otherwise create it
+    else:
+        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
+        earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
 
-    # return all earthquakes except this one
-    earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time.desc()).all()
+        # this earthquakes lat and long
+        this_earthquake = (earthquake.latitude, earthquake.longitude)
 
-    # list to hold earthquakes found
-    list_of_nearby_earthquakes = []
+        # return all earthquakes except this one
+        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time.desc()).all()
 
-    # loop through our list of earthquakes
-    for instance in earthquake_instances:
+        # list to hold earthquakes found
+        list_of_nearby_earthquakes = []
 
-        # build a comparison
-        comparision_earthquake = (instance.latitude, instance.longitude)
+        # loop through our list of earthquakes
+        for instance in earthquake_instances:
 
-        # calculate the distance
-        evaluated_distance = haversine(this_earthquake, comparision_earthquake)
+            # build a comparison
+            comparision_earthquake = (instance.latitude, instance.longitude)
 
-        # if less than
-        if evaluated_distance < 25:
+            # calculate the distance
+            evaluated_distance = haversine(this_earthquake, comparision_earthquake)
 
-            # add param to object
-            instance.distance = evaluated_distance
+            # if less than
+            if evaluated_distance < 25:
 
-            # move along if we have six
-            if len(list_of_nearby_earthquakes) == 6:
+                # add param to object
+                instance.distance = evaluated_distance
+
+                # move along if we have six
+                if len(list_of_nearby_earthquakes) == 6:
+                    pass
+
+                else:
+                    # append if we don't
+                    list_of_nearby_earthquakes.append(instance)
+
+            # move along if not
+            else:
                 pass
 
-            else:
-                # append if we don't
-                list_of_nearby_earthquakes.append(instance)
+        tmplt = render_template(
+            'detail.html',
+            recent_earthquakes = recent_earthquakes,
+            earthquake = earthquake,
+            nearest_earthquakes = list_of_nearby_earthquakes
+        )
 
-        # move along if not
-        else:
-            pass
-
-    tmplt = render_template(
-        'detail.html',
-        recent_earthquakes = recent_earthquakes,
-        earthquake = earthquake,
-        nearest_earthquakes = list_of_nearby_earthquakes
-    )
-
-    #cache.set("view/detail", tmplt)
-    return tmplt
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt)
+        logging.debug(cache)
+        return tmplt
 
 @app.route('/explore-the-map', methods=['GET'])
 def map():
