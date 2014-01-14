@@ -14,21 +14,36 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 
 @app.route('/')
 def index():
-    #cached = cache.get("view/index")
-    #if cached is not None:
-        #return cached
-    recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
-    earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
-    tmplt = render_template(
-        'index.html',
-        recent_earthquakes = recent_earthquakes,
-        earthquake_instances = earthquake_instances
-    )
-    #cache.set("view/index", tmplt)
-    return tmplt
+
+    cache_expiration = 60 * 10
+
+    # set the cache key
+    identifier = 'view/index'
+
+    # see if theres a key
+    cached = cache.get(identifier)
+
+    # if it does, return it
+    if cached is not None:
+        return cached
+
+    else:
+        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
+        earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
+        tmplt = render_template(
+            'index.html',
+            recent_earthquakes = recent_earthquakes,
+            earthquake_instances = earthquake_instances
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
 
 @app.route('/<string:title>/<int:id>/', methods=['GET'])
 def detail(title, id):
+
+    cache_expiration = 60 * 10
 
     # set the cache key
     identifier = 'detail_view_for_%d' % id
@@ -38,7 +53,6 @@ def detail(title, id):
 
     # if it does, return it
     if cached is not None:
-        logging.debug(cached)
         return cached
 
     # otherwise create it
@@ -90,8 +104,7 @@ def detail(title, id):
         )
 
         # add pass the identifier and the template to the cache
-        cache.set(identifier, tmplt)
-        logging.debug(cache)
+        cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
 @app.route('/explore-the-map', methods=['GET'])
