@@ -48,9 +48,6 @@ App.Views.MapView = Backbone.View.extend({
     // adds lat and lng to form fields
     // retrieve values when enter pressed
     addressSearch: function(e){
-        $("input[id='addressSearch']").focus(function(){
-        });
-
         $("input[id='addressSearch']").geocomplete({
             details: "form"
         });
@@ -102,21 +99,26 @@ App.Views.MapView = Backbone.View.extend({
     },
 
     resetUserView: function(){
-        $("div.submit").html("<button type='button' id='submit'>Submit</button>");
-
         if (this.map.hasLayer(this.userLayer)){
             this.map.removeLayer(this.userLayer);
         }
-
+        $("select[id='search-radius']").val(
+            $("select[id='search-radius']").prop('defaultSelected')
+        );
+        $("input[id='addressSearch']").val('');
+        $("input[id='latitudeSearch']").val('');
         $("input[id='latitudeSearch']").val('');
         $("input[id='longitudeSearch']").val('');
         $("input[id='accuracySearch']").val('');
-
+        $("input[type='checkbox']").attr('checked', false);
+        this.toggleLayers();
+        this.map.setView(this.center, this.initialZoom);
+        $("div.submit").html("<button type='button' id='submit'>Search</button>");
     },
 
     addUserLayerToMap: function(latitude, longitude, accuracy, searchRadius){
 
-        //$("div.submit").html("<button type='button' id='reset'>Remove Location</button>");
+        $("div.submit").html("<button type='button' id='reset'>Reset map</button>");
 
         // create our user layers
         this.userLocationCenter = new L.LatLng(latitude, longitude);
