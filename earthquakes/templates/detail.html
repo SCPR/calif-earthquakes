@@ -232,8 +232,8 @@
                     earthquakeLocationMarker.bindPopup(
                         "<p>" + moment(data.date_time).format('MMMM D, YYYY') + "<br />" +
                         data.place + "<br />" +
-                        "Mag: " + data.mag + "</p>").openPopup();
-                });
+                        "Mag: " + data.mag + "</p>")
+                }).openPopup();
 
                 /*
                 if (data.nearest_cities.length) {
