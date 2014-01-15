@@ -97,6 +97,14 @@ def server_drop_nearby_cities():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py drop_cities"))
 
+def server_drop_row(record_id=''):
+    """
+    deletes a specific record
+    """
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py drop_row --record " + record_id))
+
 def __env_cmd(cmd):
     return env.bin_root + cmd
 

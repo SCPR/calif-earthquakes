@@ -210,15 +210,9 @@ class dropIndividualRow(Command):
     )
     def run(self, record):
         id = int(record)
-        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
-        logging.debug(type(earthquake))
-
-
-        #db.session.commit()
-
-
-
-
+        earthquake = Earthquake.query.get(id)
+        db.session.delete(earthquake)
+        db.session.commit()
 
 class local_test_argument(Command):
     "sets up the database based on models"
