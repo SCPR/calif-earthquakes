@@ -67,7 +67,7 @@ def url_structure_format(value, date):
     return formatted_value
 
 def convert_km_to_miles(value):
-    value = value * 1.609344
+    value = value / 1.609344
     return '{0:.3g}'.format(value)
 
 def round_floating_point(value):
