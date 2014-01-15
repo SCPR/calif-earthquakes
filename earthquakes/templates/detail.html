@@ -214,8 +214,6 @@
 
                 var earthquakeLocationMarker = new L.marker(mapCenter);
 
-                console.log(data);
-
                 /*
                 var earthquakeLocationMarker = L.circleMarker([data.latitude, data.longitude], 200, {
                     clickable: false,
@@ -225,8 +223,6 @@
                     fillOpacity: 0.3
                 });
                 */
-
-                earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
 
                 earthquakeLocationMarker.on("click", function(){
                     earthquakeLocationMarker.bindPopup(
@@ -243,6 +239,10 @@
                 }
                 */
 
+                var CaliforniaFaultLines = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-faultlines/{z}/{x}/{y}.png');
+
+                earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
+                earthquakeLocationLayer.addLayer(CaliforniaFaultLines)
                 earthquakeLocationLayer.addTo(map);
             }
 
