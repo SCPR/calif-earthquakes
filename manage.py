@@ -203,6 +203,23 @@ class dropNearbyCitiesRows(Command):
         db.session.commit()
         logging.debug('deleted %s records' % (database_rows))
 
+class dropIndividualRow(Command):
+    "sets up the database based on models"
+    option_list = (
+        Option('--record', '-record', dest='record'),
+    )
+    def run(self, record):
+        id = int(record)
+        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
+        logging.debug(type(earthquake))
+
+
+        #db.session.commit()
+
+
+
+
+
 class local_test_argument(Command):
     "sets up the database based on models"
     option_list = (
@@ -216,6 +233,7 @@ manager.add_command('query', UsgsApiQuery())
 manager.add_command('initdb', InitDb())
 manager.add_command('drop_earthquakes', dropEarthquakesRows())
 manager.add_command('drop_cities', dropNearbyCitiesRows())
+manager.add_command('drop_row', dropIndividualRow())
 manager.add_command('local_test_argument', local_test_argument)
 manager.add_command('db', MigrateCommand)
 

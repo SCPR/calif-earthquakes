@@ -142,6 +142,10 @@ def local_drop_nearby_cities():
     ''' deletes all instances of the NearbyCities model in the table '''
     local('python manage.py drop_cities')
 
+def local_drop_row(record_id=''):
+    ''' deletes a specific record '''
+    local('python manage.py drop_row --record ' + record_id)
+
 def local_test_argument(api_url=''):
     logging.debug(api_url)
     local('python manage.py local_test_argument --api_url ' + api_url)
