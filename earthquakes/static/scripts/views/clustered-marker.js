@@ -22,7 +22,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     addCollectionToMap: function(arrayOfModels){
         var myIcon = L.Icon.extend({
-            iconUrl: 'static/i/leaflet/blue-earthquake-pin.png',
+            iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png',
             iconSize: [38, 95],
             iconAnchor: [22, 94],
             popupAnchor: [-3, -76]
@@ -36,7 +36,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
         for(var i=0; i<arrayOfModels.length; i++){
             this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
-                {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin.png'})});
+                {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
             this.bindEvent(this.marker, arrayOfModels[i].attributes);
             this.markerCluster.addLayer(this.marker);
         };
