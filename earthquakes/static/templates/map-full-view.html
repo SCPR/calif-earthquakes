@@ -4,33 +4,35 @@
             <h1>Explore Earthquakes</h1>
         </header>
         <form class="filters">
-            <p>Displaying <span id="quantity"></span> earthquakes</p>
-            <div class="control stacked location">
-                <div class="pairing text">
-                    <label for="location">Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></label>
-                    <input type="text" id="addressSearch" placeholder="Start typing your address...">
-                    <div id="location-awareness-input">
-                        <input type="text" class="no-show" name="lat" id="latitudeSearch">
-                        <input type="text" class="no-show" name="lng" id="longitudeSearch">
-                        <input type="text" class="no-show" name="acc" id="accuracySearch">
+            <p>Displaying <span id="quantity"></span> recent earthquakes</p>
+            <div class="geography-browser">
+                <div class="control stacked location">
+                    <div class="pairing text">
+                        <label for="location">Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></label>
+                        <input type="text" id="addressSearch" placeholder="Start typing your address...">
+                        <div id="location-awareness-input">
+                            <input type="text" class="no-show" name="lat" id="latitudeSearch">
+                            <input type="text" class="no-show" name="lng" id="longitudeSearch">
+                            <input type="text" class="no-show" name="acc" id="accuracySearch">
+                        </div>
                     </div>
-                </div>
-                <div class="pairing radius">
-                    <label for="radius">Search Radius</label>
-                    <select name="search-radius" id="search-radius">
-                        <option value="3220">2 miles</option>
-                        <option value="8047">5 miles</option>
-                        <option value="16093">10 miles</option>
-                        <option value="24140">15 miles</option>
-                        <option value="32186">20 miles</option>
-                        <option value="80467">50 miles</option>
-                        <option value="160934">100 miles</option>
-                    </select>
-                </div>
-                <div class="control submit clearfix">
-                    <button type="button" id="submit">Submit</button>
-                </div>
-            </div><!--/ .location -->
+                    <div class="pairing radius">
+                        <label for="radius">Search Radius</label>
+                        <select name="search-radius" id="search-radius">
+                            <option value="3220">2 miles</option>
+                            <option value="8047">5 miles</option>
+                            <option value="16093">10 miles</option>
+                            <option value="24140">15 miles</option>
+                            <option value="32186">20 miles</option>
+                            <option value="80467">50 miles</option>
+                            <option value="160934">100 miles</option>
+                        </select>
+                    </div>
+                    <div class="control submit clearfix">
+                        <button type="button" id="submit">Submit</button>
+                    </div>
+                </div><!--/ .location -->
+            </div>
             <div class="control toggle faultlines">
                 <input type="checkbox" id="fault-lines" name="fault-lines" value="hidden">
                 <label for="fault-lines">Show fault lines</label>
@@ -49,5 +51,30 @@
     <div class="data-display clearfix"></div>
 </section>
 <section class="dashboard clearfix">
+    <aside class="legend clearfix">
+        <header>
+            <span>Legend</span>
+        </header>
+        <div class="keys clearfix">
+            <div class="inner">
+                <figure>
+                    <b class="icon"><img src="static/i/legend-incident.png" alt="Blue pin" /></b>
+                    <figcaption>Earthquake</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-cluster.png" alt="Blue circle" /></b>
+                    <figcaption>Earthquakes (cluster)</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-faults.png" alt="Green lines" /></b>
+                    <figcaption>Fault lines</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-counties.png" alt="Orange lines" /></b>
+                    <figcaption>County lines</figcaption>
+                </figure>
+            </div>
+        </div>
+    </aside><!--/ .legend -->
     <div id="content-map-canvas" class="initial"></div>
 </section>
