@@ -125,4 +125,4 @@ def require_appkey(view_function):
 
 # flask_restless config
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=200, max_results_per_page=200)
+manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri'], results_per_page=300, max_results_per_page=300)
