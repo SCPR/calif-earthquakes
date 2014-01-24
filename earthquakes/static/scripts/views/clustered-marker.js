@@ -1,27 +1,6 @@
 App.Views.ClusteredMarkerView = Backbone.View.extend({
 
     initialize: function(markersCollection) {
-        // if else gymnastics to set marker icon based on params
-
-        /*
-        var myIcon = L.Icon.extend({
-            iconUrl: 'images/camera.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76]
-        });
-
-        if (this.model.attributes.result_type === 'instagram'){
-            this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')], {icon: new myIcon({iconUrl: 'static/images/new-instagram-logo.png'})});
-        } else {
-            this.marker = L.marker([this.model.get('latitude'), this.model.get('longitude')], {icon: new myIcon({iconUrl: 'static/images/new-twitter-logo.png'})});
-        }
-        */
-
-        /* some gymnastics here to determine if should rendere a clustered map
-        or a single marker map. these should really be different views similar to
-        the items? maybe i pass the logic in the router sted of here. */
-
         // create this.collection
         this.collection = markersCollection;
 
@@ -42,6 +21,13 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
     },
 
     addCollectionToMap: function(arrayOfModels){
+        var myIcon = L.Icon.extend({
+            iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png',
+            iconSize: [38, 95],
+            iconAnchor: [22, 94],
+            popupAnchor: [-3, -76]
+        });
+
         this.markerCluster = L.markerClusterGroup({
             disableClusteringAtZoom: 16,
             zoomToBoundsOnClick: true,
@@ -49,9 +35,9 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
         });
 
         for(var i=0; i<arrayOfModels.length; i++){
-            this.marker = L.marker(L.latLng(arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude));
+            this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
+                {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
             this.bindEvent(this.marker, arrayOfModels[i].attributes);
-            //this.marker.addTo(this.map);
             this.markerCluster.addLayer(this.marker);
         };
 

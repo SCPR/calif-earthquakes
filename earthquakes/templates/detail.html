@@ -204,7 +204,7 @@
                 );
 
                 var myIcon = L.Icon.extend({
-                    imagePath: null,
+                    iconUrl: SITE_URL + '/static/i/leaflet/blue-earthquake-pin-small.png',
                     iconSize: [38, 95],
                     iconAnchor: [22, 94],
                     popupAnchor: [-3, -76]
@@ -212,17 +212,7 @@
 
                 var earthquakeLocationLayer = new L.layerGroup();
 
-                var earthquakeLocationMarker = new L.marker(mapCenter);
-
-                /*
-                var earthquakeLocationMarker = L.circleMarker([data.latitude, data.longitude], 200, {
-                    clickable: false,
-                    opacity: 0.3,
-                    weight: 1,
-                    color: '#ec792b',
-                    fillOpacity: 0.3
-                });
-                */
+                var earthquakeLocationMarker = new L.marker(mapCenter, {icon: new myIcon({iconUrl: SITE_URL + '/static/i/leaflet/blue-earthquake-pin-small.png'})});
 
                 earthquakeLocationMarker.on("click", function(){
                     earthquakeLocationMarker.bindPopup(
@@ -245,7 +235,6 @@
                 earthquakeLocationLayer.addLayer(CaliforniaFaultLines)
                 earthquakeLocationLayer.addTo(map);
             }
-
         };
     </script>
 {% endblock %}

@@ -2,50 +2,38 @@
     margin: 0;
     padding: 0;
 }
-
 table {
     border-collapse: collapse;
     border-spacing: 0;
 }
-
 fieldset, img {
     border: 0;
 }
-
 address, caption, cite, code, dfn, em, strong, th, var {
     font-style: normal;
     font-weight: normal;
 }
-
 ol, ul, li {
     list-style: none;
 }
-
 caption, th {
     text-align: left;
 }
-
 h1, h2, h3, h4, h5, h6 {
     font-size: 100%;
     font-weight: normal;
 }
-
 q:before, q:after {
-    content: ''
-}
-
+    content: ''}
 strong {
     font-weight: bold;
 }
-
 em {
     font-style: italic;
 }
-
 a img {
     border: none;
 }
-
 .clearfix:after {
     content: ".";
     display: block;
@@ -53,54 +41,42 @@ a img {
     clear: both;
     visibility: hidden;
 }
-
 .clearfix {
     display: inline-block;
 }
-
 .clearfix {
     display: block;
 }
-
 * html .clearfix {
     height: 1%}
 html {
     -webkit-text-size-adjust: none;
 }
-
 body {
     font-size: 100%;
     font-weight: normal;
 }
-
 .bound {
     width: 90%;
     max-width: 1300px;
     margin: 0 auto;
 }
-
 a {
     text-decoration: none;
     color: inherit;
 }
-
 img {
     display: block;
 }
-
 mark {
     background: none;
     color: inherit;
 }
-
 .ratio {
     position: relative;
 }
-
 .ratio .fill {
-    padding-top: 65%
-}
-
+    padding-top: 65%}
 .ratio .img-contain {
     display: block;
     position: absolute;
@@ -111,37 +87,30 @@ mark {
     background: #f0f0f0;
     overflow: hidden;
 }
-
 .ratio .img-contain img {
     width: 100%;
     height: auto;
     display: block;
 }
-
 input {
     -webkit-appearance: none;
     border-radius: 0;
 }
-
 header, aside, nav, footer, section, article, hgroup, address, figure, figcaption, video, details, summary, img {
     display: block;
 }
-
 body {
     background-color: black;
     font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
 }
-
 .masthead {
     background: #262626;
     padding: 50px 0 43px;
     color: #ec7c2d;
 }
-
 .masthead .inner {
     position: relative;
 }
-
 .masthead .brand {
     position: absolute;
     top: 0;
@@ -149,7 +118,6 @@ body {
     min-width: 162px;
     height: 23px;
 }
-
 .masthead .brand a {
     display: block;
     width: 100%;
@@ -160,26 +128,21 @@ body {
     background: url(../i/logo-kpcc.png) no-repeat;
     background-size: 100% auto;
 }
-
 .masthead h1, .masthead .tagline {
     margin: 0 0 0 190px;
 }
-
 .masthead h1 {
     text-transform: uppercase;
     font-weight: 700;
 }
-
 .masthead h1 a:hover {
     color: #ffac35;
     text-decoration: underline;
 }
-
 .masthead .tagline {
     color: #b66125;
     font-size: 0.8125em;
 }
-
 .masthead .pledge {
     position: absolute;
     text-align: right;
@@ -187,14 +150,12 @@ body {
     right: 0;
     color: #919191;
 }
-
 .masthead .pledge mark {
     display: block;
     color: white;
     text-transform: uppercase;
     font-weight: 700;
 }
-
 .masthead .pledge mark a {
     display: inline-block;
     background: url(../i/earthquake-icons.png) no-repeat;
@@ -202,248 +163,198 @@ body {
     background-position: 0 -43px;
     padding: 0 0 0 25px;
 }
-
 .masthead .pledge mark a:hover {
     text-decoration: underline;
 }
-
 .masthead .pledge p {
     font-size: 0.8125em;
 }
-
 @media screen and (max-width: 940px) {
     .masthead {
-        box-shadow: inset 0 69px 0 #262626,  inset 0 70px 0 #6b4428;
-        padding: 25px 0 30px;
-    }
-
-    .masthead .inner {
-        padding-top: 70px;
-    }
-
-    .masthead .brand {
-        min-width: 130px;
-    }
-
-    .masthead h1 {
-        margin: 0;
-        font-size: 1.5em;
-    }
-
-    .masthead .tagline {
-        margin: 0;
-    }
-
-    .masthead .pledge {
-        top: -4px;
-        font-size: 85%
-    }
+    box-shadow: inset 0 69px 0 #262626,  inset 0 70px 0 #6b4428;
+    padding: 25px 0 30px;
 }
-
-@media screen and (max-width: 440px) {
+.masthead .inner {
+    padding-top: 70px;
+}
+.masthead .brand {
+    min-width: 130px;
+}
+.masthead h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+.masthead .tagline {
+    margin: 0;
+}
+.masthead .pledge {
+    top: -4px;
+    font-size: 85%}
+}@media screen and (max-width: 440px) {
     .masthead {
-        box-shadow: inset 0 44px 0 #262626,  inset 0 45px 0 #6b4428;
-        padding: 15px 0 25px;
-    }
-
-    .masthead .inner {
-        padding-top: 50px;
-    }
-
-    .masthead .brand {
-        left: 50%;
-        margin-left: -65px;
-    }
-
-    .masthead h1, .masthead .tagline, .masthead .pledge {
-        text-align: center;
-    }
-
-    .masthead h1 {
-        margin-bottom: 3px;
-        font-size: 1.3em;
-        line-height: 1;
-    }
-
-    .masthead .tagline {
-        margin-bottom: 25px;
-    }
-
-    .masthead .pledge {
-        position: static;
-    }
+    box-shadow: inset 0 44px 0 #262626,  inset 0 45px 0 #6b4428;
+    padding: 15px 0 25px;
 }
-
-.page-cols {
+.masthead .inner {
+    padding-top: 50px;
+}
+.masthead .brand {
+    left: 50%;
+    margin-left: -65px;
+}
+.masthead h1, .masthead .tagline, .masthead .pledge {
+    text-align: center;
+}
+.masthead h1 {
+    margin-bottom: 3px;
+    font-size: 1.3em;
+    line-height: 1;
+}
+.masthead .tagline {
+    margin-bottom: 25px;
+}
+.masthead .pledge {
+    position: static;
+}
+}.page-cols {
     position: relative;
     z-index: 1;
     background: #f0f0f0 url(../i/fauxcol-body-base.png) repeat-y center top;
 }
-
 .page-cols>.inner {
     padding: 0 0 150px;
     background: url(../i/gray-dot.png) repeat-y 24.38462% top, url(../i/gray-dot.png) repeat-y 50% top, url(../i/fauxcol-body-inner.png) repeat-y 76.84615% top;
     background-size: 1px 1px,  1px 1px,  1500px 10px;
 }
-
 .page-cols .primary {
     width: 74.384615384615%;
     float: left;
 }
-
 .page-cols .supportive {
     width: 23.153846153846%;
     float: right;
 }
-
 .page-cols .supportive {
     padding-top: 69px;
     font-size: 0.8125em;
     color: #464646;
 }
-
 .page-cols .supportive>aside {
     text-align: right;
     margin-bottom: 50px;
 }
-
 .page-cols .supportive h1 {
     border-top: 1px solid #808080;
     margin-bottom: 30px;
     text-transform: uppercase;
     font-weight: 700;
     color: #444444;
-    padding: 5px 0 0 10%
-}
-
+    padding: 5px 0 0 10%}
 .page-cols .supportive ul, .page-cols .supportive .prose {
-    margin-left: 10%
-}
-
+    margin-left: 10%}
 .page-cols .supportive .prose p {
     margin-bottom: 1em;
 }
-
 .page-cols .supportive .prose a {
     color: #0068d2;
     border-bottom-color: #a4bed9;
 }
-
 .page-cols .supportive .prose a:hover {
     color: #9e4100;
     border-bottom-color: #ec7c2d;
 }
-
 .page-cols .supportive li {
     margin-bottom: 1em;
     line-height: 1.3;
 }
-
 .page-cols .supportive a {
     border-bottom: 1px solid #b6b6b6;
 }
-
 .page-cols .supportive a:hover {
     color: black;
     border-bottom-color: #464646;
 }
-
 @media screen and (max-width: 1023px) {
     .page-cols {
-       background: #f0f0f0;
-       }
+    background: #f0f0f0;
+}
+.page-cols>.inner {
+    padding: 0 0 0;
+    background: url(../i/gray-dot.png) repeat-y 32.7818% top, url(../i/gray-dot.png) repeat-y 67.2182% top;
+    background-size: 1px 1px,  1px 1px;
+}
+.page-cols .primary {
+    width: 100%;
+    float: none;
+    margin-bottom: 50px;
+}
+.page-cols .supportive {
+    width: 100%;
+    float: none;
+    background: #dbdbdb url(../i/gray-dot.png) repeat-y center top;
+    background-size: 1px 1px;
+    box-shadow: inset 0 7px 0 rgba(0, 0, 0, 0.3);
+    padding: 40px 5.5% 30px 5.5%;
+    width: 100%;
+    margin-left: -5.5%}
+.page-cols .supportive>aside {
+    width: 45%;
+    text-align: left;
+}
+.page-cols .supportive aside:nth-child(1) {
+    float: left;
+}
+.page-cols .supportive aside:nth-child(2) {
+    float: right;
+}
+.page-cols .supportive h1 {
+    padding-left: 0;
+    border-top: none;
+}
+.page-cols .supportive ul, .page-cols .supportive .prose {
+    margin-left: 0;
+}
+}@media screen and (max-width: 715px) {
     .page-cols>.inner {
-        padding: 0 0 0;
-        background: url(../i/gray-dot.png) repeat-y 32.7818% top, url(../i/gray-dot.png) repeat-y 67.2182% top;
-        background-size: 1px 1px,  1px 1px;
-    }
-    .page-cols .primary {
-        width: 100%;
-        float: none;
-        margin-bottom: 50px;
-    }
+    background: url(../i/gray-dot.png) repeat-y center top;
+    background-size: 1px 1px;
+}
+}@media screen and (max-width: 445px) {
     .page-cols .supportive {
-        width: 100%;
-        float: none;
-        background: #dbdbdb url(../i/gray-dot.png) repeat-y center top;
-        background-size: 1px 1px;
-        box-shadow: inset 0 7px 0 rgba(0, 0, 0, 0.3);
-        padding: 40px 5.5% 30px 5.5%;
-        width: 100%;
-        margin-left: -5.5%;
-    }
-    .page-cols .supportive>aside {
-        width: 45%;
-        text-align: left;
-    }
-    .page-cols .supportive aside:nth-child(1) {
-        float: left;
-    }
-    .page-cols .supportive aside:nth-child(2) {
-        float: right;
-    }
-    .page-cols .supportive h1 {
-        padding-left: 0;
-        border-top: none;
-    }
-    .page-cols .supportive ul, .page-cols .supportive .prose {
-        margin-left: 0;
-    }
+    background: #dbdbdb;
 }
-
-@media screen and (max-width: 715px) {
-    .page-cols>.inner {
-        background: url(../i/gray-dot.png) repeat-y center top;
-        background-size: 1px 1px;
-    }
+.page-cols .supportive>aside {
+    width: 100%}
+.page-cols .supportive aside:nth-child(1) {
+    float: left;
 }
-@media screen and (max-width: 445px) {
-    .page-cols .supportive {
-        background: #dbdbdb;
-    }
-
-    .page-cols .supportive>aside {
-        width: 100%}
-
-    .page-cols .supportive aside:nth-child(1) {
-        float: left;
-    }
-
-    .page-cols .supportive aside:nth-child(2) {
-        float: right;
-    }
-
-    .page-cols .supportive h1 {
-        padding-left: 0;
-        border-top: none;
-    }
-
-    .page-cols .supportive ul {
-        margin-left: 0;
-    }
+.page-cols .supportive aside:nth-child(2) {
+    float: right;
 }
-
-.magnitude-log li {
+.page-cols .supportive h1 {
+    padding-left: 0;
+    border-top: none;
+}
+.page-cols .supportive ul {
+    margin-left: 0;
+}
+}.magnitude-log li {
     display: block;
     margin-bottom: 1em;
 }
-
 .magnitude-log li a {
     display: block;
     position: relative;
     padding-top: 5px;
     padding: 5px 0 0 48px;
 }
-
 .magnitude-log li span {
     border-bottom: 1px solid #c2c2c2;
     line-height: 1;
 }
-
 .magnitude-log li span, .magnitude-log li b {
     display: block;
 }
-
 .magnitude-log li b {
     padding-top: 3px;
     font-weight: normal;
@@ -451,16 +362,13 @@ body {
     text-transform: uppercase;
     font-size: 0.8125em;
 }
-
 .magnitude-log li a:hover span {
     color: black;
     border-bottom-color: black;
 }
-
 .magnitude-log li a:hover b {
     color: #9e4100;
 }
-
 .magnitude-log li mark {
     display: block;
     width: 39px;
@@ -476,6 +384,95 @@ body {
 @media screen and (max-width: 1400px) {
     .magnitude-log {
     font-size: 0.875em;
+}
+}.legend {
+    border-top: 1px solid white;
+    background: #d7d7d7 url(../i/fauxcol-legend.png) repeat-y 28.6036% top;
+    background-size: 1500px 10px;
+    box-shadow: inset 0 2px 3px -2px rgba(0, 0, 0, 0.3);
+}
+.legend header {
+    text-transform: uppercase;
+    text-align: right;
+    width: 28.603603603604%;
+    float: left;
+}
+.legend header span {
+    display: block;
+    font-weight: 700;
+    color: #828181;
+    margin: 20px 10px 0 0;
+}
+.legend .keys {
+    float: right;
+    width: 71.396396396396%;
+    padding-bottom: 25px;
+}
+.legend .keys .inner {
+    margin: 15px 2.523659305994% 0;
+}
+.legend .keys figure {
+    font-size: 0.75em;
+    width: 23.5%;
+    float: left;
+    margin-right: 2%;
+    color: #68baff;
+    position: relative;
+}
+.legend .keys figure:last-child {
+    float: right;
+    margin-right: 0;
+}
+.legend .keys .icon {
+    display: block;
+    width: 33px;
+    position: absolute;
+}
+.legend .keys .icon img {
+    width: 100%;
+    height: auto;
+}
+.legend .keys figcaption {
+    margin-left: 40px;
+    display: block;
+    line-height: 1.1;
+    padding: 7px 0 0;
+}
+.legend .keys figure:nth-child(3) figcaption {
+    color: #37cd78;
+}
+.legend .keys figure:nth-child(4) figcaption {
+    color: #ff8a3b;
+}
+@media screen and (max-width: 760px) {
+    .legend {
+    background: #393939;
+}
+.legend header {
+    width: 100%;
+    text-align: left;
+    float: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px 0 8px;
+}
+.legend header span {
+    margin: 0 0 0 3%}
+.legend .keys {
+    width: 100%;
+    float: none;
+}
+}@media screen and (max-width: 540px) {
+    .legend .keys figure {
+    font-size: 0.6875em;
+}
+.legend .keys .icon {
+    left: 50%;
+    margin-left: -16px;
+}
+.legend .keys figcaption {
+    margin: 0 0 0 0;
+    padding-top: 50px;
+    text-align: center;
 }
 }.definitions {
     display: none;
@@ -718,60 +715,47 @@ body {
     .single .page-cols .dossier {
     margin-bottom: 0;
 }
-}
-
-@media screen and (max-width: 430px) {
+}@media screen and (max-width: 430px) {
     .single .page-cols .dossier .report {
-        width: 90%;
-        background: none;
-        margin: 0 0 35px 30px;
-    }
-
-    .single .page-cols .dossier .report>ul:first-child {
-        width: 100%;
-        float: none;
-        margin-left: 0;
-    }
-    .single .page-cols .dossier .report>ul:last-child {
-        width: 100%;
-        float: none;
-    }
+    width: 90%;
+    background: none;
+    margin: 0 0 35px 30px;
 }
-
-.single .page-cols .triptych .nearby {
+.single .page-cols .dossier .report>ul:first-child {
+    width: 100%;
+    float: none;
+    margin-left: 0;
+}
+.single .page-cols .dossier .report>ul:last-child {
+    width: 100%;
+    float: none;
+}
+}.single .page-cols .triptych .nearby {
     width: 31.127197518097%;
     float: left;
 }
-
 .single .page-cols .triptych .charts {
     width: 65.563598759049%;
     float: right;
 }
-
 .single .page-cols .triptych .charts>aside {
-    width: 47.476340694006%;
-}
-
+    width: 47.476340694006%}
 .single .page-cols .triptych .charts>aside.depth {
     float: left;
 }
-
 .single .page-cols .triptych .charts>aside.intensity {
     float: right;
 }
-
 .single .page-cols .triptych header {
     position: relative;
     margin-bottom: 30px;
 }
-
 .single .page-cols .triptych header h1 {
     text-transform: uppercase;
     font-size: 0.8125em;
     font-weight: 700;
     margin-right: 25px;
 }
-
 .single .page-cols .triptych header .tip {
     background: url(../i/earthquake-icons.png) no-repeat;
     background-size: 500px 1000px;
@@ -786,34 +770,30 @@ body {
     top: -3px;
     background-position: 0 -140px;
 }
-
 .single .page-cols .triptych header .tip:hover {
     background-position: 0 -170px;
 }
-
 @media screen and (max-width: 715px) {
     .single .page-cols .triptych .nearby {
-        float: none;
-        width: 100%;
-        background: #f0f0f0;
-        padding-top: 12px;
-        padding: 12px 0 30px;
-    }
-    .single .page-cols .triptych .charts {
-        padding-top: 12px;
-        border-top: 3px solid black;
-        width: 100%;
-        float: none;
-    }
-    .single .page-cols .triptych header {
-        margin-bottom: 20px;
-    }
-    .single .page-cols .triptych header h1 {
-        font-size: 0.75em;
-    }
+    float: none;
+    width: 100%;
+    background: #f0f0f0;
+    padding-top: 12px;
+    padding: 12px 0 30px;
 }
-
-.titling {
+.single .page-cols .triptych .charts {
+    padding-top: 12px;
+    border-top: 3px solid black;
+    width: 100%;
+    float: none;
+}
+.single .page-cols .triptych header {
+    margin-bottom: 20px;
+}
+.single .page-cols .triptych header h1 {
+    font-size: 0.75em;
+}
+}.titling {
     background: white;
     padding: 40px 0 56px;
     box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12);
@@ -821,39 +801,32 @@ body {
     z-index: 2;
     text-transform: uppercase;
 }
-
 .titling .stats {
     width: 32.461538461538%;
     margin-right: -0.769230769231%;
     float: right;
     text-align: right;
 }
-
 .titling .stats figure {
     background: #ec7c2d;
     width: 47.39336492891%;
     overflow: hidden;
     float: left;
 }
-
 .titling .stats figure.felt {
     background: #9b9b9b;
     float: right;
 }
-
 .titling .stats figure .value {
     position: relative;
     color: white;
 }
-
 .titling .stats figure .value b {
     font-weight: normal;
     font-weight: 700;
     font-size: 2.6875em;
     display: block;
-    margin-right: 5%;
-}
-
+    margin-right: 5%}
 .titling .stats figure .value .tip {
     background: url(../i/earthquake-icons.png) no-repeat;
     background-size: 500px 1000px;
@@ -868,107 +841,89 @@ body {
     bottom: 0.5em;
     background-position: 0 -80px;
 }
-
 .titling .stats figure .value .tip:hover {
     background-position: 0 -110px;
 }
-
 .titling .stats figure figcaption {
     background: white;
     font-size: 0.8125em;
     line-height: 1.1;
     padding-right: 5%}
-
 .titling .stats figure figcaption mark {
     font-weight: 700;
     display: block;
     padding: 5px 0;
 }
-
 .titling .stats figure figcaption p {
     text-transform: none;
     font-size: 0.84615384615385em;
     color: #767676;
 }
-
 .titling .stats figure figcaption p a {
     border-bottom: 1px solid #dddddd;
     line-height: 1.3;
 }
-
 .titling .stats figure figcaption p a:hover {
     border-bottom-color: black;
     color: black;
 }
-
 .titling .stats figure.magnitude figcaption mark {
     color: #ec7c2d;
 }
-
 .titling .stats figure.felt figcaption mark {
     color: #9b9b9b;
 }
-
 .titling .vitals {
     width: 65.846153846154%;
     float: left;
 }
-
 .titling .vitals h1 {
     font-weight: 300;
     font-size: 3em;
     line-height: 1.03;
     margin-bottom: 8px;
 }
-
 .titling .vitals h2 {
     font-size: 0.875em;
     color: #808080;
 }
-
 @media screen and (max-width: 750px) {
     .titling {
-        padding: 25px 0 30px;
-    }
-    .titling .stats {
-        width: 100%;
-        margin-right: -0.769230769231%;
-        float: none;
-    }
-    .titling .stats figure figcaption {
-        padding-bottom: 2px;
-    }
-    .titling .vitals {
-        width: 100%;
-        float: none;
-        margin-bottom: 30px;
-    }
-    .titling .vitals h1 {
-        font-size: 2.5em;
-    }
+    padding: 25px 0 30px;
 }
-
-.column-chart {
+.titling .stats {
+    width: 100%;
+    margin-right: -0.769230769231%;
+    float: none;
+}
+.titling .stats figure figcaption {
+    padding-bottom: 2px;
+}
+.titling .vitals {
+    width: 100%;
+    float: none;
+    margin-bottom: 30px;
+}
+.titling .vitals h1 {
+    font-size: 2.5em;
+}
+}.column-chart {
     height: 273px;
     position: relative;
     z-index: 1;
 }
-
 .column-chart .range {
     width: 36.87707641196%;
     position: relative;
     background: #d2d2d2;
     height: 100%}
-
 .column-chart .range .fill {
     display: block;
     background: #dfa77f;
     width: 100%;
     position: absolute;
     top: 0;
-    height: 50%
-}
-
+    height: 50%}
 .column-chart .marker {
     display: block;
     position: absolute;
@@ -983,7 +938,6 @@ body {
     font-weight: 700;
     color: #888888;
 }
-
 .column-chart .marker span {
     white-space: nowrap;
     overflow: hidden;
@@ -993,99 +947,80 @@ body {
     padding-left: 10px;
     line-height: 1;
     margin-top: -5px;
-    margin-left: 45.847176079734%
-}
-
+    margin-left: 45.847176079734%}
 .column-chart .marker.label {
     top: 50%;
     color: #de5c00;
     font-size: 0.875em;
     background-image: url(../i/orange-dot.png);
 }
-
 .column-chart .marker.label span {
     margin-top: -6px;
 }
-
 .column-chart .marker.conclusion {
     top: auto;
     bottom: 0;
     background-position: left bottom;
 }
-
 .column-chart .marker.conclusion span {
     margin-bottom: -4px;
 }
-
 .column-chart.from-floor .range .fill {
     top: auto;
     bottom: 0;
 }
-
 body.landing .masthead {
     padding-bottom: 51px;
 }
-
 body.landing .masthead .inner {
     padding-top: 91px;
 }
-
 body.landing .masthead h1, body.landing .masthead .tagline {
     margin: 0 0 4px 0;
 }
-
 body.landing .masthead h1 {
     color: white;
     font-weight: 300;
     font-size: 3em;
 }
-
 body.landing .masthead h1 a:hover {
     color: inherit;
 }
-
 body.landing .masthead .tagline {
     color: #9c9c9c;
     font-size: 0.9375em;
 }
-
 @media screen and (max-width: 940px) {
     body.landing .masthead {
-        box-shadow: inset 0 69px 0 #262626,  inset 0 70px 0 #777777;
-    }
+    box-shadow: inset 0 69px 0 #262626,  inset 0 70px 0 #777777;
 }
-
-@media screen and (max-width: 670px) {
+}@media screen and (max-width: 670px) {
     body.landing .masthead h1 {
-        font-size: 2.35em;
-        line-height: 1;
-    }
+    font-size: 2.35em;
+    line-height: 1;
 }
-@media screen and (max-width: 440px) {
+}@media screen and (max-width: 440px) {
     body.landing .masthead {
-        box-shadow: inset 0 44px 0 #262626,  inset 0 45px 0 #777777;
-    }
-    body.landing .masthead .inner {
-        padding-top: 60px;
-    }
-    body.landing .masthead h1 {
-        margin-bottom: 10px;
-        font-size: 2em;
-    }
-    body.landing .masthead .tagline {
-        margin-bottom: 20px;
-        font-size: 0.8125em;
-    }
+    box-shadow: inset 0 44px 0 #262626,  inset 0 45px 0 #777777;
 }
-
-.prologue {
+body.landing .masthead .inner {
+    padding-top: 60px;
+}
+body.landing .masthead h1 {
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+body.landing .masthead .tagline {
+    margin-bottom: 20px;
+    font-size: 0.8125em;
+}
+}.prologue {
     background: white;
     padding: 61px 0 63px;
     box-shadow: inset 0 5px 0 #e0e0e0, 0 5px 0 rgba(0, 0, 0, 0.12);
     position: relative;
     z-index: 2;
 }
-
 .prologue .inner {
     background: url(../i/fauxcol-dashboard.png) repeat-y 31.69231% top;
     background-size: 1500px 10px;
@@ -1096,11 +1031,9 @@ body.landing .masthead .tagline {
     font-size: 0.8125em;
     margin-bottom: 1.5em;
 }
-
 .prologue header h1 {
     font-weight: 700;
 }
-
 .prologue .latest {
     width: 25.615384615385%;
     float: left;
@@ -1108,12 +1041,10 @@ body.landing .masthead .tagline {
     padding-top: 15px;
     color: #464646;
 }
-
 .prologue .latest article {
     position: relative;
     margin-bottom: 1.7em;
 }
-
 .prologue .latest article .magnitude {
     width: 63px;
     display: block;
@@ -1127,7 +1058,6 @@ body.landing .masthead .tagline {
     left: 0;
     padding: 8px 0;
 }
-
 .prologue .latest article h1 {
     font-size: 1.3125em;
     line-height: 1;
@@ -1137,69 +1067,62 @@ body.landing .masthead .tagline {
     border-bottom: 1px solid #e8ac81;
     padding-top: 3px;
 }
-
 .prologue .latest article ul li {
     font-size: 0.8125em;
     margin-bottom: 3px;
 }
-
 .prologue .latest article ul .near {
     font-size: 1em;
 }
-
 .prologue .latest article ul mark {
     font-weight: 700;
 }
-
 .prologue .latest article ul .near mark {
     color: #d15904;
 }
-
 .prologue .latest article ul span {
     font-style: italic;
     color: #b2b2b2;
 }
-
 .prologue .latest article a {
     display: block;
     position: relative;
     padding-left: 79px;
 }
-
 .prologue .latest article a:hover .magnitude {
     box-shadow: inset 0 0 0 3px #9e4100;
     color: #9e4100;
 }
-
 .prologue .latest article a:hover h1 {
     border-bottom-color: #9e4100;
     color: #9e4100;
 }
-
 .prologue .latest article a:hover ul .near mark {
     color: #9e4100;
 }
-
 .prologue .dashboard {
     width: 68.307692307692%;
     float: right;
     position: relative;
 }
-
 .prologue .dashboard .controls {
     padding: 18px 0 40px;
     width: 28.603603603604%;
     float: left;
 }
-
 .prologue .dashboard .controls header, .prologue .dashboard .controls form {
-    margin: 0 12.59842519685%
-    }
-
+    margin: 0 12.59842519685%}
 .prologue .dashboard .controls header {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
-
+.prologue .dashboard .controls .geography-browser {
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0 5% 15px;
+    width: 100%;
+    margin: 0 0 20px -5%;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.07);
+    border-radius: 5px;
+}
 .prologue .dashboard .controls .control {
     margin-bottom: 8px;
 }
@@ -1209,82 +1132,79 @@ body.landing .masthead .tagline {
     font-size: 0.75em;
     font-family: "proxima-nova",  "Avenir Next",  "Avenir",  "Lucida Grande",  "Corbel",  "Tahoma",  Arial,  sans-serif;
 }
-
 .prologue .dashboard .controls .control input {
     color: #d15904;
 }
-
 .prologue .dashboard .controls .control input[type="checkbox"] {
     border: 1px solid blue;
     -webkit-appearance: checkbox;
 }
-
 .prologue .dashboard .controls .control p {
     margin-bottom: 8px;
 }
-
 .prologue .dashboard .controls .control p label, .prologue .dashboard .controls .control p input {
     display: inline-block;
 }
-
 .prologue .dashboard .controls .control.stacked {
     padding-top: 8px;
 }
-
 .prologue .dashboard .controls .control.stacked p input {
     border: none;
     background: none;
     padding: 0;
     width: 5em;
 }
-
 .prologue .dashboard .controls .control.stacked label {
     font-size: 0.6875em;
     text-transform: uppercase;
     color: #7e7e7e;
 }
-
 .prologue .dashboard .controls .control.toggle {
     background: #ecd2a2;
     border-radius: 5px;
-    padding: 1px 5px 4px;
-    margin-left: -5px;
+    padding: 1px 5% 4px;
+    margin-left: -5%;
+    width: 100%;
+    position: relative;
 }
-
+.prologue .dashboard .controls .control.toggle label {
+    line-height: 1;
+    display: block;
+    margin: 5px 0 3px 19px;
+}
+.prologue .dashboard .controls .control.toggle input {
+    position: absolute;
+    top: 6px;
+    left: 5%}
 .prologue .dashboard .controls .control.location {
     padding-top: 15px;
 }
-
 .prologue .dashboard .controls .control.location .pairing.text {
     margin-bottom: 8px;
 }
-
 .prologue .dashboard .controls .control.location .pairing.text label {
     display: block;
     margin-bottom: 5px;
 }
-
 .prologue .dashboard .controls .control.location input[type="text"] {
     display: block;
     border: 1px solid gray;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     padding: 3px;
     width: 100%;
     font-weight: normal;
 }
-
 .prologue .dashboard .controls .control.submit, .prologue .dashboard .controls .control.more-options {
-    padding-top: 12px;
+    padding-top: 8px;
     border-top: 1px solid rgba(0, 0, 0, 0.15);
-    margin-top: 11px;
+    margin: 10px 0 0;
 }
-
 .prologue .dashboard .controls .control.submit button, .prologue .dashboard .controls .control.more-options button {
     display: block;
     padding: 6px 9px;
     cursor: pointer;
-    /*float: right;*/
-    width: 100%;
+    float: right;
     text-align: center;
     border: none;
     background: #9e4100;
@@ -1294,180 +1214,158 @@ body.landing .masthead .tagline {
     font-size: 0.9375em;
     text-transform: uppercase;
 }
-
 .prologue .dashboard .controls .control.submit button:hover, .prologue .dashboard .controls .control.more-options button:hover {
     background: #ec7c2d;
 }
-
 .prologue .dashboard .controls .control.more-options {
     padding-top: 10px;
     margin-top: 17px;
     margin-bottom: 0;
 }
-
 .prologue .dashboard .controls .control.more-options button {
     background: #838383;
     font-size: 0.6875em;
 }
-
 .prologue .dashboard .controls .control.more-options button:hover {
     background: #adadad;
 }
-
 .prologue .dashboard .module {
     width: 71.396396396396%;
     float: right;
     overflow: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.17);
-    background: gray;
+    background: #acc0de;
     min-height: 250px;
+    position: relative;
 }
-
 @media screen and (max-width: 1200px) {
     .prologue .latest article {
-        font-size: 85%
-    }
-}
-
-@media screen and (max-width: 1023px) {
-    .prologue {
-        padding-top: 35px;
-    }
-    .prologue .inner {
-        background: none;
-    }
-    .prologue .latest, .prologue .dashboard {
-        width: 100%;
-        float: none;
-    }
-    .prologue .latest {
-        padding-top: 0;
-        border-top: none;
-        border-bottom: 3px solid #e4e4e4;
-        margin-bottom: 25px;
-    }
-    .prologue .latest header {
-        padding-bottom: 8px;
-        border-bottom: 3px solid #e4e4e4;
-    }
-    .prologue .latest article {
-        width: 31.33333%;
-        float: left;
-        box-shadow: inset 0 45px 0 #fff, inset 0 46px 0 #ec7c2d;
-    }
-    .prologue .latest article h1 {
-        font-size: 1.2em;
-        display: block;
-        margin-bottom: 14px;
-        margin-left: 79px;
-        border-bottom: none;
-    }
-    .prologue .latest article h1 span {
-        display: block;
-    }
-    .prologue .latest article a {
-        padding-left: 0;
-    }
-    .prologue .latest article a:hover {
-        box-shadow: inset 0 45px 0 #fff, inset 0 46px 0 #9e4100;
-    }
-    .prologue .latest article .magnitude {
-        padding: 6px 0;
-    }
-    .prologue .latest article:first-child {
-        margin-right: 3%}
-    .prologue .latest article:last-child {
-        float: right;
-    }
-    .prologue .dashboard .controls {
-        padding-top: 0;
-    }
-    .prologue .dashboard .controls form, .prologue .dashboard .controls header {
-        margin-left: 0;
-    }
-}
-
-@media screen and (max-width: 690px) {
-    .prologue .latest article {
-        box-shadow: none;
-        text-align: center;
-    }
-    .prologue .latest article .magnitude {
-        top: 0;
-        width: 100%
-    }
-    .prologue .latest article h1 {
-        margin: 0 0 7px;
-        padding: 45px 0 3px;
-        border-bottom: 1px solid #ec7c2d;
-    }
-    .prologue .latest article h1 span {
-        display: inline;
-    }
-    .prologue .latest article a:hover {
-        box-shadow: none;
-    }
-}
-
-@media screen and (max-width: 630px) {
-    .prologue .dashboard .controls {
-        width: 100%;
-        float: none;
-        margin: 0 auto;
-        max-width: 350px;
-    }
-    .prologue .dashboard .controls form {
-        margin: 0 0 0 0;
-    }
+    font-size: 85%}
+}@media screen and (min-width: 1024px) {
     .prologue .dashboard .module {
-        width: 100%;
-        float: none;
-        position: relative;
-    }
+    min-height: 376px;
 }
-
-@media screen and (max-width: 519px) {
+}@media screen and (max-width: 1023px) {
+    .prologue {
+    padding-top: 35px;
+}
+.prologue .inner {
+    background: none;
+}
+.prologue .latest, .prologue .dashboard {
+    width: 100%;
+    float: none;
+}
+.prologue .latest {
+    padding-top: 0;
+    border-top: none;
+    border-bottom: 3px solid #e4e4e4;
+    margin-bottom: 25px;
+}
+.prologue .latest header {
+    padding-bottom: 8px;
+    border-bottom: 3px solid #e4e4e4;
+}
+.prologue .latest article {
+    width: 31.33333%;
+    float: left;
+    box-shadow: inset 0 45px 0 #fff, inset 0 46px 0 #ec7c2d;
+}
+.prologue .latest article h1 {
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 14px;
+    margin-left: 79px;
+    border-bottom: none;
+}
+.prologue .latest article h1 span {
+    display: block;
+}
+.prologue .latest article a {
+    padding-left: 0;
+}
+.prologue .latest article a:hover {
+    box-shadow: inset 0 45px 0 #fff, inset 0 46px 0 #9e4100;
+}
+.prologue .latest article .magnitude {
+    padding: 6px 0;
+}
+.prologue .latest article:first-child {
+    margin-right: 3%}
+.prologue .latest article:last-child {
+    float: right;
+}
+.prologue .dashboard .controls {
+    padding-top: 0;
+}
+.prologue .dashboard .controls form, .prologue .dashboard .controls header {
+    margin-left: 0;
+}
+}@media screen and (max-width: 690px) {
     .prologue .latest article {
-        text-align: left;
-        float: none;
-        width: 100%
-    }
-
-    .prologue .latest article:first-child {
-        margin-right: 0;
-    }
-
-    .prologue .latest article:last-child {
-        float: none;
-    }
-
-    .prologue .latest article a {
-        padding-left: 79px;
-    }
-
-    .prologue .latest article .magnitude {
-        width: 63px;
-    }
-
-    .prologue .latest article h1 {
-        padding: 4px 0 0;
-    }
+    box-shadow: none;
+    text-align: center;
 }
-
-@media screen and (min-width: 1024px) {
+.prologue .latest article .magnitude {
+    top: 0;
+    width: 100%}
+.prologue .latest article h1 {
+    margin: 0 0 7px;
+    padding: 45px 0 3px;
+    border-bottom: 1px solid #ec7c2d;
+}
+.prologue .latest article h1 span {
+    display: inline;
+}
+.prologue .latest article a:hover {
+    box-shadow: none;
+}
+}@media screen and (max-width: 630px) {
+    .prologue .dashboard .controls {
+    width: 100%;
+    float: none;
+    margin: 0 auto;
+    max-width: 85%}
+.prologue .dashboard .controls form {
+    margin: 0 0 0 0;
+}
+.prologue .dashboard .control.toggle {
+    padding-right: 2%;
+    padding-left: 2%;
+    margin-left: -2%}
+.prologue .dashboard .control.toggle input {
+    left: 3%}
+.prologue .dashboard .module {
+    width: 100%;
+    float: none;
+    position: relative;
+}
+}@media screen and (max-width: 519px) {
+    .prologue .latest article {
+    text-align: left;
+    float: none;
+    width: 100%}
+.prologue .latest article:first-child {
+    margin-right: 0;
+}
+.prologue .latest article:last-child {
+    float: none;
+}
+.prologue .latest article a {
+    padding-left: 79px;
+}
+.prologue .latest article .magnitude {
+    width: 63px;
+}
+.prologue .latest article h1 {
+    padding: 4px 0 0;
+}
+}@media screen and (min-width: 1024px) {
     body.landing .page-cols>.inner {
-        background-position: 24.6% top, 49.75% top, 76.84615% top;
-    }
+    background-position: 24.6% top, 49.75% top, 76.84615% top;
 }
-
-body.landing .page-cols .supportive {
+}body.landing .page-cols .supportive {
     padding-top: 59px;
 }
-
 body.landing .page-cols .primary header {
     padding: 48px 0 23px;
     background: #f0f0f0;
@@ -1475,37 +1373,30 @@ body.landing .page-cols .primary header {
     text-transform: uppercase;
     margin-bottom: 20px;
 }
-
 body.landing .page-cols .primary header h1 {
     font-weight: 700;
     color: #444444;
     font-size: 1.25em;
 }
-
 body.landing .page-cols .primary .magnitude-log ul {
     column-count: 3;
     -moz-column-count: 3;
     -webkit-column-count: 3;
 }
-
 @media screen and (max-width: 715px) {
     body.landing .page-cols .primary .magnitude-log ul {
-        column-count: 2;
-        -moz-column-count: 2;
-        -webkit-column-count: 2;
-    }
+    column-count: 2;
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
 }
-
-@media screen and (max-width: 460px) {
+}@media screen and (max-width: 460px) {
     body.landing .page-cols .primary .magnitude-log ul {
-        column-count: 1;
-        -moz-column-count: 1;
-        -webkit-column-count: 1;
-    }
+    column-count: 1;
+    -moz-column-count: 1;
+    -webkit-column-count: 1;
 }
-
-@media screen and (max-width: 460px) {
+}@media screen and (max-width: 460px) {
     body.landing .page-cols>.inner {
-        background-image: none;
-    }
+    background-image: none;
+}
 }
