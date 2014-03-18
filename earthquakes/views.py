@@ -107,6 +107,14 @@ def detail(title, id):
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
+@app.route('/internal-staff-lookup')
+def lookup():
+    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).all()
+    return render_template(
+        'lookup.html',
+        earthquake_instances = earthquake_instances
+    )
+
 @app.route('/explore-the-map', methods=['GET'])
 def map():
     return render_template(
