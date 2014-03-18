@@ -105,11 +105,17 @@ def server_drop_row(record_id=''):
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py drop_row --record " + record_id))
 
+def server_find_dupes():
+    ''' finds duplicate records '''
+    with cd(env.project_root):
+        run("export FLASK_ENV=production")
+        run(__env_cmd("python manage.py find_dupes"))
+
 def __env_cmd(cmd):
     return env.bin_root + cmd
 
-# local commands
 
+# local commands
 def localrun():
     """
     run the flask application

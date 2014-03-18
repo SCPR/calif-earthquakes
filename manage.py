@@ -215,7 +215,7 @@ class dropIndividualRow(Command):
         db.session.commit()
 
 class findDuplicates(Command):
-    "deletes instance of a record in the table"
+    "deletes instance of a duplicate record in the table"
     def run(self):
 
         # lets get all of the earthquakes
@@ -246,11 +246,16 @@ class findDuplicates(Command):
             else:
                 logging.debug("No matches or outlier")
 
+        findDuplicates.process(list_of_duplicate_quakes)
+
+    @staticmethod
+    def process(list_of_duplicate_quakes):
+
         # here's a list of lists of duplicates
         for instance in list_of_duplicate_quakes:
 
+            # let's consider our two instances
             if len(instance) == 2:
-                # let's consider our two instances
                 initial_instance = instance[0]
                 comparison_instance = instance[1]
 
@@ -260,21 +265,14 @@ class findDuplicates(Command):
 
                     # compare timestamps
                     if comparison_instance.updated_raw > initial_instance.updated_raw:
-                        logging.debug("Delete initial_instance. Comparison time %s is more recent than %s" % (comparison_instance.updated, initial_instance.updated
-                        ))
                         findDuplicates.delete_this_duplicate(initial_instance.id)
-
                     else:
-                        logging.debug("Delete comparison_instance. Initial time of %s is more recent than %s?" % (initial_instance.updated, comparison_instance.updated
-                        ))
                         findDuplicates.delete_this_duplicate(comparison_instance.id)
-
                 else:
                     logging.debug("These codes don't match so let's leave things alone")
-                    print "These codes don't match so let's leave %s alone" % (initial_instance.code)
 
+            # let's consider our three instances
             elif len(instance) == 3:
-                # let's consider our two instances
                 initial_instance = instance[0]
                 middle_instance = instance[1]
                 last_instance = instance[2]
