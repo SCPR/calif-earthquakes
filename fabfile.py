@@ -154,6 +154,10 @@ def local_drop_row(record_id=''):
     ''' deletes a specific record '''
     local('python manage.py drop_row --record ' + record_id)
 
+def local_find_dupes():
+    ''' finds duplicate records '''
+    local('python manage.py find_dupes')
+
 def local_test_argument(api_url=''):
     logging.debug(api_url)
     local('python manage.py local_test_argument --api_url ' + api_url)

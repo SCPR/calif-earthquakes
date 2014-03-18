@@ -204,7 +204,7 @@ class dropNearbyCitiesRows(Command):
         logging.debug('deleted %s records' % (database_rows))
 
 class dropIndividualRow(Command):
-    "sets up the database based on models"
+    "deletes instance of a record in the table"
     option_list = (
         Option('--record', '-record', dest='record'),
     )
@@ -213,6 +213,103 @@ class dropIndividualRow(Command):
         earthquake = Earthquake.query.get(id)
         db.session.delete(earthquake)
         db.session.commit()
+
+class findDuplicates(Command):
+    "deletes instance of a record in the table"
+    def run(self):
+
+        # lets get all of the earthquakes
+        earthquakes = Earthquake.query.all()
+
+        # create a list to hold the duplicates
+        list_of_duplicate_quakes = []
+
+        # cycle through our queryset
+        for quake in earthquakes:
+
+            # identify if it's a duplicate
+            duplicate = Earthquake.query.filter_by(url=quake.url).count()
+
+            # if it is a double dupe append it to a list
+            if duplicate == 2:
+                logging.debug("Two matches")
+                this_quake = Earthquake.query.filter_by(url=quake.url).all()
+                list_of_duplicate_quakes.append(this_quake)
+
+            # if it is a three dupe append it to a list
+            elif duplicate == 3:
+                logging.debug("Three matches")
+                this_quake = Earthquake.query.filter_by(url=quake.url).all()
+                list_of_duplicate_quakes.append(this_quake)
+
+            # pass it on by
+            else:
+                logging.debug("No matches or outlier")
+
+        # here's a list of lists of duplicates
+        for instance in list_of_duplicate_quakes:
+
+            if len(instance) == 2:
+                # let's consider our two instances
+                initial_instance = instance[0]
+                comparison_instance = instance[1]
+
+                # see if the codes are the same
+                if initial_instance.code == comparison_instance.code:
+                    logging.debug("checking for the newer record?")
+
+                    # compare timestamps
+                    if comparison_instance.updated_raw > initial_instance.updated_raw:
+                        logging.debug("Delete initial_instance. Comparison time %s is more recent than %s" % (comparison_instance.updated, initial_instance.updated
+                        ))
+                        findDuplicates.delete_this_duplicate(initial_instance.id)
+
+                    else:
+                        logging.debug("Delete comparison_instance. Initial time of %s is more recent than %s?" % (initial_instance.updated, comparison_instance.updated
+                        ))
+                        findDuplicates.delete_this_duplicate(comparison_instance.id)
+
+                else:
+                    logging.debug("These codes don't match so let's leave things alone")
+                    print "These codes don't match so let's leave %s alone" % (initial_instance.code)
+
+            elif len(instance) == 3:
+                # let's consider our two instances
+                initial_instance = instance[0]
+                middle_instance = instance[1]
+                last_instance = instance[2]
+
+                # see if the codes are the same
+                if initial_instance.code == middle_instance.code == last_instance.code:
+                    logging.debug("checking for the newer record?")
+
+                    print "%s - %s - %s" % (initial_instance.updated, middle_instance.updated, last_instance.updated)
+                    big = last_instance.updated
+                    if (initial_instance.updated > middle_instance.updated and initial_instance.updated > last_instance.updated):
+                       big = initial_instance.updated
+                       findDuplicates.delete_this_duplicate(middle_instance.id)
+                       findDuplicates.delete_this_duplicate(last_instance.id)
+                       print big
+                    elif(middle_instance.updated > last_instance.updated):
+                       big = middle_instance.updated
+                       findDuplicates.delete_this_duplicate(initial_instance.id)
+                       findDuplicates.delete_this_duplicate(last_instance.id)
+                       print big
+                    else:
+                        findDuplicates.delete_this_duplicate(initial_instance.id)
+                        findDuplicates.delete_this_duplicate(middle_instance.id)
+                        print big
+
+    @staticmethod
+    def delete_this_duplicate(record_id):
+        logging.debug("Delete %s from database" % (record_id))
+        try:
+            earthquake = Earthquake.query.get(record_id)
+            logging.debug(earthquake)
+            db.session.delete(earthquake)
+            db.session.commit()
+        except:
+            print "exception for %s\n" % (record_id)
 
 class local_test_argument(Command):
     "sets up the database based on models"
@@ -228,6 +325,7 @@ manager.add_command('initdb', InitDb())
 manager.add_command('drop_earthquakes', dropEarthquakesRows())
 manager.add_command('drop_cities', dropNearbyCitiesRows())
 manager.add_command('drop_row', dropIndividualRow())
+manager.add_command('find_dupes', findDuplicates())
 manager.add_command('local_test_argument', local_test_argument)
 manager.add_command('db', MigrateCommand)
 
