@@ -87,20 +87,18 @@ class UsgsApiQuery(Command):
                         earthquake_id = None
                     )
                     list_of_nearby_cities.append(city)
-                logging.debug(list_of_nearby_cities)
                 detail_instance['nearest_cities_url'] = nearest_cities_url
                 detail_instance['nearest_cities'] = list_of_nearby_cities
             else:
                 pass
-        logging.debug(list_of_instances)
         self.write(list_of_instances)
 
     "write class instances to the database"
     def write(self, list_of_instances):
         for item in list_of_instances:
-            comparison_slug = '%s-%s' % (item['properties']['title'].lower(), item['properties']['time'])
+            comparison_code = '%s' % (item['properties']['code'])
             comparison_updated_raw = item['properties']['updated']
-            instance = Earthquake.query.filter_by(primary_slug=comparison_slug).first()
+            instance = Earthquake.query.filter_by(code=comparison_code).first()
             if instance is None:
                 logging.debug('creating new record')
                 quake = Earthquake(
@@ -138,6 +136,7 @@ class UsgsApiQuery(Command):
                     nearest_cities_url = item['nearest_cities_url'],
                     nearest_cities=item['nearest_cities']
                 )
+                logging.debug(quake)
                 db.session.add(quake)
                 for city in item['nearest_cities']:
                     logging.debug(city)
@@ -179,7 +178,6 @@ class UsgsApiQuery(Command):
                     instance.gap = item['properties']['gap']
                     instance.magType = item['properties']['magType']
                     instance.nearest_cities_url = item['nearest_cities_url']
-            db.session.commit()
         logging.debug('Processed %s records' % (len(list_of_instances)))
 
 class InitDb(Command):
