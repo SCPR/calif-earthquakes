@@ -228,18 +228,18 @@ class findDuplicates(Command):
         for quake in earthquakes:
 
             # identify if it's a duplicate
-            duplicate = Earthquake.query.filter_by(url=quake.url).count()
+            duplicate = Earthquake.query.filter_by(code=quake.code).count()
 
             # if it is a double dupe append it to a list
             if duplicate == 2:
                 logging.debug("Two matches")
-                this_quake = Earthquake.query.filter_by(url=quake.url).all()
+                this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
 
             # if it is a three dupe append it to a list
             elif duplicate == 3:
                 logging.debug("Three matches")
-                this_quake = Earthquake.query.filter_by(url=quake.url).all()
+                this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
 
             # pass it on by
