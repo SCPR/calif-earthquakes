@@ -183,6 +183,6 @@ App.Views.LaHabraView = Backbone.View.extend({
 
         this.model = markersCollection.model.attributes;
         this.model.map = this.map;
-        this.markerViews = new App.Views.ClusteredMarkerView(this.model);
+        this.markerViews = new App.Views.SingleMarkerView(this.model);
     }
 });
