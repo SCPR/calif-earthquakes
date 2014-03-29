@@ -69,6 +69,9 @@ def url_structure_format(value, date):
     value = value.replace(', California', '')
     split_value = value.split(' of ')
     date_format = '%B-%-d-%Y'
+    pacific = pytz.timezone("US/Pacific")
+    utc = timezone("UTC")
+    date = date.replace(tzinfo=pytz.UTC).astimezone(pacific)
     date_string = date.strftime(date_format)
     instance_location = str(split_value[1]).replace(' ', '-').lower()
     instance_date = date_string.lower()
