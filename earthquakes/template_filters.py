@@ -14,17 +14,23 @@ def time_format(value):
 	return value
 
 def date_format(value, html_tag):
+    pacific = pytz.timezone("US/Pacific")
+    utc = timezone("UTC")
     if html_tag:
         date_format = '%B %-d, <' + html_tag + '>%Y</' + html_tag + '>'
     else:
         date_format = '%B %-d, %Y'
+    value = value.replace(tzinfo=pytz.UTC).astimezone(pacific)
     value = value.strftime(date_format)
     return value
 
 def date_format_no_year(value):
-	date_format = '%B %-d'
-	value = value.strftime(date_format)
-	return value
+    pacific = pytz.timezone("US/Pacific")
+    utc = timezone("UTC")
+    value = value.replace(tzinfo=pytz.UTC).astimezone(pacific)
+    date_format = '%B %-d'
+    value = value.strftime(date_format)
+    return value
 
 def strip_and_format_state(value, html_tag):
     value = value.replace(', California', '')
