@@ -105,7 +105,7 @@ App.Views.SingleMarkerView = Backbone.View.extend({
 
         for(var i=0; i<arrayOfModels.length; i++){
 
-            if (arrayOfModels[i].attributes.mag > 5){
+            if (arrayOfModels[i].attributes.mag >= 4){
                 this.marker = new L.CircleMarker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude], {
                     radius: 15,
                     color: '#9e4100',
@@ -116,7 +116,7 @@ App.Views.SingleMarkerView = Backbone.View.extend({
                     clickable: true
                 });
 
-            } else if (arrayOfModels[i].attributes.mag < 5 && arrayOfModels[i].attributes.mag > 2.5){
+            } else if (arrayOfModels[i].attributes.mag < 4 && arrayOfModels[i].attributes.mag > 2.5){
                 this.marker = new L.CircleMarker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude], {
                     radius: 10,
                     color: '#9e4100',

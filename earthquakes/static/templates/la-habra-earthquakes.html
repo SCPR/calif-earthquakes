@@ -1,11 +1,42 @@
+<style>
+.clear {margin-bottom: 15px;}
+
+.circleBase {
+    -moz-border-radius: 999px; /* Firefox */
+    -webkit-border-radius: 999px; /* Safari and Chrome */
+    border-radius: 999px; /* Opera 10.5+, future browsers, and now also Internet Explorer 6+ using IE-CSS3 */
+    behavior: url(ie-css3.htc); /* This lets IE know to call the script on all elements which get the 'box' class */
+    float: left;
+    margin-right: 25px;
+}
+.largerQuake {width: 25px; height: 25px; background: #ec7c2d; opacity: 1}
+.mediumQuake {width: 15px; height: 15px; background: #ec7c2d; opacity: .8}
+.smallerQuake {width: 10px; height: 10px; background: #ec7c2d; opacity: .5}
+.hidden {display: none;}
+</style>
+
 <section class="latest">
     <div class="controls">
         <header>
             <h1>Earthquakes near La Habra</h1>
         </header>
+        <p>A magnitude-5.1 earthquake near La Habra Friday night continued to produce aftershocks into Saturday afternoon.</p>
+        <p>&nbsp;</p>
+        <p>The map to the right centers on the seismic activity near La Habra since Friday afternoon, and is based on U.S. Geological Survey data..</p>
+        <p>&nbsp;</p>
+        <div class="clear">
+            <div class="circleBase largerQuake"></div>
+            <div class="keytext"><strong>Greater than magnitude 4.0</strong></div>
+        </div>
+        <div class="clear">
+            <div class="circleBase mediumQuake"></div>
+            <div class="keytext"><strong>Between magnitude 2.5 and 3.9</strong></div>
+        </div>
+        <div class="clear">
+            <div class="circleBase smallerQuake"></div>
+            <div class="keytext"><strong>Less than magnitude 2.4</strong></div>
 
-        <p>A magnitude-5.1 earthquake near La Habra Friday night continued to produce aftershocks into Saturday morning. The map to the right centers on the seismic activity near La Habra since Friday afternoon, and is based on U.S. Geological Survey data..</p>
-
+        </div>
         <form class="filters">
             <!--
             <p>Displaying <span id="quantity"></span> recent earthquakes</p>
@@ -62,11 +93,11 @@
         </header>
         <div class="keys clearfix">
             <div class="inner">
-                <figure>
+                <figure class="hidden">
                     <b class="icon"><img src="static/i/legend-incident.png" alt="Blue pin" /></b>
                     <figcaption>Earthquake</figcaption>
                 </figure>
-                <figure>
+                <figure class="hidden">
                     <b class="icon"><img src="static/i/legend-cluster.png" alt="Blue circle" /></b>
                     <figcaption>Earthquakes (cluster)</figcaption>
                 </figure>
