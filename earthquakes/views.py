@@ -43,7 +43,7 @@ def index():
 @app.route('/<string:title>/<int:id>/', methods=['GET'])
 def detail(title, id):
 
-    cache_expiration = 60 * 10
+    cache_expiration = 60 * 1
 
     # set the cache key
     identifier = 'detail_view_for_%d' % id
