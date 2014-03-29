@@ -51,6 +51,9 @@ def strip_state(value):
 def place_format(value, date):
     value = value.replace(', California', '')
     split_value = value.split(' of ')
+    pacific = pytz.timezone("US/Pacific")
+    utc = timezone("UTC")
+    date = date.replace(tzinfo=pytz.UTC).astimezone(pacific)
     date_format = '%B %-d, %Y'
     date_string = date.strftime(date_format)
     formatted_value = '%s: %s' % (split_value[1], date_string)
