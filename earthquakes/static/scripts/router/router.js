@@ -21,7 +21,7 @@ App.Router = Backbone.Router.extend({
 
     laHabraQuakeMap: function(){
         var mapContainer = ".content-map-container";
-        this.laHabraMap(mapContainer, window.earthquakeCollection, 'static/templates/la-habra-earthquakes.html', 12);
+        this.laHabraMap(mapContainer, window.earthquakeCollection, 'static/templates/la-habra-earthquakes.html', 13);
     },
 
     fullScreenView: function(){

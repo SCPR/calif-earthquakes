@@ -106,16 +106,37 @@ App.Views.SingleMarkerView = Backbone.View.extend({
         for(var i=0; i<arrayOfModels.length; i++){
 
             if (arrayOfModels[i].attributes.mag > 5){
-                this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
-                    {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
+                this.marker = new L.CircleMarker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude], {
+                    radius: 15,
+                    color: '#9e4100',
+                    fillColor: '#ec7c2d',
+                    fillOpacity: 1.0,
+                    opacity: 1.0,
+                    weight: 5.0,
+                    clickable: true
+                });
 
             } else if (arrayOfModels[i].attributes.mag < 5 && arrayOfModels[i].attributes.mag > 2.5){
-                this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
-                    {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
+                this.marker = new L.CircleMarker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude], {
+                    radius: 10,
+                    color: '#9e4100',
+                    fillColor: '#ec7c2d',
+                    fillOpacity: .8,
+                    opacity: .8,
+                    weight: 1.0,
+                    clickable: true
+                });
 
             } else {
-                this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
-                    {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
+                this.marker = new L.CircleMarker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude], {
+                    radius: 5,
+                    color: '#9e4100',
+                    fillColor: '#ec7c2d',
+                    fillOpacity: .5,
+                    opacity: .5,
+                    weight: 1.0,
+                    clickable: true
+                });
             }
 
             this.bindEvent(this.marker, arrayOfModels[i].attributes);
