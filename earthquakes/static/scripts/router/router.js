@@ -16,6 +16,12 @@ App.Router = Backbone.Router.extend({
     routes: {
         "": "indexView",
         "explore-the-map": "fullScreenView",
+        "la-habra-earthquakes": "laHabraQuakeMap",
+    },
+
+    laHabraQuakeMap: function(){
+        var mapContainer = ".content-map-container";
+        this.laHabraMap(mapContainer, window.earthquakeCollection, 'static/templates/la-habra-earthquakes.html', 12);
     },
 
     fullScreenView: function(){
@@ -47,5 +53,27 @@ App.Router = Backbone.Router.extend({
         });
 
         return this.mapView;
+    },
+
+    laHabraMap: function(mapContainer, markers, template, initialZoom){
+        // if mapView on page remove it
+
+        if (this.mapView){
+            this.mapView.remove();
+        };
+
+        this.mapModel = new App.Models.Map({
+            markers: markers
+        });
+
+        this.mapView = new App.Views.LaHabraView({
+            model: this.mapModel,
+            container: mapContainer,
+            template: template,
+            initialZoom: initialZoom
+        });
+
+        return this.mapView;
     }
+
 });

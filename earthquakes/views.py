@@ -121,6 +121,12 @@ def map():
         'full-screen-map.html',
     )
 
+@app.route('/la-habra-earthquakes', methods=['GET'])
+def la_habra_map():
+    return render_template(
+        'la-habra-earthquakes.html',
+    )
+
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
     @wraps(view_function)

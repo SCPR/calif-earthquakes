@@ -50,7 +50,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
                 "<p>" + moment(attributes.pacific_timezone).format('MMMM D, YYYY') + "<br />" +
                 attributes.place + "<br />" +
                 "Mag: " + attributes.mag + "</p>" +
-                "<a href='" + attributes.earthquake_tracker_url + "'>View on Earthquake Tracker</a>");
+                "<a href='" + attributes.earthquake_tracker_url + "'>Read More</a>");
         }).openPopup();
 
         /*
