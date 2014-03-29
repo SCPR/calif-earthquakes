@@ -1,0 +1,85 @@
+<section class="latest">
+    <div class="controls">
+        <header>
+            <h1>Earthquakes near La Habra</h1>
+        </header>
+
+        <p>A magnitude-5.1 earthquake near La Habra Friday night continued to produce aftershocks into Saturday morning. The map to the right centers on the seismic activity near La Habra since Friday afternoon, and is based on U.S. Geological Survey data..</p>
+
+        <form class="filters">
+            <!--
+            <p>Displaying <span id="quantity"></span> recent earthquakes</p>
+            -->
+            <div class="geography-browser">
+                <div class="control stacked location">
+                    <div class="pairing text">
+                        <label for="location">Enter your address or use <a class="findMe" href="javascript:void(0)">your location</a></label>
+                        <input type="text" id="addressSearch" placeholder="Start typing your address...">
+                        <div id="location-awareness-input">
+                            <input type="text" class="no-show" name="lat" id="latitudeSearch">
+                            <input type="text" class="no-show" name="lng" id="longitudeSearch">
+                            <input type="text" class="no-show" name="acc" id="accuracySearch">
+                        </div>
+                    </div>
+                    <div class="pairing radius">
+                        <label for="radius">Search Radius</label>
+                        <select name="search-radius" id="search-radius">
+                            <option value="3220">2 miles</option>
+                            <option value="8047">5 miles</option>
+                            <option value="16093">10 miles</option>
+                            <option value="24140">15 miles</option>
+                            <option value="32186">20 miles</option>
+                            <option value="80467">50 miles</option>
+                            <option value="160934">100 miles</option>
+                        </select>
+                    </div>
+                    <div class="control submit clearfix">
+                        <button type="button" id="submit">Submit</button>
+                    </div>
+                </div><!--/ .location -->
+            </div>
+            <div class="control toggle faultlines">
+                <input type="checkbox" id="fault-lines" name="fault-lines" value="hidden">
+                <label for="fault-lines">Show fault lines</label>
+            </div>
+            <div class="control toggle counties">
+                <input type="checkbox" id="county-boundaries" name="county-boundaries" value="hidden">
+                <label for="county-boundaries">Show county boundaries</label>
+            </div>
+            <!--
+            <div class="control more-options clearfix">
+                <button>Explore the map further</button>
+            </div>
+            -->
+        </form>
+    </div>
+    <div class="data-display clearfix"></div>
+</section>
+<section class="dashboard clearfix">
+    <aside class="legend clearfix">
+        <header>
+            <span>Legend</span>
+        </header>
+        <div class="keys clearfix">
+            <div class="inner">
+                <figure>
+                    <b class="icon"><img src="static/i/legend-incident.png" alt="Blue pin" /></b>
+                    <figcaption>Earthquake</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-cluster.png" alt="Blue circle" /></b>
+                    <figcaption>Earthquakes (cluster)</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-faults.png" alt="Green lines" /></b>
+                    <figcaption>Fault lines</figcaption>
+                </figure>
+                <figure>
+                    <b class="icon"><img src="static/i/legend-counties.png" alt="Orange lines" /></b>
+                    <figcaption>County lines</figcaption>
+                </figure>
+            </div>
+        </div>
+    </aside><!--/ .legend -->
+    <div id="content-map-canvas" class="initial"></div>
+</section>
