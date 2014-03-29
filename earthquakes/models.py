@@ -3,6 +3,9 @@
 import os, logging, requests, time, datetime, calendar
 from flask import url_for
 from flask.ext.sqlalchemy import SQLAlchemy
+import pytz
+from pytz import timezone
+from datetime import tzinfo, date
 from earthquakes import app, db
 import earthquakes.views
 
@@ -80,6 +83,30 @@ class Earthquake(db.Model):
     def resource_uri(self):
         ''' take database record and add resource_uri '''
         url_prefix = "%s/api/earthquakes" % app.config["SITE_URL"]
+        return "%s/%s" % (url_prefix, self.id)
+
+    def pacific_timezone(self):
+        ''' take database record and create pacific timezone day and date '''
+        date_format = '%B-%-d-%Y'
+        pacific = pytz.timezone("US/Pacific")
+        utc = timezone("UTC")
+        date = self.date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
+        return date
+
+    def earthquake_tracker_url(self):
+        ''' take database record and creates link to earthquake tracker instance '''
+        value = self.place
+        value = value.replace(', California', '')
+        split_value = value.split(' of ')
+        instance_location = str(split_value[1]).replace(' ', '-').lower()
+        date_format = '%B-%-d-%Y'
+        pacific = pytz.timezone("US/Pacific")
+        utc = timezone("UTC")
+        date = self.date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
+        date_string = date.strftime(date_format)
+        instance_date = date_string.lower()
+        formatted_value = '%s-%s' % (instance_location, instance_date)
+        url_prefix = "%s/%s" % (app.config["SITE_URL"], formatted_value)
         return "%s/%s" % (url_prefix, self.id)
 
     def __repr__(self):

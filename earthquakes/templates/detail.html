@@ -216,9 +216,9 @@
 
                 earthquakeLocationMarker.on("click", function(){
                     earthquakeLocationMarker.bindPopup(
-                        "<p>" + moment(data.date_time).format('MMMM D, YYYY') + "<br />" +
+                        "<p>" + moment(data.pacific_timezone).format('MMMM D, YYYY') + "<br />" +
                         data.place + "<br />" +
-                        "Mag: " + data.mag + "</p>")
+                        "Mag: " + data.mag + "</p>");
                 }).openPopup();
 
                 /*
