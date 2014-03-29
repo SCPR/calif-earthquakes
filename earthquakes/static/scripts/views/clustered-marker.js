@@ -47,10 +47,17 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
     bindEvent: function(marker, attributes){
         marker.on("click", function(){
             marker.bindPopup(
-                "<p>" + moment(attributes.pacific_timezone).format('MMMM D, YYYY') + "<br />" +
-                attributes.place + "<br />" +
-                "Mag: " + attributes.mag + "</p>" +
-                "<a href='" + attributes.earthquake_tracker_url + "'>Read More</a>");
+                "<div class='map-marker'>"+
+                    "<article>" +
+                        "<a href='" + attributes.earthquake_tracker_url + "'>" +
+                            "<h1>" + moment(attributes.pacific_timezone).format('MMMM D, YYYY, h:mm a') + "</h1>" +
+                            "<ul>" +
+                                "<li class='near'><strong>Location</strong>: " + attributes.place + "</li>" +
+                            "</ul>" +
+                            "<aside class='magnitude'><strong>Magnitude</strong>: " + attributes.mag + "</aside>" +
+                        "</a>" +
+                    "</article>" +
+                "</div");
         }).openPopup();
 
         /*

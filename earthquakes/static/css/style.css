@@ -1400,3 +1400,48 @@ body.landing .page-cols .primary .magnitude-log ul {
     background-image: none;
 }
 }
+
+
+/* map marker styles */
+.map-marker article h1 {
+    font-size: 1.2em;
+    line-height: 1;
+    color: #d15904;
+    /* display: inline-block; */
+    margin-bottom: 6px;
+    border-bottom: 1px solid #e8ac81;
+    padding-top: 3px;
+}
+.map-marker article ul li {
+    font-size: 0.8125em;
+    margin-bottom: 3px;
+}
+.map-marker article ul .near {
+    font-size: 1em;
+}
+.map-marker article ul mark {
+    font-weight: 700;
+}
+.map-marker article ul .near mark {
+    color: #d15904;
+}
+.map-marker article ul span {
+    font-style: italic;
+    color: #b2b2b2;
+}
+.map-marker article a {
+    /* display: block; */
+    /* position: relative; */
+    padding-left: 79px;
+}
+.map-marker article a:hover .magnitude {
+    box-shadow: inset 0 0 0 3px #9e4100;
+    color: #9e4100;
+}
+.map-marker article a:hover h1 {
+    border-bottom-color: #9e4100;
+    color: #9e4100;
+}
+.map-marker article a:hover ul .near mark {
+    color: #9e4100;
+}
