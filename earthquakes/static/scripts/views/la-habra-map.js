@@ -18,7 +18,7 @@ App.Views.LaHabraView = Backbone.View.extend({
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
             this.initialZoom = 6;
         } else {
-            this.initialZoom = markersCollection.initialZoom;
+            this.initialZoom = 7;
         }
 
         this.center = new L.LatLng(33.9053, -117.949);
