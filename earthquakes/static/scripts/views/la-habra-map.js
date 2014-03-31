@@ -16,9 +16,9 @@ App.Views.LaHabraView = Backbone.View.extend({
         this.CaliforniaCountyBoundaries = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-county-boundaries/{z}/{x}/{y}.png');
 
         if (navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)) {
-            this.initialZoom = 6;
+            this.initialZoom = 8;
         } else {
-            this.initialZoom = 7;
+            this.initialZoom = 13;
         }
 
         this.center = new L.LatLng(33.9053, -117.949);
