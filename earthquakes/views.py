@@ -12,6 +12,9 @@ from haversine import haversine
 
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
+# set the maximum number of records to return to the view
+DB_QUERY_LIMIT = 1000
+
 @app.route('/')
 def index():
 
@@ -21,20 +24,21 @@ def index():
     # set the cache identifier
     identifier = 'view/index'
 
-    # see if theres an identifier set
+    # see if cache exists
     cached = cache.get(identifier)
 
-    # if so return it
+    # if cache exists return it
     if cached is not None:
-        logging.debug(cached)
         return cached
 
-    # otherwise generate the page
+    # if cache doesnt exist generate the page
     else:
-
-        # can these queries be combined into one large one and then filtered?
-        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
-        earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
+        earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+        recent_earthquakes = earthquakes[:3]
+        earthquake_instances = []
+        for earthquake in earthquakes:
+            if earthquake.mag > 2.5:
+                earthquake_instances.append(earthquake)
         tmplt = render_template(
             'index.html',
             recent_earthquakes = recent_earthquakes,
@@ -54,26 +58,23 @@ def detail(title, id):
     # set the cache identifier
     identifier = 'detail_view_for_%d' % id
 
-    # see if theres an identifier set
+    # see if cache exists
     cached = cache.get(identifier)
 
-    # if so return it
+    # if cache exists return it
     if cached is not None:
-        logging.debug(cached)
         return cached
 
     # otherwise generate the page
     else:
 
-        # can these queries be combined into one large one and then filtered?
-        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
-        earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
-
-        # this earthquakes lat and long
+        # get this earthquake
+        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
         this_earthquake = (earthquake.latitude, earthquake.longitude)
 
-        # return all earthquakes except this one
-        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time.desc()).all()
+        # get earthquakes that aren't this one
+        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+        recent_earthquakes = earthquake_instances[:6]
 
         # list to hold earthquakes found
         list_of_nearby_earthquakes = []
@@ -101,10 +102,6 @@ def detail(title, id):
                     # append if we don't
                     list_of_nearby_earthquakes.append(instance)
 
-            # move along if not
-            else:
-                pass
-
         tmplt = render_template(
             'detail.html',
             recent_earthquakes = recent_earthquakes,
@@ -118,23 +115,86 @@ def detail(title, id):
 
 @app.route('/internal-staff-lookup')
 def lookup():
-    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(50).all()
-    return render_template(
-        'lookup.html',
-        earthquake_instances = earthquake_instances
-    )
+
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = 'internal_staff_lookup'
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the page
+    else:
+        earthquake_instances = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(100).all()
+        tmplt = render_template(
+            'lookup.html',
+            earthquake_instances = earthquake_instances
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
 
 @app.route('/explore-the-map', methods=['GET'])
 def map():
-    return render_template(
-        'full-screen-map.html',
-    )
+
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = 'explore_the_map'
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
+
+    # otherwise generate the page
+    else:
+        tmplt = render_template(
+            'full-screen-map.html'
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
 
 @app.route('/la-habra-earthquakes', methods=['GET'])
 def la_habra_map():
-    return render_template(
-        'la-habra-earthquakes.html',
-    )
+
+
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = 'la_habra_earthquakes'
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
+
+    # otherwise generate the page
+    else:
+        tmplt = render_template(
+            'la-habra-earthquakes.html'
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
 
 def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
