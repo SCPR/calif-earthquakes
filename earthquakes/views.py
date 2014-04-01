@@ -195,33 +195,28 @@ def la_habra_map():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/test-api.json', methods=["GET"])
-def test_api_endpoint():
+@app.route('/earthquaketracker/api/v1.0/earthquakes', methods=["GET"])
+def api_recent_earthquakes_endpoint():
 
     # set the cache key
-    cache_expiration = 60 * 10
+    cache_expiration = 60 * 15
 
     # set the cache identifier
-    identifier = "view/test_api_endpoint"
+    identifier = "view/api_recent_earthquakes_endpoint"
 
     # see if cache exists
     cached = cache.get(identifier)
 
     # if cache exists return it
     if cached is not None:
-        logging.debug(cached)
         return cached
 
-    # otherwise generate the page
+    # otherwise generate the json response
     else:
-
-        data = {
-            "data": "test",
-            "second_data": "second-test"
-        }
-
-        resp = Response(json.dumps(data), status=200, mimetype='application/json')
-
+        earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(300).all()
+        resp = jsonify(
+            results = [i.serialize for i in earthquakes]
+        )
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
 
@@ -232,7 +227,6 @@ def test_api_endpoint():
 
 
 
-
 # flask_restless config
-manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=["GET"], include_methods=["resource_uri", "earthquake_tracker_url", "pacific_timezone"], results_per_page=300, max_results_per_page=300)
+#manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+#manager.create_api(Earthquake, methods=["GET"], include_methods=["resource_uri", "earthquake_tracker_url", "pacific_timezone"], results_per_page=300, max_results_per_page=300)
