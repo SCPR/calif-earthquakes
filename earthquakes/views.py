@@ -195,15 +195,43 @@ def la_habra_map():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-def require_appkey(view_function):
-    ''' requires an api key to hit json endpoints '''
-    @wraps(view_function)
-    def decorated_function(*args, **kwargs):
-        if request.args.get("apikey") and request.args.get("apikey") == app.config["APIKEY"]:
-            return view_function(*args, **kwargs)
-        else:
-            abort(401)
-    return decorated_function
+@app.route('/test-api.json', methods=["GET"])
+def test_api_endpoint():
+
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = "view/test_api_endpoint"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
+
+    # otherwise generate the page
+    else:
+
+        data = {
+            "data": "test",
+            "second_data": "second-test"
+        }
+
+        resp = Response(json.dumps(data), status=200, mimetype='application/json')
+
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
+
+
+
+
+
+
+
+
 
 # flask_restless config
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
