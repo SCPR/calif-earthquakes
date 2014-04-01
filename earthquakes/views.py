@@ -59,6 +59,7 @@ def detail(title, id):
 
     # if so return it
     if cached is not None:
+        logging.debug(cached)
         return cached
 
     # otherwise generate the page
@@ -117,7 +118,7 @@ def detail(title, id):
 
 @app.route('/internal-staff-lookup')
 def lookup():
-    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(100).all()
+    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(50).all()
     return render_template(
         'lookup.html',
         earthquake_instances = earthquake_instances
