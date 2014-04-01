@@ -15,19 +15,24 @@ logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', lev
 @app.route('/')
 def index():
 
+    # set the cache key
     cache_expiration = 60 * 10
 
-    # set the cache key
+    # set the cache identifier
     identifier = 'view/index'
 
-    # see if theres a key
+    # see if theres an identifier set
     cached = cache.get(identifier)
 
-    # if it does, return it
+    # if so return it
     if cached is not None:
+        logging.debug(cached)
         return cached
 
+    # otherwise generate the page
     else:
+
+        # can these queries be combined into one large one and then filtered?
         recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
         earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
         tmplt = render_template(
@@ -43,20 +48,23 @@ def index():
 @app.route('/<string:title>/<int:id>/', methods=['GET'])
 def detail(title, id):
 
+    # set the cache key
     cache_expiration = 60 * 10
 
-    # set the cache key
+    # set the cache identifier
     identifier = 'detail_view_for_%d' % id
 
-    # see if theres a key
+    # see if theres an identifier set
     cached = cache.get(identifier)
 
-    # if it does, return it
+    # if so return it
     if cached is not None:
         return cached
 
-    # otherwise create it
+    # otherwise generate the page
     else:
+
+        # can these queries be combined into one large one and then filtered?
         recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
         earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
 
@@ -109,7 +117,7 @@ def detail(title, id):
 
 @app.route('/internal-staff-lookup')
 def lookup():
-    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(50).all()
+    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(100).all()
     return render_template(
         'lookup.html',
         earthquake_instances = earthquake_instances
