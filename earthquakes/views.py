@@ -10,19 +10,19 @@ from earthquakes import app, cache, db
 from earthquakes.models import Earthquake
 from haversine import haversine
 
-logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
 
 # set the maximum number of records to return to the view
 DB_QUERY_LIMIT = 1000
 
-@app.route('/')
+@app.route("/")
 def index():
 
     # set the cache key
     cache_expiration = 60 * 10
 
     # set the cache identifier
-    identifier = 'view/index'
+    identifier = "view/index"
 
     # see if cache exists
     cached = cache.get(identifier)
@@ -40,7 +40,7 @@ def index():
             if earthquake.mag > 2.5:
                 earthquake_instances.append(earthquake)
         tmplt = render_template(
-            'index.html',
+            "index.html",
             recent_earthquakes = recent_earthquakes,
             earthquake_instances = earthquake_instances
         )
@@ -49,14 +49,14 @@ def index():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/<string:title>/<int:id>/', methods=['GET'])
+@app.route("/<string:title>/<int:id>/", methods=["GET"])
 def detail(title, id):
 
     # set the cache key
     cache_expiration = 60 * 10
 
     # set the cache identifier
-    identifier = 'detail_view_for_%d' % id
+    identifier = "view/detail_view_for_%d" % id
 
     # see if cache exists
     cached = cache.get(identifier)
@@ -103,7 +103,7 @@ def detail(title, id):
                     list_of_nearby_earthquakes.append(instance)
 
         tmplt = render_template(
-            'detail.html',
+            "detail.html",
             recent_earthquakes = recent_earthquakes,
             earthquake = earthquake,
             nearest_earthquakes = list_of_nearby_earthquakes
@@ -113,14 +113,14 @@ def detail(title, id):
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/internal-staff-lookup')
+@app.route("/internal-staff-lookup", methods=["GET"])
 def lookup():
 
     # set the cache key
     cache_expiration = 60 * 10
 
     # set the cache identifier
-    identifier = 'internal_staff_lookup'
+    identifier = "view/internal_staff_lookup"
 
     # see if cache exists
     cached = cache.get(identifier)
@@ -133,7 +133,7 @@ def lookup():
     else:
         earthquake_instances = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(100).all()
         tmplt = render_template(
-            'lookup.html',
+            "lookup.html",
             earthquake_instances = earthquake_instances
         )
 
@@ -141,14 +141,14 @@ def lookup():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/explore-the-map', methods=['GET'])
+@app.route("/explore-the-map", methods=["GET"])
 def map():
 
     # set the cache key
     cache_expiration = 60 * 10
 
     # set the cache identifier
-    identifier = 'explore_the_map'
+    identifier = "view/explore_the_map"
 
     # see if cache exists
     cached = cache.get(identifier)
@@ -161,22 +161,21 @@ def map():
     # otherwise generate the page
     else:
         tmplt = render_template(
-            'full-screen-map.html'
+            "full-screen-map.html"
         )
 
         # add pass the identifier and the template to the cache
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/la-habra-earthquakes', methods=['GET'])
+@app.route("/la-habra-earthquakes", methods=["GET"])
 def la_habra_map():
-
 
     # set the cache key
     cache_expiration = 60 * 10
 
     # set the cache identifier
-    identifier = 'la_habra_earthquakes'
+    identifier = "view/la_habra_earthquakes"
 
     # see if cache exists
     cached = cache.get(identifier)
@@ -189,7 +188,7 @@ def la_habra_map():
     # otherwise generate the page
     else:
         tmplt = render_template(
-            'la-habra-earthquakes.html'
+            "la-habra-earthquakes.html"
         )
 
         # add pass the identifier and the template to the cache
@@ -200,7 +199,7 @@ def require_appkey(view_function):
     ''' requires an api key to hit json endpoints '''
     @wraps(view_function)
     def decorated_function(*args, **kwargs):
-        if request.args.get('apikey') and request.args.get('apikey') == app.config['APIKEY']:
+        if request.args.get("apikey") and request.args.get("apikey") == app.config["APIKEY"]:
             return view_function(*args, **kwargs)
         else:
             abort(401)
@@ -208,4 +207,4 @@ def require_appkey(view_function):
 
 # flask_restless config
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri', 'earthquake_tracker_url', 'pacific_timezone'], results_per_page=300, max_results_per_page=300)
+manager.create_api(Earthquake, methods=["GET"], include_methods=["resource_uri", "earthquake_tracker_url", "pacific_timezone"], results_per_page=300, max_results_per_page=300)
