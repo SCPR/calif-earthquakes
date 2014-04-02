@@ -193,7 +193,7 @@ def la_habra_map():
         )
 
         # add pass the identifier and the template to the cache
-        #cache.set(identifier, tmplt, timeout = cache_expiration)
+        cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
 @app.route('/earthquaketracker/api/v1.0/earthquakes', methods=["GET"])
