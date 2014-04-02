@@ -241,9 +241,7 @@ def api_detail_earthquakes_endpoint(id):
     else:
         earthquake = Earthquake.query.filter_by(id=id).first_or_404()
 
-        resp = jsonify(
-            results = 1,
-            objects = [earthquake.serialize]
-        )
+        resp = jsonify(earthquake.serialize)
+
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
