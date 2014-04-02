@@ -262,21 +262,20 @@ def api_search_earthquakes_endpoint():
         return cached
 
     # otherwise generate the json response
+    # keying on primary_slug = "m5.1  - 1km s of la habra, california-1396066182010"
     else:
-        earthquake_main = Earthquake.query.filter_by(primary_slug="m5.1  - 1km s of la habra, california-1396066182010").first_or_404()
-        this_earthquake = (earthquake_main.latitude, earthquake_main.longitude)
-        earthquake_aftershocks = Earthquake.query.filter(and_(Earthquake.id!=earthquake_main.id, Earthquake.date_time_raw > 1396048252200)).order_by(Earthquake.date_time_raw.desc()).all()
-        list_of_la_habra_aftershocks = []
-        list_of_la_habra_aftershocks.append(earthquake_main)
-        for aftershock in earthquake_aftershocks:
-            comparision_earthquake = (aftershock.latitude, aftershock.longitude)
-            evaluated_distance = haversine(this_earthquake, comparision_earthquake)
+        target_earthquakes = Earthquake.query.filter(Earthquake.date_time_raw > 1396059504300).order_by(Earthquake.date_time_raw.desc()).all()
+        la_habra_earthquake = (33.919, -117.943)
+        list_of_la_habra_earthquakes = []
+        for earthquake in target_earthquakes:
+            comparision_earthquake = (earthquake.latitude, earthquake.longitude)
+            evaluated_distance = haversine(la_habra_earthquake, comparision_earthquake)
             if evaluated_distance < 40:
-                aftershock.distance = evaluated_distance
-                list_of_la_habra_aftershocks.append(aftershock)
+                earthquake.distance = evaluated_distance
+                list_of_la_habra_earthquakes.append(earthquake)
         resp = jsonify(
-            results = len(list_of_la_habra_aftershocks),
-            objects = [i.serialize for i in list_of_la_habra_aftershocks]
+            results = len(list_of_la_habra_earthquakes),
+            objects = [i.serialize for i in list_of_la_habra_earthquakes]
         )
-        #cache.set(identifier, resp, timeout = cache_expiration)
+        cache.set(identifier, resp, timeout = cache_expiration)
         return resp
