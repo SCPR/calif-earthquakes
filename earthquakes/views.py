@@ -193,14 +193,14 @@ def la_habra_map():
         )
 
         # add pass the identifier and the template to the cache
-        cache.set(identifier, tmplt, timeout = cache_expiration)
+        #cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
 @app.route('/earthquaketracker/api/v1.0/earthquakes', methods=["GET"])
 def api_recent_earthquakes_endpoint():
 
     # set the cache key
-    cache_expiration = 60 * 15
+    cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_recent_earthquakes_endpoint"
@@ -226,7 +226,7 @@ def api_recent_earthquakes_endpoint():
 def api_detail_earthquakes_endpoint(id):
 
     # set the cache key
-    cache_expiration = 60 * 20
+    cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_detail_earthquakes_endpoint_for_%d" % id
@@ -249,7 +249,7 @@ def api_detail_earthquakes_endpoint(id):
 def api_search_earthquakes_endpoint():
 
     # set the cache key
-    cache_expiration = 60 * 20
+    cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_detail_earthquakes_endpoint_for_la_habra_quakes"
@@ -278,5 +278,5 @@ def api_search_earthquakes_endpoint():
             results = len(list_of_la_habra_aftershocks),
             objects = [i.serialize for i in list_of_la_habra_aftershocks]
         )
-        cache.set(identifier, resp, timeout = cache_expiration)
+        #cache.set(identifier, resp, timeout = cache_expiration)
         return resp
