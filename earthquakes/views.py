@@ -221,6 +221,29 @@ def api_recent_earthquakes_endpoint():
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
 
-# flask_restless config
-#manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-#manager.create_api(Earthquake, methods=["GET"], include_methods=["resource_uri", "earthquake_tracker_url", "pacific_timezone"], results_per_page=300, max_results_per_page=300)
+@app.route('/earthquaketracker/api/v1.0/earthquakes/<int:id>/', methods=["GET"])
+def api_detail_earthquakes_endpoint(id):
+
+    # set the cache key
+    cache_expiration = 60 * 15
+
+    # set the cache identifier
+    identifier = "view/api_detail_earthquakes_endpoint_for_%d" % id
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the json response
+    else:
+        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
+
+        resp = jsonify(
+            results = 1,
+            objects = [earthquake.serialize]
+        )
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
