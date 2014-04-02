@@ -215,17 +215,11 @@ def api_recent_earthquakes_endpoint():
     else:
         earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(300).all()
         resp = jsonify(
-            results = [i.serialize for i in earthquakes]
+            results = len(earthquakes),
+            objects = [i.serialize for i in earthquakes]
         )
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
-
-
-
-
-
-
-
 
 # flask_restless config
 #manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
