@@ -6,6 +6,7 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 import flask.ext.sqlalchemy
 import flask.ext.restless
+from sqlalchemy import or_, and_
 from earthquakes import app, cache, db
 from earthquakes.models import Earthquake
 from haversine import haversine
@@ -225,7 +226,7 @@ def api_recent_earthquakes_endpoint():
 def api_detail_earthquakes_endpoint(id):
 
     # set the cache key
-    cache_expiration = 60 * 15
+    cache_expiration = 60 * 20
 
     # set the cache identifier
     identifier = "view/api_detail_earthquakes_endpoint_for_%d" % id
@@ -240,8 +241,42 @@ def api_detail_earthquakes_endpoint(id):
     # otherwise generate the json response
     else:
         earthquake = Earthquake.query.filter_by(id=id).first_or_404()
-
         resp = jsonify(earthquake.serialize)
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
 
+@app.route('/earthquaketracker/api/v1.0/earthquakes/la-habra-quakes', methods=["GET"])
+def api_search_earthquakes_endpoint():
+
+    # set the cache key
+    cache_expiration = 60 * 20
+
+    # set the cache identifier
+    identifier = "view/api_detail_earthquakes_endpoint_for_la_habra_quakes"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the json response
+    else:
+        earthquake_main = Earthquake.query.filter_by(primary_slug="m5.1  - 1km s of la habra, california-1396066182010").first_or_404()
+        this_earthquake = (earthquake_main.latitude, earthquake_main.longitude)
+        earthquake_aftershocks = Earthquake.query.filter(and_(Earthquake.id!=earthquake_main.id, Earthquake.date_time_raw > 1396048252200)).order_by(Earthquake.date_time_raw.desc()).all()
+        list_of_la_habra_aftershocks = []
+        list_of_la_habra_aftershocks.append(earthquake_main)
+        for aftershock in earthquake_aftershocks:
+            comparision_earthquake = (aftershock.latitude, aftershock.longitude)
+            evaluated_distance = haversine(this_earthquake, comparision_earthquake)
+            if evaluated_distance < 40:
+                aftershock.distance = evaluated_distance
+                list_of_la_habra_aftershocks.append(aftershock)
+        resp = jsonify(
+            results = len(list_of_la_habra_aftershocks),
+            objects = [i.serialize for i in list_of_la_habra_aftershocks]
+        )
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
