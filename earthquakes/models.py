@@ -131,7 +131,7 @@ class Earthquake(db.Model):
     def serialize(self):
         return {
             "pacific_timezone": Earthquake.generate_pacific_time(self.date_time),
-            "generate_tracker_url": Earthquake.generate_tracker_url(self.place, self.date_time, self.id),
+            "earthquake_tracker_url": Earthquake.generate_tracker_url(self.place, self.date_time, self.id),
             "resource_uri": Earthquake.generate_resource_uri(self.id),
             'nearest_cities': Earthquake.serialize_many2many(self.nearest_cities),
             "id": self.id,
