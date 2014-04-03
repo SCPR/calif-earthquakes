@@ -20,8 +20,12 @@ App.Router = Backbone.Router.extend({
     },
 
     laHabraQuakeMap: function(){
+        window.earthquakeLaHabra = new App.Collections.LaHabraEarthquakes();
+        window.earthquakeLaHabra.fetch({
+            async: false,
+        });
         var mapContainer = ".content-map-container";
-        this.laHabraMap(mapContainer, window.earthquakeCollection, 'static/templates/la-habra-earthquakes.html', 13);
+        this.laHabraMap(mapContainer, window.earthquakeLaHabra, 'static/templates/la-habra-earthquakes.html', 13);
     },
 
     fullScreenView: function(){

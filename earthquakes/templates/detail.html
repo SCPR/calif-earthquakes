@@ -164,7 +164,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         $(document).ready(function() {
-            var urlQuery = SITE_URL + '/api/earthquake/' + {{ earthquake.id }}
+            var urlQuery = SITE_URL + '/earthquaketracker/api/v1.0/earthquakes/' + {{ earthquake.id }} + '/'
             fn.retrieveData(urlQuery);
         });
 
@@ -174,7 +174,6 @@
             },
 
             createMap: function(data){
-
                 var stamenTonerBaseLayer = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
                     attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>",
                 	subdomains: "abcd",

@@ -9,6 +9,8 @@ from datetime import tzinfo, date
 from earthquakes import app, db
 import earthquakes.views
 
+logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+
 class Earthquake(db.Model):
     __tablename__ = 'earthquake'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -80,83 +82,91 @@ class Earthquake(db.Model):
         self.nearest_cities_url = nearest_cities_url
         self.nearest_cities = nearest_cities
 
-    def resource_uri(self):
+    def __repr__(self):
+        return '<place %r>' % self.place
+
+    @staticmethod
+    def generate_resource_uri(id):
         ''' take database record and add resource_uri '''
         url_prefix = "%s/api/earthquakes" % app.config["SITE_URL"]
-        return "%s/%s" % (url_prefix, self.id)
+        return "%s/%s" % (url_prefix, id)
 
-    def pacific_timezone(self):
+    @staticmethod
+    def generate_pacific_time(date_time):
         ''' take database record and create pacific timezone day and date '''
-        date_format = '%B-%-d-%Y'
         pacific = pytz.timezone("US/Pacific")
         utc = timezone("UTC")
-        date = self.date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
-        return date
+        date = date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
+        pacific_timezone = date.strftime("%a, %d %b %Y %H:%M:%S %z")
+        return pacific_timezone
 
-    def earthquake_tracker_url(self):
+    @staticmethod
+    def generate_tracker_url(place, date_time, id):
         ''' take database record and creates link to earthquake tracker instance '''
-        value = self.place
+        value = place
         value = value.replace(', California', '')
         split_value = value.split(' of ')
         instance_location = str(split_value[1]).replace(' ', '-').lower()
         date_format = '%B-%-d-%Y'
         pacific = pytz.timezone("US/Pacific")
         utc = timezone("UTC")
-        date = self.date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
+        date = date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
         date_string = date.strftime(date_format)
         instance_date = date_string.lower()
         formatted_value = '%s-%s' % (instance_location, instance_date)
         url_prefix = "%s/%s" % (app.config["SITE_URL"], formatted_value)
-        return "%s/%s" % (url_prefix, self.id)
+        return "%s/%s" % (url_prefix, id)
 
-    def __repr__(self):
-        return '<place %r>' % self.place
+    @staticmethod
+    def serialize_many2many(nearest_cities):
+       '''
+       Return object's relations in easily serializeable format.
+       nb! calls many2many's serialize property.
+       '''
+
+       list_of_nearest_cities = [i.serialize for i in nearest_cities]
+       return list_of_nearest_cities
 
     @property
     def serialize(self):
         return {
-            'id': self.id,
-            'primary_slug': self.primary_slug,
-            'mag': self.mag,
-            'place': self.place,
-            'title': self.title,
-            'date_time': self.date_time,
-            'date_time_raw': self.date_time_raw,
-            'updated': self.updated,
-            'updated_raw': self.updated_raw,
-            'tz': self.tz,
-            'url': self.url,
-            'felt': self.felt,
-            'cdi': self.cdi,
-            'mmi': self.mmi,
-            'alert': self.alert,
-            'status': self.status,
-            'tsunami': self.tsunami,
-            'sig': self.sig,
-            'resource_type': self.resource_type,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'depth': self.depth,
-            'net': self.net,
-            'code': self.code,
-            'ids': self.ids,
-            'sources': self.sources,
-            'nst': self.nst,
-            'dmin': self.dmin,
-            'rms': self.rms,
-            'gap': self.gap,
-            'magType': self.magType,
-            'nearest_cities_url': self.nearest_cities_url,
-            'nearest_cities': self.nearest_cities,
+            "pacific_timezone": Earthquake.generate_pacific_time(self.date_time),
+            "earthquake_tracker_url": Earthquake.generate_tracker_url(self.place, self.date_time, self.id),
+            "resource_uri": Earthquake.generate_resource_uri(self.id),
+            'nearest_cities': Earthquake.serialize_many2many(self.nearest_cities),
+            "id": self.id,
+            "primary_slug": self.primary_slug,
+            "mag": self.mag,
+            "place": self.place,
+            "title": self.title,
+            "date_time": self.date_time,
+            "date_time_raw": self.date_time_raw,
+            "updated": self.updated,
+            "updated_raw": self.updated_raw,
+            "tz": self.tz,
+            "url": self.url,
+            "felt": self.felt,
+            "cdi": self.cdi,
+            "mmi": self.mmi,
+            "alert": self.alert,
+            "status": self.status,
+            "tsunami": self.tsunami,
+            "sig": self.sig,
+            "resource_type": self.resource_type,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "depth": self.depth,
+            "net": self.net,
+            "code": self.code,
+            "ids": self.ids,
+            "sources": self.sources,
+            "nst": self.nst,
+            "dmin": self.dmin,
+            "rms": self.rms,
+            "gap": self.gap,
+            "magType": self.magType,
+            "nearest_cities_url": self.nearest_cities_url,
         }
-
-    @property
-    def serialize_many2many(self):
-       '''
-       Return object's relations in easily serializeable format.
-       NB! Calls many2many's serialize property.
-       '''
-       return [item.serialize for item in self.many2many]
 
 class NearestCity(db.Model):
     __tablename__ = 'nearest_cities'

@@ -107,6 +107,8 @@ class UsgsApiQuery(Command):
                 pass
         self.write(list_of_instances)
 
+    # try pulling earthquake codes into memory and querying those
+    # sted of pinging the database each time to see if it exists
     "write class instances to the database"
     def write(self, list_of_instances):
         for item in list_of_instances:

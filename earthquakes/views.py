@@ -6,32 +6,42 @@ from flask import Flask, jsonify, render_template, request, \
     url_for, abort, flash, make_response
 import flask.ext.sqlalchemy
 import flask.ext.restless
+from sqlalchemy import or_, and_
 from earthquakes import app, cache, db
 from earthquakes.models import Earthquake
 from haversine import haversine
 
-logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
 
-@app.route('/')
+# set the maximum number of records to return to the view
+DB_QUERY_LIMIT = 1000
+
+@app.route("/")
 def index():
 
+    # set the cache key
     cache_expiration = 60 * 10
 
-    # set the cache key
-    identifier = 'view/index'
+    # set the cache identifier
+    identifier = "view/index"
 
-    # see if theres a key
+    # see if cache exists
     cached = cache.get(identifier)
 
-    # if it does, return it
+    # if cache exists return it
     if cached is not None:
         return cached
 
+    # if cache doesnt exist generate the page
     else:
-        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(3).all()
-        earthquake_instances = Earthquake.query.filter(Earthquake.mag>2.5).order_by(Earthquake.date_time.desc()).all()
+        earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+        recent_earthquakes = earthquakes[:3]
+        earthquake_instances = []
+        for earthquake in earthquakes:
+            if earthquake.mag > 2.5:
+                earthquake_instances.append(earthquake)
         tmplt = render_template(
-            'index.html',
+            "index.html",
             recent_earthquakes = recent_earthquakes,
             earthquake_instances = earthquake_instances
         )
@@ -40,31 +50,32 @@ def index():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/<string:title>/<int:id>/', methods=['GET'])
+@app.route("/<string:title>/<int:id>/", methods=["GET"])
 def detail(title, id):
 
+    # set the cache key
     cache_expiration = 60 * 10
 
-    # set the cache key
-    identifier = 'detail_view_for_%d' % id
+    # set the cache identifier
+    identifier = "view/detail_view_for_%d" % id
 
-    # see if theres a key
+    # see if cache exists
     cached = cache.get(identifier)
 
-    # if it does, return it
+    # if cache exists return it
     if cached is not None:
         return cached
 
-    # otherwise create it
+    # otherwise generate the page
     else:
-        recent_earthquakes = Earthquake.query.order_by(Earthquake.date_time.desc()).limit(6).all()
-        earthquake = Earthquake.query.filter_by(id=id).order_by(Earthquake.date_time.desc()).first_or_404()
 
-        # this earthquakes lat and long
+        # get this earthquake
+        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
         this_earthquake = (earthquake.latitude, earthquake.longitude)
 
-        # return all earthquakes except this one
-        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time.desc()).all()
+        # get earthquakes that aren't this one
+        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+        recent_earthquakes = earthquake_instances[:6]
 
         # list to hold earthquakes found
         list_of_nearby_earthquakes = []
@@ -92,12 +103,8 @@ def detail(title, id):
                     # append if we don't
                     list_of_nearby_earthquakes.append(instance)
 
-            # move along if not
-            else:
-                pass
-
         tmplt = render_template(
-            'detail.html',
+            "detail.html",
             recent_earthquakes = recent_earthquakes,
             earthquake = earthquake,
             nearest_earthquakes = list_of_nearby_earthquakes
@@ -107,36 +114,168 @@ def detail(title, id):
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/internal-staff-lookup')
+@app.route("/internal-staff-lookup", methods=["GET"])
 def lookup():
-    earthquake_instances = Earthquake.query.filter(Earthquake.mag>1.0).order_by(Earthquake.date_time.desc()).limit(50).all()
-    return render_template(
-        'lookup.html',
-        earthquake_instances = earthquake_instances
-    )
 
-@app.route('/explore-the-map', methods=['GET'])
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = "view/internal_staff_lookup"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the page
+    else:
+        earthquake_instances = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(100).all()
+        tmplt = render_template(
+            "lookup.html",
+            earthquake_instances = earthquake_instances
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
+
+@app.route("/explore-the-map", methods=["GET"])
 def map():
-    return render_template(
-        'full-screen-map.html',
-    )
 
-@app.route('/la-habra-earthquakes', methods=['GET'])
+    # set the cache key
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = "view/explore_the_map"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
+
+    # otherwise generate the page
+    else:
+        tmplt = render_template(
+            "full-screen-map.html"
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
+
+@app.route("/la-habra-earthquakes", methods=["GET"])
 def la_habra_map():
-    return render_template(
-        'la-habra-earthquakes.html',
-    )
 
-def require_appkey(view_function):
-    ''' requires an api key to hit json endpoints '''
-    @wraps(view_function)
-    def decorated_function(*args, **kwargs):
-        if request.args.get('apikey') and request.args.get('apikey') == app.config['APIKEY']:
-            return view_function(*args, **kwargs)
-        else:
-            abort(401)
-    return decorated_function
+    # set the cache key
+    cache_expiration = 60 * 10
 
-# flask_restless config
-manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Earthquake, methods=['GET'], include_methods=['resource_uri', 'earthquake_tracker_url', 'pacific_timezone'], results_per_page=300, max_results_per_page=300)
+    # set the cache identifier
+    identifier = "view/la_habra_earthquakes"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        logging.debug(cached)
+        return cached
+
+    # otherwise generate the page
+    else:
+        tmplt = render_template(
+            "la-habra-earthquakes.html"
+        )
+
+        # add pass the identifier and the template to the cache
+        cache.set(identifier, tmplt, timeout = cache_expiration)
+        return tmplt
+
+@app.route('/earthquaketracker/api/v1.0/earthquakes', methods=["GET"])
+def api_recent_earthquakes_endpoint():
+
+    # set the cache key
+    cache_expiration = 60 * 25
+
+    # set the cache identifier
+    identifier = "view/api_recent_earthquakes_endpoint"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the json response
+    else:
+        earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(300).all()
+        resp = jsonify(
+            results = len(earthquakes),
+            objects = [i.serialize for i in earthquakes]
+        )
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
+
+@app.route('/earthquaketracker/api/v1.0/earthquakes/<int:id>/', methods=["GET"])
+def api_detail_earthquakes_endpoint(id):
+
+    # set the cache key
+    cache_expiration = 60 * 25
+
+    # set the cache identifier
+    identifier = "view/api_detail_earthquakes_endpoint_for_%d" % id
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the json response
+    else:
+        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
+        resp = jsonify(earthquake.serialize)
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
+
+@app.route('/earthquaketracker/api/v1.0/earthquakes/la-habra-quakes', methods=["GET"])
+def api_search_earthquakes_endpoint():
+
+    # set the cache key
+    cache_expiration = 60 * 25
+
+    # set the cache identifier
+    identifier = "view/api_detail_earthquakes_endpoint_for_la_habra_quakes"
+
+    # see if cache exists
+    cached = cache.get(identifier)
+
+    # if cache exists return it
+    if cached is not None:
+        return cached
+
+    # otherwise generate the json response
+    # keying on primary_slug = "m5.1  - 1km s of la habra, california-1396066182010"
+    else:
+        target_earthquakes = Earthquake.query.filter(Earthquake.date_time_raw > 1396059504300).order_by(Earthquake.date_time_raw.desc()).all()
+        la_habra_earthquake = (33.919, -117.943)
+        list_of_la_habra_earthquakes = []
+        for earthquake in target_earthquakes:
+            comparision_earthquake = (earthquake.latitude, earthquake.longitude)
+            evaluated_distance = haversine(la_habra_earthquake, comparision_earthquake)
+            if evaluated_distance < 40:
+                earthquake.distance = evaluated_distance
+                list_of_la_habra_earthquakes.append(earthquake)
+        resp = jsonify(
+            results = len(list_of_la_habra_earthquakes),
+            objects = [i.serialize for i in list_of_la_habra_earthquakes]
+        )
+        cache.set(identifier, resp, timeout = cache_expiration)
+        return resp
