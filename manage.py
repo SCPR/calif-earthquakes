@@ -215,7 +215,7 @@ class UsgsApiQuery(Command):
 
     "generate an email to send out"
     def generate_email(self, quake):
-        if quake.mag >= 4:
+        if quake.mag >= 3.5:
             value = quake.place.replace(", California", "")
             split_value = value.split(" of ")
             quake_distance = split_value[0].split(" ")
