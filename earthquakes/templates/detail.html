@@ -202,22 +202,30 @@
                     stamenTonerBaseLayer
                 );
 
-                var myIcon = L.Icon.extend({
+                var myIcon = new L.Icon({
                     iconUrl: SITE_URL + '/static/i/leaflet/blue-earthquake-pin-small.png',
-                    iconSize: [38, 95],
-                    iconAnchor: [22, 94],
-                    popupAnchor: [-3, -76]
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [0, -41]
                 });
 
                 var earthquakeLocationLayer = new L.layerGroup();
 
-                var earthquakeLocationMarker = new L.marker(mapCenter, {icon: new myIcon({iconUrl: SITE_URL + '/static/i/leaflet/blue-earthquake-pin-small.png'})});
+                var earthquakeLocationMarker = L.marker(mapCenter, {icon: myIcon}).addTo(map);
 
                 earthquakeLocationMarker.on("click", function(){
                     earthquakeLocationMarker.bindPopup(
-                        "<p>" + moment(data.pacific_timezone).format('MMMM D, YYYY') + "<br />" +
-                        data.place + "<br />" +
-                        "Mag: " + data.mag + "</p>");
+                        "<div class='map-marker'>"+
+                            "<article>" +
+                                "<a href='" + data.earthquake_tracker_url + "'>" +
+                                    "<h1>" + moment(data.pacific_timezone).format('MMMM D, YYYY') + "</h1>" +
+                                    "<ul>" +
+                                        "<li class='near'><strong>Location</strong>: " + data.place + "</li>" +
+                                    "</ul>" +
+                                    "<aside class='magnitude'><strong>Magnitude</strong>: " + data.mag + "</aside>" +
+                                "</a>" +
+                            "</article>" +
+                        "</div");
                 }).openPopup();
 
                 /*
@@ -229,7 +237,6 @@
                 */
 
                 var CaliforniaFaultLines = new L.TileLayer('http://archives.chrislkeller.com/map-tiles/california-faultlines/{z}/{x}/{y}.png');
-
                 earthquakeLocationLayer.addLayer(earthquakeLocationMarker);
                 earthquakeLocationLayer.addLayer(CaliforniaFaultLines)
                 earthquakeLocationLayer.addTo(map);

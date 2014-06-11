@@ -21,11 +21,11 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
     },
 
     addCollectionToMap: function(arrayOfModels){
-        var myIcon = L.Icon.extend({
+        var myIcon = new L.Icon({
             iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76]
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [0, -41]
         });
 
         this.markerCluster = L.markerClusterGroup({
@@ -36,7 +36,7 @@ App.Views.ClusteredMarkerView = Backbone.View.extend({
 
         for(var i=0; i<arrayOfModels.length; i++){
             this.marker = L.marker([arrayOfModels[i].attributes.latitude, arrayOfModels[i].attributes.longitude],
-                {icon: new myIcon({iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png'})});
+                {icon: myIcon});
             this.bindEvent(this.marker, arrayOfModels[i].attributes);
             this.markerCluster.addLayer(this.marker);
         };
@@ -90,11 +90,11 @@ App.Views.SingleMarkerView = Backbone.View.extend({
     },
 
     addCollectionToMap: function(arrayOfModels){
-        var myIcon = L.Icon.extend({
+        var myIcon = new L.Icon({
             iconUrl: 'static/i/leaflet/blue-earthquake-pin-small.png',
-            iconSize: [38, 95],
-            iconAnchor: [22, 94],
-            popupAnchor: [-3, -76]
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [0, -41]
         });
 
         this.markerCluster = L.markerClusterGroup({
