@@ -20,10 +20,10 @@ DB_QUERY_LIMIT = 1000
 def index():
 
     # set the cache expiration
-    if app.config["USE_LOCAL_CACHE"] == True:
-        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
-    else:
-        cache_expiration = 60 * 10
+    #if app.config["USE_LOCAL_CACHE"] == True:
+        #cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
+    #else:
+    cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/index"
@@ -32,35 +32,35 @@ def index():
     cached = cache.get(identifier)
 
     # if cache exists return it
-    if cached is not None:
-        return cached
+    #if cached is not None:
+        #return cached
 
     # if cache doesnt exist generate the page
-    else:
-        earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
-        recent_earthquakes = earthquakes[:3]
-        earthquake_instances = []
-        for earthquake in earthquakes:
-            if earthquake.mag > 2.5:
-                earthquake_instances.append(earthquake)
-        tmplt = render_template(
-            "index.html",
-            recent_earthquakes = recent_earthquakes,
-            earthquake_instances = earthquake_instances
-        )
+    #else:
+    earthquakes = Earthquake.query.order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+    recent_earthquakes = earthquakes[:3]
+    earthquake_instances = []
+    for earthquake in earthquakes:
+        if earthquake.mag > 2.5:
+            earthquake_instances.append(earthquake)
+    tmplt = render_template(
+        "index.html",
+        recent_earthquakes = recent_earthquakes,
+        earthquake_instances = earthquake_instances
+    )
 
-        # add pass the identifier and the template to the cache
-        cache.set(identifier, tmplt, timeout = cache_expiration)
-        return tmplt
+    # add pass the identifier and the template to the cache
+    cache.set(identifier, tmplt, timeout = cache_expiration)
+    return tmplt
 
 @app.route("/<string:title>/<int:id>/", methods=["GET"])
 def detail(title, id):
 
     # set the cache expiration
-    if app.config["USE_LOCAL_CACHE"] == True:
-        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
-    else:
-        cache_expiration = 60 * 10
+    #if app.config["USE_LOCAL_CACHE"] == True:
+        #cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
+    #else:
+    cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/detail_view_for_%d" % id
@@ -69,56 +69,56 @@ def detail(title, id):
     cached = cache.get(identifier)
 
     # if cache exists return it
-    if cached is not None:
-        return cached
+    #if cached is not None:
+        #return cached
 
     # otherwise generate the page
-    else:
+    #else:
 
-        # get this earthquake
-        earthquake = Earthquake.query.filter_by(id=id).first_or_404()
-        this_earthquake = (earthquake.latitude, earthquake.longitude)
+    # get this earthquake
+    earthquake = Earthquake.query.filter_by(id=id).first_or_404()
+    this_earthquake = (earthquake.latitude, earthquake.longitude)
 
-        # get earthquakes that aren't this one
-        earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
-        recent_earthquakes = earthquake_instances[:6]
+    # get earthquakes that aren't this one
+    earthquake_instances = Earthquake.query.filter(Earthquake.id!=id).order_by(Earthquake.date_time_raw.desc()).limit(DB_QUERY_LIMIT).all()
+    recent_earthquakes = earthquake_instances[:6]
 
-        # list to hold earthquakes found
-        list_of_nearby_earthquakes = []
+    # list to hold earthquakes found
+    list_of_nearby_earthquakes = []
 
-        # loop through our list of earthquakes
-        for instance in earthquake_instances:
+    # loop through our list of earthquakes
+    for instance in earthquake_instances:
 
-            # build a comparison
-            comparision_earthquake = (instance.latitude, instance.longitude)
+        # build a comparison
+        comparision_earthquake = (instance.latitude, instance.longitude)
 
-            # calculate the distance
-            evaluated_distance = haversine(this_earthquake, comparision_earthquake)
+        # calculate the distance
+        evaluated_distance = haversine(this_earthquake, comparision_earthquake)
 
-            # if less than
-            if evaluated_distance < 25:
+        # if less than
+        if evaluated_distance < 25:
 
-                # add param to object
-                instance.distance = evaluated_distance
+            # add param to object
+            instance.distance = evaluated_distance
 
-                # move along if we have six
-                if len(list_of_nearby_earthquakes) == 6:
-                    pass
+            # move along if we have six
+            if len(list_of_nearby_earthquakes) == 6:
+                pass
 
-                else:
-                    # append if we don't
-                    list_of_nearby_earthquakes.append(instance)
+            else:
+                # append if we don't
+                list_of_nearby_earthquakes.append(instance)
 
-        tmplt = render_template(
-            "detail.html",
-            recent_earthquakes = recent_earthquakes,
-            earthquake = earthquake,
-            nearest_earthquakes = list_of_nearby_earthquakes
-        )
+    tmplt = render_template(
+        "detail.html",
+        recent_earthquakes = recent_earthquakes,
+        earthquake = earthquake,
+        nearest_earthquakes = list_of_nearby_earthquakes
+    )
 
-        # add pass the identifier and the template to the cache
-        cache.set(identifier, tmplt, timeout = cache_expiration)
-        return tmplt
+    # add pass the identifier and the template to the cache
+    cache.set(identifier, tmplt, timeout = cache_expiration)
+    return tmplt
 
 @app.route("/internal-staff-lookup", methods=["GET"])
 def lookup():
