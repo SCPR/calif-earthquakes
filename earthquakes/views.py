@@ -20,8 +20,8 @@ DB_QUERY_LIMIT = 1000
 def index():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 10
 
@@ -57,8 +57,8 @@ def index():
 def detail(title, id):
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 10
 
@@ -124,8 +124,8 @@ def detail(title, id):
 def lookup():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 10
 
@@ -155,8 +155,8 @@ def lookup():
 def map():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 10
 
@@ -185,8 +185,8 @@ def map():
 def la_habra_map():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 10
 
@@ -215,8 +215,8 @@ def la_habra_map():
 def api_recent_earthquakes_endpoint():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 25
 
@@ -244,8 +244,8 @@ def api_recent_earthquakes_endpoint():
 def api_detail_earthquakes_endpoint(id):
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 25
 
@@ -270,8 +270,8 @@ def api_detail_earthquakes_endpoint(id):
 def api_search_earthquakes_endpoint():
 
     # set the cache expiration
-    if app.config["LOCAL_DEBUG"] == True:
-        cache_expiration = 1 * 1
+    if app.config["USE_LOCAL_CACHE"] == True:
+        cache_expiration = app.config["LOCAL_CACHE_EXPIRE"]
     else:
         cache_expiration = 60 * 25
 

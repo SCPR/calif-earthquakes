@@ -123,15 +123,15 @@ class Earthquake(db.Model):
         return date_string
 
     @staticmethod
-    def generate_tracker_url(value, date_time, id):
+    def generate_tracker_url(value, date, id):
         ''' take database record and creates link to earthquake tracker instance '''
         split_value = Earthquake.split_location_from_state(value)
-        date_string = Earthquake.format_date_for_display(date, "%B-%-d-%Y").lower()
+        instance_date = Earthquake.format_date_for_display(date, "%B-%-d-%Y").lower()
         if len(split_value) == 1:
             instance_location = str(split_value[0]).replace(" ", "-").lower()
         elif len(split_value) == 2:
             instance_location = str(split_value[1]).replace(" ", "-").lower()
-        formatted_value = "%s-%s" % (instance_location, date_string)
+        formatted_value = "%s-%s" % (instance_location, instance_date)
         url_prefix = "%s/%s" % (app.config["SITE_URL"], formatted_value)
         return "%s/%s" % (url_prefix, id)
 
