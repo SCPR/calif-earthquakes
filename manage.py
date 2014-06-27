@@ -84,9 +84,9 @@ class UsgsApiQuery(Command):
                 nearest_cities_url = None
             if nearest_cities_url is not None:
                 nearest_cities_query_details = session.get(
-                    nearest_cities_url, headers=app.config["API_MANAGER_HEADERS"])
-                nearest_cities_api_details = nearest_cities_query_details.result(
+                    nearest_cities_url, headers=app.config["API_MANAGER_HEADERS"]
                 )
+                nearest_cities_api_details = nearest_cities_query_details.result()
                 nearest_cities_api_details = nearest_cities_api_details.json()
                 list_of_nearby_cities = []
                 for nearby_city in nearest_cities_api_details:
@@ -105,7 +105,7 @@ class UsgsApiQuery(Command):
                 detail_instance["nearest_cities"] = list_of_nearby_cities
             else:
                 detail_instance["nearest_cities_url"] = None
-                detail_instance["nearest_cities"] = None
+                detail_instance["nearest_cities"] = []
         self.write(list_of_instances)
 
     # try pulling earthquake codes into memory and querying those
@@ -162,10 +162,11 @@ class UsgsApiQuery(Command):
                 )
 
                 self.generate_email(quake)
-
                 db.session.add(quake)
-                for city in item["nearest_cities"]:
-                    db.session.add(city)
+
+                if item["nearest_cities"] is not None:
+                    for city in item["nearest_cities"]:
+                        db.session.add(city)
             else:
                 if instance.updated_raw == comparison_updated_raw:
                     logging.debug(
