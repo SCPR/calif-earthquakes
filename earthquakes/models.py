@@ -9,10 +9,10 @@ from datetime import tzinfo, date
 from earthquakes import app, db
 import earthquakes.views
 
-logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
 
 class Earthquake(db.Model):
-    __tablename__ = 'earthquake'
+    __tablename__ = "earthquake"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     primary_slug = db.Column(db.Text)
     mag = db.Column(db.Float, nullable=True)
@@ -45,7 +45,7 @@ class Earthquake(db.Model):
     gap = db.Column(db.Float, nullable=True)
     magType = db.Column(db.String(1000), nullable=True)
     nearest_cities_url = db.Column(db.Text, nullable=True)
-    nearest_cities = db.relationship('NearestCity', backref='earthquake', lazy='dynamic')
+    nearest_cities = db.relationship("NearestCity", backref="earthquake", lazy="dynamic")
 
     def __init__(self, id, primary_slug, mag, place, title, date_time, date_time_raw, updated, updated_raw, tz, url, felt, cdi, mmi, alert, status, tsunami, sig, resource_type, latitude, longitude, depth, net, code, ids, sources, nst, dmin, rms, gap, magType, nearest_cities_url, nearest_cities):
         self.id = id
@@ -83,7 +83,7 @@ class Earthquake(db.Model):
         self.nearest_cities = nearest_cities
 
     def __repr__(self):
-        return '<place %r>' % self.place
+        return "<place %r>" % self.place
 
     @staticmethod
     def generate_resource_uri(id):
@@ -101,19 +101,37 @@ class Earthquake(db.Model):
         return pacific_timezone
 
     @staticmethod
-    def generate_tracker_url(place, date_time, id):
-        ''' take database record and creates link to earthquake tracker instance '''
-        value = place
-        value = value.replace(', California', '')
-        split_value = value.split(' of ')
-        instance_location = str(split_value[1]).replace(' ', '-').lower()
-        date_format = '%B-%-d-%Y'
+    def strip_state(value):
+        try:
+            value = value.replace(", California", "")
+        except:
+            value = value
+        return value
+
+    @staticmethod
+    def split_location_from_state(value):
+        value = Earthquake.strip_state(value)
+        split_value = value.split(" of ")
+        return split_value
+
+    @staticmethod
+    def format_date_for_display(date, date_format):
         pacific = pytz.timezone("US/Pacific")
         utc = timezone("UTC")
-        date = date_time.replace(tzinfo=pytz.UTC).astimezone(pacific)
+        date = date.replace(tzinfo=pytz.UTC).astimezone(pacific)
         date_string = date.strftime(date_format)
-        instance_date = date_string.lower()
-        formatted_value = '%s-%s' % (instance_location, instance_date)
+        return date_string
+
+    @staticmethod
+    def generate_tracker_url(value, date_time, id):
+        ''' take database record and creates link to earthquake tracker instance '''
+        split_value = Earthquake.split_location_from_state(value)
+        date_string = Earthquake.format_date_for_display(date, "%B-%-d-%Y").lower()
+        if len(split_value) == 1:
+            instance_location = str(split_value[0]).replace(" ", "-").lower()
+        elif len(split_value) == 2:
+            instance_location = str(split_value[1]).replace(" ", "-").lower()
+        formatted_value = "%s-%s" % (instance_location, date_string)
         url_prefix = "%s/%s" % (app.config["SITE_URL"], formatted_value)
         return "%s/%s" % (url_prefix, id)
 
@@ -133,7 +151,7 @@ class Earthquake(db.Model):
             "pacific_timezone": Earthquake.generate_pacific_time(self.date_time),
             "earthquake_tracker_url": Earthquake.generate_tracker_url(self.place, self.date_time, self.id),
             "resource_uri": Earthquake.generate_resource_uri(self.id),
-            'nearest_cities': Earthquake.serialize_many2many(self.nearest_cities),
+            "nearest_cities": Earthquake.serialize_many2many(self.nearest_cities),
             "id": self.id,
             "primary_slug": self.primary_slug,
             "mag": self.mag,
@@ -169,7 +187,7 @@ class Earthquake(db.Model):
         }
 
 class NearestCity(db.Model):
-    __tablename__ = 'nearest_cities'
+    __tablename__ = "nearest_cities"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     distance = db.Column(db.Integer, nullable=True)
     direction = db.Column(db.String(1000))
@@ -177,7 +195,7 @@ class NearestCity(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     population = db.Column(db.Integer, nullable=True)
-    earthquake_id = db.Column(db.Integer, db.ForeignKey('earthquake.id'))
+    earthquake_id = db.Column(db.Integer, db.ForeignKey("earthquake.id"))
 
     def __init__(self, id, distance, direction, name, latitude, longitude, population, earthquake_id):
         self.id = id
@@ -191,20 +209,20 @@ class NearestCity(db.Model):
         self.earthquake_id = earthquake_id
 
     def __repr__(self):
-        return '<name %r>' % self.name
+        return "<name %r>" % self.name
 
     @property
     def serialize(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'distance': self.distance,
-            'direction': self.direction,
-            'name': self.name,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'population': self.population,
-            'earthquake_id': self.earthquake_id
+            "id": self.id,
+            "name": self.name,
+            "distance": self.distance,
+            "direction": self.direction,
+            "name": self.name,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "population": self.population,
+            "earthquake_id": self.earthquake_id
         }
 
     @property

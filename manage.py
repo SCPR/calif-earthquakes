@@ -213,7 +213,7 @@ class UsgsApiQuery(Command):
                     instance.magType = item["properties"]["magType"]
                     instance.nearest_cities_url = item["nearest_cities_url"]
             db.session.commit()
-        logging.debug('Processed %s records' % (len(list_of_instances)))
+        logging.debug("Processed %s records" % (len(list_of_instances)))
 
     "generate an email to send out"
     def generate_email(self, quake):

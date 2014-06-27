@@ -196,7 +196,7 @@ def la_habra_map():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
-@app.route('/earthquaketracker/api/v1.0/earthquakes', methods=["GET"])
+@app.route("/earthquaketracker/api/v1.0/earthquakes", methods=["GET"])
 def api_recent_earthquakes_endpoint():
 
     # set the cache key
@@ -222,7 +222,7 @@ def api_recent_earthquakes_endpoint():
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
 
-@app.route('/earthquaketracker/api/v1.0/earthquakes/<int:id>/', methods=["GET"])
+@app.route("/earthquaketracker/api/v1.0/earthquakes/<int:id>/", methods=["GET"])
 def api_detail_earthquakes_endpoint(id):
 
     # set the cache key
@@ -245,7 +245,7 @@ def api_detail_earthquakes_endpoint(id):
         cache.set(identifier, resp, timeout = cache_expiration)
         return resp
 
-@app.route('/earthquaketracker/api/v1.0/earthquakes/la-habra-quakes', methods=["GET"])
+@app.route("/earthquaketracker/api/v1.0/earthquakes/la-habra-quakes", methods=["GET"])
 def api_search_earthquakes_endpoint():
 
     # set the cache key
