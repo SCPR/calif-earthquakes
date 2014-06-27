@@ -104,7 +104,8 @@ class UsgsApiQuery(Command):
                 detail_instance["nearest_cities_url"] = nearest_cities_url
                 detail_instance["nearest_cities"] = list_of_nearby_cities
             else:
-                pass
+                detail_instance["nearest_cities_url"] = None
+                detail_instance["nearest_cities"] = None
         self.write(list_of_instances)
 
     # try pulling earthquake codes into memory and querying those
