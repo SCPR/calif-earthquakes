@@ -19,8 +19,11 @@ DB_QUERY_LIMIT = 1000
 @app.route("/")
 def index():
 
-    # set the cache key
-    cache_expiration = 60 * 10
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/index"
@@ -53,8 +56,11 @@ def index():
 @app.route("/<string:title>/<int:id>/", methods=["GET"])
 def detail(title, id):
 
-    # set the cache key
-    cache_expiration = 60 * 10
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/detail_view_for_%d" % id
@@ -117,8 +123,11 @@ def detail(title, id):
 @app.route("/internal-staff-lookup", methods=["GET"])
 def lookup():
 
-    # set the cache key
-    cache_expiration = 60 * 10
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/internal_staff_lookup"
@@ -145,8 +154,11 @@ def lookup():
 @app.route("/explore-the-map", methods=["GET"])
 def map():
 
-    # set the cache key
-    cache_expiration = 60 * 10
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/explore_the_map"
@@ -172,8 +184,11 @@ def map():
 @app.route("/la-habra-earthquakes", methods=["GET"])
 def la_habra_map():
 
-    # set the cache key
-    cache_expiration = 60 * 10
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 10
 
     # set the cache identifier
     identifier = "view/la_habra_earthquakes"
@@ -199,8 +214,11 @@ def la_habra_map():
 @app.route("/earthquaketracker/api/v1.0/earthquakes", methods=["GET"])
 def api_recent_earthquakes_endpoint():
 
-    # set the cache key
-    cache_expiration = 60 * 25
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_recent_earthquakes_endpoint"
@@ -225,8 +243,11 @@ def api_recent_earthquakes_endpoint():
 @app.route("/earthquaketracker/api/v1.0/earthquakes/<int:id>/", methods=["GET"])
 def api_detail_earthquakes_endpoint(id):
 
-    # set the cache key
-    cache_expiration = 60 * 25
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_detail_earthquakes_endpoint_for_%d" % id
@@ -248,8 +269,11 @@ def api_detail_earthquakes_endpoint(id):
 @app.route("/earthquaketracker/api/v1.0/earthquakes/la-habra-quakes", methods=["GET"])
 def api_search_earthquakes_endpoint():
 
-    # set the cache key
-    cache_expiration = 60 * 25
+    # set the cache expiration
+    if app.config["LOCAL_DEBUG"] == True:
+        cache_expiration = 1 * 1
+    else:
+        cache_expiration = 60 * 25
 
     # set the cache identifier
     identifier = "view/api_detail_earthquakes_endpoint_for_la_habra_quakes"
