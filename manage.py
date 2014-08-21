@@ -14,8 +14,9 @@ from flask.ext.script import Manager, Command, Option
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.mail import Mail, Message
 from concurrent import futures
-from earthquakes import app, db
+from earthquakes import app, db, assets
 from earthquakes.models import Earthquake, NearestCity
+from flask.ext.assets import ManageAssets
 
 logging.basicConfig(
     format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
@@ -235,7 +236,7 @@ class UsgsApiQuery(Command):
             time_format = "%I:%M %p %Z"
             time_string = value.strftime(time_format)
             quake_depth = "{0:.3g}".format(quake.depth / 1.609344)
-            link_to_quake = "http://projects.scpr.org/earthquakes"
+            link_to_quake = "http://earthquakes.scpr.org"
 
             subject_line = "USGS alert: %s. %s on %s" % (
                 quake.title,
@@ -249,7 +250,7 @@ class UsgsApiQuery(Command):
                 recipients = app.config["EMAIL_DISTRIBUTION"]
             )
 
-            msg.body = "An alert from USGS suggests a magnitude %s earthquake occurred at %s %s about %s miles %s of %s, which could be of interest to our audience.\n\nPlease confirm the acccuracy of the alert and double check the details against the USGS' report:\n%s\n\n and the California Integrated Seismic Network:\nhttp://www.cisn.org/eqinfo.html\n\nYou can find a link to the Earthquake Tracker page for this earthquake on our internal lookup page:\nhttp://projects.scpr.org/earthquakes/internal-staff-lookup\n\nTo see if the Caltech Seismological Laboratory offer a media briefing call (626) 395-3227 during regular business hours or (626) 449-2631 after hours and on weekends.\n\nBasic details of the earthquake are below.\n\n----------\n\nA magnitude %s earthquake struck about %s miles %s of %s at %s on %s, according to the U.S. Geological Survey.\n\nThe earthquake's depth was recorded at about %s miles, according to the USGS.\n\nRELATED: More details on KPCC's Earthquake Tracker: %s" % (
+            msg.body = "An alert from USGS suggests a magnitude %s earthquake occurred at %s %s about %s miles %s of %s, which could be of interest to our audience.\n\nPlease confirm the acccuracy of the alert and double check the details against the USGS' report:\n%s\n\n and the California Integrated Seismic Network:\nhttp://www.cisn.org/eqinfo.html\n\nYou can find a link to the Earthquake Tracker page for this earthquake on our internal lookup page:\nhttp://earthquakes.scpr.org/internal-staff-lookup\n\nTo see if the Caltech Seismological Laboratory offer a media briefing call (626) 395-3227 during regular business hours or (626) 449-2631 after hours and on weekends.\n\nBasic details of the earthquake are below.\n\n----------\n\nA magnitude %s earthquake struck about %s miles %s of %s at %s on %s, according to the U.S. Geological Survey.\n\nThe earthquake's depth was recorded at about %s miles, according to the USGS.\n\nRELATED: More details on KPCC's Earthquake Tracker: %s" % (
                     quake.mag,
                     time_string,
                     weekday_string,
@@ -433,6 +434,7 @@ manager.add_command("drop_row", dropIndividualRow())
 manager.add_command("find_dupes", findDuplicates())
 manager.add_command("local_test_argument", local_test_argument)
 manager.add_command("db", MigrateCommand)
+manager.add_command("assets", ManageAssets(assets))
 
 if __name__ == "__main__":
     manager.run()
