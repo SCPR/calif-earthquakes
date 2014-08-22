@@ -191,6 +191,32 @@ def la_habra_map():
         cache.set(identifier, tmplt, timeout = cache_expiration)
         return tmplt
 
+@app.route("/test-cluster-map", methods=["GET"])
+def test_cluster_map():
+
+    cache_expiration = 60 * 10
+
+    # set the cache identifier
+    identifier = "view/la_habra_earthquakes"
+
+    # see if cache exists
+    #cached = cache.get(identifier)
+
+    # if cache exists return it
+    #if cached is not None:
+        #logging.debug(cached)
+        #return cached
+
+    # otherwise generate the page
+    #else:
+    tmplt = render_template(
+        "test-cluster-map.html"
+    )
+
+    # add pass the identifier and the template to the cache
+    cache.set(identifier, tmplt, timeout = cache_expiration)
+    return tmplt
+
 @app.route("/earthquaketracker/api/v1.0/earthquakes", methods=["GET"])
 def api_recent_earthquakes_endpoint():
 
