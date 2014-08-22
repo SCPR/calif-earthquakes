@@ -45,7 +45,7 @@
 .leaflet-usermarker-small {
     width: 34px;
     height: 34px;
-    background: url(http://projects.scpr.org/earthquakes/static/i/bluedot.png);
+    background: url(http://earthquakes.scpr.org/static/i/bluedot.png);
     background-size: 100%;
 }
 .leaflet-usermarker-small {

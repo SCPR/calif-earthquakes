@@ -24,6 +24,7 @@ app.config.from_object(settings_environment)
 
 cache = RedisCache(
     host=app.config['CACHE_CONFIG']['host'],
+    port=app.config['CACHE_CONFIG']['port'],
     db=app.config['CACHE_CONFIG']['db']
 )
 
@@ -42,7 +43,7 @@ app.jinja_env.filters['round_floating_point'] = template_filters.round_floating_
 assets = Environment(app)
 
 # rebuild the assets
-assets.config['auto_build'] = True
+assets.config['auto_build'] = app.config['ASSETS']['auto_build']
 
 core_js = Bundle(
     # already-minified js
