@@ -23,7 +23,7 @@
     $(function(){
         window.router = new App.Router();
         Backbone.history.start({
-            root: SITE_RELATIVE_ROOT,
+            root: "",
             pushState: true,
         });
     });

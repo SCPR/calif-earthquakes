@@ -6,53 +6,9 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 from fabric.colors import green
 
-env.user            = 'archive'
-env.hosts           = ['66.226.4.228']
-env.project_root    = '/web/archive/apps/earthquakes/src'
-env.bin_root        = "/web/archive/apps/earthquakes/virtualenvs/earthquakes/bin/"
-
 logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
 
-# server commands
-def update_code():
-    """
-    Production function to update the code on the remote server
-    """
-    with cd(env.project_root):
-        run('git pull')
-
-def update_dependencies():
-    """
-    Production function to update the application's dependencies
-    """
-    with cd(env.project_root):
-        run(__env_cmd("pip install -r requirements.txt"))
-
-def restart():
-    """
-    Production function to restart the server
-    """
-    with cd(env.project_root):
-        run('mkdir -p tmp/ && touch tmp/restart.txt')
-
-def deploy():
-    """
-    Production function to pull the latest code from source control & restarts the server
-    """
-    with cd(env.project_root):
-        update_code()
-        update_dependencies()
-        restart()
-
-def revert():
-    """
-    Production function to revert git via reset --hard @{1}
-    """
-    with cd(env.project_root):
-        run('git reset --hard @{1}')
-        update_dependencies()
-        restart()
-
+# TODO: Move this to Rundeck
 def server_query(api_url=''):
     """
     Production to query the USGS api and ingest to db
@@ -61,6 +17,7 @@ def server_query(api_url=''):
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py query --api_url " + api_url))
 
+# Can this be removed?
 def server_migration_init():
     """
     enable migrations on db
@@ -69,6 +26,7 @@ def server_migration_init():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py db init"))
 
+# Can this be removed?
 def server_migration_migrate():
     """
     generate initial db migration
@@ -77,26 +35,21 @@ def server_migration_migrate():
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py db migrate"))
 
-def server_migration_upgrade():
-    """
-    apply the migration to db
-    """
-    with cd(env.project_root):
-        run("export FLASK_ENV=production")
-        run(__env_cmd("python manage.py db upgrade"))
-
+# TODO: Move this to Rundeck
 def server_drop_earthquakes():
     ''' deletes all instances of the Earthquake model in the table '''
     with cd(env.project_root):
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py drop_earthquakes"))
 
+# TODO: Move this to Rundeck
 def server_drop_nearby_cities():
     ''' deletes all instances of the NearbyCities model in the table '''
     with cd(env.project_root):
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py drop_cities"))
 
+# TODO: Move this to Rundeck
 def server_drop_row(record_id=''):
     """
     deletes a specific record
@@ -105,6 +58,7 @@ def server_drop_row(record_id=''):
         run("export FLASK_ENV=production")
         run(__env_cmd("python manage.py drop_row --record " + record_id))
 
+# TODO: Move this to Rundeck
 def server_find_dupes():
     ''' finds duplicate records '''
     with cd(env.project_root):
