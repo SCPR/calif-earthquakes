@@ -18,8 +18,11 @@ from earthquakes import app, db, assets
 from earthquakes.models import Earthquake, NearestCity
 from flask.ext.assets import ManageAssets
 
+logger = logging.getLogger("root")
 logging.basicConfig(
-    format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logging.DEBUG
+)
 
 migrate = Migrate(app, db)
 manager = Manager(app)
@@ -50,11 +53,11 @@ class UsgsApiQuery(Command):
         list_of_urls = []
         for item in usgs_api_data["features"]:
             if "California" in item["properties"]["place"]:
-                logging.debug("Details: %s. URL: %s" % (item["properties"]["title"], item["properties"]["url"]))
+                logger.debug("Details: %s. URL: %s" % (item["properties"]["title"], item["properties"]["url"]))
                 usgs_details_link = str(item["properties"]["detail"])
                 list_of_urls.append(usgs_details_link)
             else:
-                logging.debug("passing this one by")
+                logger.debug("passing this one by")
                 pass
         self.retrieve_details_from(list_of_urls)
 
@@ -118,7 +121,7 @@ class UsgsApiQuery(Command):
             comparison_updated_raw = item["properties"]["updated"]
             instance = Earthquake.query.filter_by(code=comparison_code).first()
             if instance is None:
-                logging.debug("Creating new record for %s" % (item["properties"]["title"]))
+                logger.debug("Creating new record for %s" % (item["properties"]["title"]))
                 quake = Earthquake(
                     id=None,
                     primary_slug="%s-%s" % (
@@ -161,20 +164,19 @@ class UsgsApiQuery(Command):
                     nearest_cities_url=item["nearest_cities_url"],
                     nearest_cities=item["nearest_cities"]
                 )
-
-                self.generate_email(quake)
                 db.session.add(quake)
-
                 if item["nearest_cities"] is not None:
                     for city in item["nearest_cities"]:
                         db.session.add(city)
+                db.session.commit()
+                self.generate_email(quake)
             else:
                 if instance.updated_raw == comparison_updated_raw:
-                    logging.debug(
+                    logger.debug(
                         "compared and found record exists and doesnt need to be updated")
                     pass
                 else:
-                    logging.debug("compared and have updated this record")
+                    logger.debug("compared and have updated this record")
                     instance.primary_slug = "%s-%s" % (
                         item["properties"]["title"].lower(),
                         item["properties"]["time"]
@@ -213,12 +215,14 @@ class UsgsApiQuery(Command):
                     instance.gap = item["properties"]["gap"]
                     instance.magType = item["properties"]["magType"]
                     instance.nearest_cities_url = item["nearest_cities_url"]
-            db.session.commit()
-        logging.debug("Processed %s records" % (len(list_of_instances)))
+                    db.session.commit()
+
+        logger.debug("Processed %s records" % (len(list_of_instances)))
 
     "generate an email to send out"
     def generate_email(self, quake):
-        if quake.mag >= 3.5:
+
+        if quake.mag >= .5:
             value = quake.place.replace(", California", "")
             split_value = value.split(" of ")
             quake_distance = split_value[0].split(" ")
@@ -236,7 +240,12 @@ class UsgsApiQuery(Command):
             time_format = "%I:%M %p %Z"
             time_string = value.strftime(time_format)
             quake_depth = "{0:.3g}".format(quake.depth / 1.609344)
-            link_to_quake = "http://earthquakes.scpr.org"
+
+            if len(split_value) == 1:
+                formatted_value = str(split_value[0]).replace(" ", "-").lower()
+            elif len(split_value) == 2:
+                formatted_value = str(split_value[1]).replace(" ", "-").lower()
+            link_to_quake = "http://earthquakes.scpr.org/%s-%s/%s" % (formatted_value, url_string, quake.id)
 
             subject_line = "USGS alert: %s. %s on %s" % (
                 quake.title,
@@ -250,14 +259,16 @@ class UsgsApiQuery(Command):
                 recipients = app.config["EMAIL_DISTRIBUTION"]
             )
 
-            msg.body = "An alert from USGS suggests a magnitude %s earthquake occurred at %s %s about %s miles %s of %s, which could be of interest to our audience.\n\nPlease confirm the acccuracy of the alert and double check the details against the USGS' report:\n%s\n\n and the California Integrated Seismic Network:\nhttp://www.cisn.org/eqinfo.html\n\nYou can find a link to the Earthquake Tracker page for this earthquake on our internal lookup page:\nhttp://earthquakes.scpr.org/internal-staff-lookup\n\nTo see if the Caltech Seismological Laboratory offer a media briefing call (626) 395-3227 during regular business hours or (626) 449-2631 after hours and on weekends.\n\nBasic details of the earthquake are below.\n\n----------\n\nA magnitude %s earthquake struck about %s miles %s of %s at %s on %s, according to the U.S. Geological Survey.\n\nThe earthquake's depth was recorded at about %s miles, according to the USGS.\n\nRELATED: More details on KPCC's Earthquake Tracker: %s" % (
+            msg.body = "An alert from USGS suggests a magnitude %s earthquake occurred at %s %s about %s miles %s of %s, which could be of interest to our audience:\n%s.\n\nPlease confirm the acccuracy of the alert and double check the details against the USGS' report:\n%s\n\nand the California Integrated Seismic Network:\nhttp://www.cisn.org/eqinfo.html\n\nYou can find a link to the Earthquake Tracker page for this earthquake at\n%s\nand on our internal lookup page:\nhttp://earthquakes.scpr.org/internal-staff-lookup\n\nTo see if the Caltech Seismological Laboratory offer a media briefing call (626) 395-3227 during regular business hours or (626) 449-2631 after hours and on weekends.\n\nBasic details of the earthquake are below.\n\n----------\n\nA magnitude %s earthquake struck about %s miles %s of %s at %s on %s, according to the U.S. Geological Survey.\n\nThe earthquake's depth was recorded at about %s miles, according to the USGS.\n\nRELATED: Find more details on KPCC's Earthquake Tracker: %s" % (
                     quake.mag,
                     time_string,
                     weekday_string,
                     quake_miles,
                     quake_direction,
                     quake_location,
+                    link_to_quake,
                     quake.url,
+                    link_to_quake,
                     quake.mag,
                     quake_miles,
                     quake_direction,
@@ -269,8 +280,6 @@ class UsgsApiQuery(Command):
                 )
 
             mail.send(msg)
-
-            logging.debug(msg)
 
         else:
             pass
@@ -288,7 +297,7 @@ class dropEarthquakesRows(Command):
         database_rows = len(Earthquake.query.all())
         Earthquake.query.delete()
         db.session.commit()
-        logging.debug("deleted %s records" % (database_rows))
+        logger.debug("deleted %s records" % (database_rows))
 
 class dropNearbyCitiesRows(Command):
 
@@ -297,7 +306,7 @@ class dropNearbyCitiesRows(Command):
         database_rows = len(NearestCity.query.all())
         NearestCity.query.delete()
         db.session.commit()
-        logging.debug("deleted %s records" % (database_rows))
+        logger.debug("deleted %s records" % (database_rows))
 
 class dropIndividualRow(Command):
 
@@ -331,19 +340,19 @@ class findDuplicates(Command):
 
             # if it is a double dupe append it to a list
             if duplicate == 2:
-                logging.debug("Two matches")
+                logger.debug("Two matches")
                 this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
 
             # if it is a three dupe append it to a list
             elif duplicate == 3:
-                logging.debug("Three matches")
+                logger.debug("Three matches")
                 this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
 
             # pass it on by
             else:
-                logging.debug("No matches or outlier")
+                logger.debug("No matches or outlier")
 
         findDuplicates.process(list_of_duplicate_quakes)
 
@@ -360,7 +369,7 @@ class findDuplicates(Command):
 
                 # see if the codes are the same
                 if initial_instance.code == comparison_instance.code:
-                    logging.debug("checking for the newer record?")
+                    logger.debug("checking for the newer record?")
 
                     # compare timestamps
                     if comparison_instance.updated_raw > initial_instance.updated_raw:
@@ -370,7 +379,7 @@ class findDuplicates(Command):
                         findDuplicates.delete_this_duplicate(
                             comparison_instance.id)
                 else:
-                    logging.debug(
+                    logger.debug(
                         "These codes don't match so let's leave things alone")
 
             # let's consider our three instances
@@ -381,7 +390,7 @@ class findDuplicates(Command):
 
                 # see if the codes are the same
                 if initial_instance.code == middle_instance.code == last_instance.code:
-                    logging.debug("checking for the newer record?")
+                    logger.debug("checking for the newer record?")
 
                     print "%s - %s - %s" % (initial_instance.updated, middle_instance.updated, last_instance.updated)
                     big = last_instance.updated
@@ -406,10 +415,10 @@ class findDuplicates(Command):
 
     @staticmethod
     def delete_this_duplicate(record_id):
-        logging.debug("Delete %s from database" % (record_id))
+        logger.debug("Delete %s from database" % (record_id))
         try:
             earthquake = Earthquake.query.get(record_id)
-            logging.debug(earthquake)
+            logger.debug(earthquake)
             db.session.delete(earthquake)
             db.session.commit()
         except:
@@ -423,8 +432,8 @@ class local_test_argument(Command):
     )
 
     def run(self, api_url):
-        logging.debug(app.config[api_url])
-        logging.debug("%s" % (api_url))
+        logger.debug(app.config[api_url])
+        logger.debug("%s" % (api_url))
 
 manager.add_command("query", UsgsApiQuery())
 manager.add_command("initdb", InitDb())

@@ -11,7 +11,11 @@ from earthquakes import app, cache, db
 from earthquakes.models import Earthquake
 from haversine import haversine
 
-logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
+logger = logging.getLogger("root")
+logging.basicConfig(
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logger.debug
+)
 
 # set the maximum number of records to return to the view
 DB_QUERY_LIMIT = 1000
@@ -152,7 +156,7 @@ def map():
 
     # if cache exists return it
     if cached is not None:
-        logging.debug(cached)
+        logger.debug(cached)
         return cached
 
     # otherwise generate the page
@@ -178,7 +182,7 @@ def la_habra_map():
 
     # if cache exists return it
     if cached is not None:
-        logging.debug(cached)
+        logger.debug(cached)
         return cached
 
     # otherwise generate the page
@@ -204,7 +208,7 @@ def test_cluster_map():
 
     # if cache exists return it
     #if cached is not None:
-        #logging.debug(cached)
+        #logger.debug(cached)
         #return cached
 
     # otherwise generate the page

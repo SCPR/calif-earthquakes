@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import os, logging
+import os
+import logging
 from flask import Flask, jsonify, render_template, request, \
     Response, send_from_directory, session, g, redirect, \
     url_for, abort, flash, make_response
@@ -13,7 +14,11 @@ import settings_common
 
 settings_environment = __import__("settings_%s" % os.environ.setdefault("FLASK_ENV", "development"))
 
-logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+logger = logging.getLogger("root")
+logging.basicConfig(
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logging.DEBUG
+)
 
 PROJ_PATH, _ = os.path.split(os.path.abspath(os.path.realpath(__file__)))
 

@@ -6,7 +6,11 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 from fabric.colors import green
 
-logging.basicConfig(format='\033[1;36m%(levelname)s:\033[0;37m %(message)s', level=logging.DEBUG)
+logger = logging.getLogger("root")
+logging.basicConfig(
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logging.DEBUG
+)
 
 # TODO: Move this to Rundeck
 def server_query(api_url=''):

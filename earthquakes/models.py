@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-import os, logging, requests, time, datetime, calendar
+import os
+import logging
+import requests
+import time
+import datetime
+import calendar
 from flask import url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 import pytz
@@ -9,7 +14,11 @@ from datetime import tzinfo, date
 from earthquakes import app, db
 import earthquakes.views
 
-logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
+logger = logging.getLogger("root")
+logging.basicConfig(
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logging.DEBUG
+)
 
 class Earthquake(db.Model):
     __tablename__ = "earthquake"
