@@ -3,7 +3,11 @@ import pytz
 from pytz import timezone
 from datetime import tzinfo, date
 
-logging.basicConfig(format="\033[1;36m%(levelname)s:\033[0;37m %(message)s", level=logging.DEBUG)
+logger = logging.getLogger("root")
+logging.basicConfig(
+    format = "\033[1;36m%(levelname)s: %(filename)s (def %(funcName)s %(lineno)s): \033[1;37m %(message)s",
+    level=logging.DEBUG
+)
 
 ''' date conversion functions '''
 def format_date_for_display(date, date_format):
@@ -81,7 +85,15 @@ def strip_state(value):
 def split_location_from_state(value):
     value = strip_state(value)
     split_value = value.split(" of ")
-    return split_value
+    if len(split_value) >= 3:
+        output = []
+        output.append(split_value[0])
+        output.append(split_value[-1])
+    elif len(split_value) == 2:
+        output = split_value
+    else:
+        output = split_value
+    return output
 
 def convert_km_to_miles(value):
     value = value / 1.609344
