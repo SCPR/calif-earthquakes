@@ -52,13 +52,16 @@ class UsgsApiQuery(Command):
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data["features"]:
-            if "California" in item["properties"]["place"]:
-                logger.debug("Details: %s. URL: %s" % (item["properties"]["title"], item["properties"]["url"]))
-                usgs_details_link = str(item["properties"]["detail"])
-                list_of_urls.append(usgs_details_link)
+            if "Baja California" in item["properties"]["place"]:
+                logger.debug("passing this one by: %s" % (item["properties"]["place"]))
             else:
-                logger.debug("passing this one by")
-                pass
+                if "California" in item["properties"]["place"]:
+                    logger.debug("Details: %s. URL: %s" % (item["properties"]["title"], item["properties"]["url"]))
+                    usgs_details_link = str(item["properties"]["detail"])
+                    list_of_urls.append(usgs_details_link)
+                else:
+                    logger.debug("passing this one by")
+                    pass
         self.retrieve_details_from(list_of_urls)
 
     "performs request on local earthquake details url and returns the data"
