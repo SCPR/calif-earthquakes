@@ -1,32 +1,36 @@
+import os
 import yaml
 
-env = 'production'
+#env = 'production'
 
-DEBUG = False
-ASSETS_DEBUG = False
-SITE_URL = "http://earthquakes.scpr.org"
+CONFIG_FILE = os.environ.setdefault("EARTHQUAKE_TRACKER_CONFIG_PATH","./development.yml")
+
+CONFIG = yaml.load(open(CONFIG_FILE))
+
+DEBUG = CONFIG["debug"]
+
+ASSETS_DEBUG = CONFIG["assets_debug"]
+
+SITE_URL = CONFIG["site_url"]
 
 ASSETS = {
-    "auto_build" : False
+    "auto_build": CONFIG["assets"]["auto_build"]
 }
 
-CONFIG_DB       = yaml.load(open("config/database.yml", 'r'))[env]
-CONFIG_MAIL     = yaml.load(open("config/mail.yml", 'r'))[env]
+CACHE_CONFIG = CONFIG["cache"]
 
-CACHE_CONFIG    = yaml.load(open("config/cache.yml", 'r'))[env]
-EMAIL_DISTRIBUTION  = yaml.load(open("config/contacts.yml", 'r'))[env]['contacts']
-
+#SQLALCHEMY_DATABASE_URI = CONFIG["sqlalchemy_database_uri"]
 SQLALCHEMY_DATABASE_URI = "mysql://%s:%s@%s:%s/%s" % (
-    CONFIG_DB['username'],
-    CONFIG_DB['password'],
-    CONFIG_DB['host'],
-    CONFIG_DB['port'],
-    CONFIG_DB['database']
+    CONFIG["database"]["username"],
+    CONFIG["database"]["password"],
+    CONFIG["database"]["host"],
+    CONFIG["database"]["port"],
+    CONFIG["database"]["database"]
 )
 
-MAIL_SERVER     = CONFIG_MAIL['server']
-MAIL_PORT       = CONFIG_MAIL['port']
-MAIL_USE_TLS    = CONFIG_MAIL['use_tls']
-MAIL_USE_SSL    = CONFIG_MAIL['use_ssl']
-MAIL_USERNAME   = CONFIG_MAIL['username']
-MAIL_PASSWORD   = CONFIG_MAIL['password']
+MAIL_SERVER = CONFIG["email"]["host"]
+MAIL_PORT = CONFIG["email"]["port"]
+MAIL_USE_TLS = CONFIG["email"]["use_tls"]
+MAIL_USE_SSL = CONFIG["email"]["use_ssl"]
+MAIL_USERNAME = CONFIG["email"]["username"]
+MAIL_PASSWORD = CONFIG["email"]["password"]
