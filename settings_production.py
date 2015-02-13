@@ -3,7 +3,7 @@ import yaml
 
 #env = 'production'
 
-CONFIG_FILE = os.environ.setdefault("EARTHQUAKE_TRACKER_CONFIG_PATH","./development.yml")
+CONFIG_FILE = os.environ.setdefault("CONFIG_PATH","./development.yml")
 
 CONFIG = yaml.load(open(CONFIG_FILE))
 
