@@ -1,0 +1,46 @@
+---
+debug:
+
+assets_debug:
+
+site_relative_root:
+
+site_url:
+
+assets:
+  auto_build:
+
+database:
+  username:
+  password:
+  host:
+  port:
+  database:
+  sqlalchemy_database_uri:
+
+# optional if you intend to generate emails from an application
+email:
+  host:
+  username:
+  password:
+  port:
+  use_tls:
+  use_ssl:
+
+email_distribution:
+  -
+
+cache:
+  host:
+  port:
+  db:
+
+api:
+  twitter:
+    consumer_key:
+    consumer_secret:
+    access_token:
+    access_token_secret:
+
+  assethost:
+    token_secret:

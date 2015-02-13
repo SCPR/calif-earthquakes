@@ -1,5 +1,5 @@
 API_MANAGER_HEADERS = {
-    "From": "ckeller@scpr.org",
+    "From": "KPCC - Southern California Public Radio (ckeller@scpr.org)",
     "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/1.0.154.53 Safari/525.19"
 }
 
