@@ -7,9 +7,9 @@ CONFIG_FILE = os.environ.setdefault("CONFIG_PATH","./development.yml")
 
 CONFIG = yaml.load(open(CONFIG_FILE))
 
-DEBUG = CONFIG["debug"]
+DEBUG = CONFIG["debug",False]
 
-ASSETS_DEBUG = CONFIG["assets_debug"]
+ASSETS_DEBUG = CONFIG["assets_debug",False]
 
 SITE_URL = CONFIG["site_url"]
 
