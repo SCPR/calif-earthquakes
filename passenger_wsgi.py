@@ -1,5 +1,9 @@
-import sys, os, yaml
+import sys
+import os
+import yaml
+import newrelic.agent
+from earthquakes import app as application
 
 sys.path.append(os.getcwd())
 
-from earthquakes import app as application
+newrelic.agent.initialize("config/newrelic.ini")
