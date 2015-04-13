@@ -259,7 +259,7 @@ class UsgsApiQuery(Command):
             msg = Message(
                 subject_line,
                 sender = "kpccdatadesk@gmail.com",
-                recipients = app.config["EMAIL_DISTRIBUTION"]
+                recipients = app.config["CONFIG"]["email_distribution"]
             )
 
             msg.body = "An alert from USGS suggests a magnitude %s earthquake occurred at %s %s about %s miles %s of %s, which could be of interest to our audience:\n%s.\n\nPlease confirm the acccuracy of the alert and double check the details against the USGS' report:\n%s\n\nand the California Integrated Seismic Network:\nhttp://www.cisn.org/eqinfo.html\n\nYou can find a link to the Earthquake Tracker page for this earthquake at\n%s\nand on our internal lookup page:\nhttp://earthquakes.scpr.org/internal-staff-lookup\n\nTo see if the Caltech Seismological Laboratory offer a media briefing call (626) 395-3227 during regular business hours or (626) 449-2631 after hours and on weekends.\n\nBasic details of the earthquake are below.\n\n----------\n\nA magnitude %s earthquake struck about %s miles %s of %s at %s on %s, according to the U.S. Geological Survey.\n\nThe earthquake's depth was recorded at about %s miles, according to the USGS.\n\nRELATED: Find more details on KPCC's Earthquake Tracker: %s" % (
