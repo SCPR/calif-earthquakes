@@ -179,7 +179,6 @@ class UsgsApiQuery(Command):
                         "compared and found record exists and doesnt need to be updated")
                     pass
                 else:
-                    logger.debug("compared and have updated this record")
                     instance.primary_slug = "%s-%s" % (
                         item["properties"]["title"].lower(),
                         item["properties"]["time"]
@@ -218,6 +217,7 @@ class UsgsApiQuery(Command):
                     instance.gap = item["properties"]["gap"]
                     instance.magType = item["properties"]["magType"]
                     instance.nearest_cities_url = item["nearest_cities_url"]
+                    logger.debug("compared and have updated this record: %s" % (instance.primary_slug))
                     db.session.commit()
 
         logger.debug("Processed %s records" % (len(list_of_instances)))
