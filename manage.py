@@ -47,8 +47,7 @@ class UsgsApiQuery(Command):
 
     "performs request on earthquake api url and returns the data"
     def run(self, api_url):
-        usgs_query_api = requests.get(
-            app.config[api_url], headers=app.config["API_MANAGER_HEADERS"])
+        usgs_query_api = requests.get(app.config[api_url], headers=app.config["API_MANAGER_HEADERS"])
         usgs_api_data = usgs_query_api.json()
         list_of_urls = []
         for item in usgs_api_data["features"]:
@@ -67,7 +66,7 @@ class UsgsApiQuery(Command):
     "performs request on local earthquake details url and returns the data"
     def retrieve_details_from(self, list_of_urls):
         list_of_instances = []
-        session = FuturesSession(max_workers=3)
+        session = FuturesSession(max_workers=1)
         for detail_url in list_of_urls:
             # time.sleep(5)
             usgs_query_details = session.get(
