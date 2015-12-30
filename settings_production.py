@@ -1,7 +1,7 @@
 import os
 import yaml
 
-#env = 'production'
+# env = 'production'
 
 CONFIG_FILE = os.environ.setdefault("CONFIG_PATH","./development.yml")
 
@@ -19,14 +19,16 @@ ASSETS = {
 
 CACHE_CONFIG = CONFIG["cache"]
 
-#SQLALCHEMY_DATABASE_URI = CONFIG["sqlalchemy_database_uri"]
-SQLALCHEMY_DATABASE_URI = "mysql://%s:%s@%s:%s/%s" % (
-    CONFIG["database"]["username"],
-    CONFIG["database"]["password"],
-    CONFIG["database"]["host"],
-    CONFIG["database"]["port"],
-    CONFIG["database"]["database"]
-)
+if CONFIG_FILE == "./development.yml":
+    SQLALCHEMY_DATABASE_URI = CONFIG["database"]["sqlalchemy_database_uri"]
+else:
+    SQLALCHEMY_DATABASE_URI = "mysql://%s:%s@%s:%s/%s" % (
+        CONFIG["database"]["username"],
+        CONFIG["database"]["password"],
+        CONFIG["database"]["host"],
+        CONFIG["database"]["port"],
+        CONFIG["database"]["database"]
+    )
 
 MAIL_SERVER = CONFIG["email"]["host"]
 MAIL_PORT = CONFIG["email"]["port"]
