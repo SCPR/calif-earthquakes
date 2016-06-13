@@ -286,94 +286,80 @@ class UsgsApiQuery(Command):
         else:
             pass
 
-class InitDb(Command):
 
-    "sets up the database based on models"
+class InitDb(Command):
+    """
+    sets up the database based on models
+    """
     def run(self):
         db.create_all()
 
-class dropEarthquakesRows(Command):
 
-    "deletes all instances of the Earthquake model in the table"
+class dropEarthquakesRows(Command):
+    """
+    deletes all instances of the Earthquake model in the table
+    """
     def run(self):
         database_rows = len(Earthquake.query.all())
         Earthquake.query.delete()
         db.session.commit()
         logger.debug("deleted %s records" % (database_rows))
 
-class dropNearbyCitiesRows(Command):
 
-    "deletes all instances of the NearbyCities model in the table"
+class dropNearbyCitiesRows(Command):
+    """
+    deletes all instances of the NearbyCities model in the table
+    """
     def run(self):
         database_rows = len(NearestCity.query.all())
         NearestCity.query.delete()
         db.session.commit()
         logger.debug("deleted %s records" % (database_rows))
 
-class dropIndividualRow(Command):
 
+class dropIndividualRow(Command):
+    """
+    deletes instance of a record in the table
+    """
     option_list = (
         Option("--record", "-record", dest="record"),
     )
-
-    "deletes instance of a record in the table"
     def run(self, record):
         id = int(record)
         earthquake = Earthquake.query.get(id)
         db.session.delete(earthquake)
         db.session.commit()
 
+
 class findDuplicates(Command):
-
-    "deletes instance of a duplicate record in the table"
+    """
+    deletes instance of a duplicate record in the table
+    """
     def run(self):
-
-        # lets get all of the earthquakes
         earthquakes = Earthquake.query.all()
-
-        # create a list to hold the duplicates
         list_of_duplicate_quakes = []
-
-        # cycle through our queryset
         for quake in earthquakes:
-
-            # identify if it's a duplicate
             duplicate = Earthquake.query.filter_by(code=quake.code).count()
-
-            # if it is a double dupe append it to a list
             if duplicate == 2:
                 logger.debug("Two matches")
                 this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
-
-            # if it is a three dupe append it to a list
             elif duplicate == 3:
                 logger.debug("Three matches")
                 this_quake = Earthquake.query.filter_by(code=quake.code).all()
                 list_of_duplicate_quakes.append(this_quake)
-
-            # pass it on by
             else:
                 logger.debug("No matches or outlier")
-
         findDuplicates.process(list_of_duplicate_quakes)
 
     @staticmethod
     def process(list_of_duplicate_quakes):
-
-        # here's a list of lists of duplicates
         for instance in list_of_duplicate_quakes:
-
-            # let's consider our two instances
             if len(instance) == 2:
                 initial_instance = instance[0]
                 comparison_instance = instance[1]
-
-                # see if the codes are the same
                 if initial_instance.code == comparison_instance.code:
                     logger.debug("checking for the newer record?")
-
-                    # compare timestamps
                     if comparison_instance.updated_raw > initial_instance.updated_raw:
                         findDuplicates.delete_this_duplicate(
                             initial_instance.id)
@@ -383,17 +369,12 @@ class findDuplicates(Command):
                 else:
                     logger.debug(
                         "These codes don't match so let's leave things alone")
-
-            # let's consider our three instances
             elif len(instance) == 3:
                 initial_instance = instance[0]
                 middle_instance = instance[1]
                 last_instance = instance[2]
-
-                # see if the codes are the same
                 if initial_instance.code == middle_instance.code == last_instance.code:
                     logger.debug("checking for the newer record?")
-
                     print "%s - %s - %s" % (initial_instance.updated, middle_instance.updated, last_instance.updated)
                     big = last_instance.updated
                     if (initial_instance.updated > middle_instance.updated and initial_instance.updated > last_instance.updated):
@@ -426,16 +407,6 @@ class findDuplicates(Command):
         except:
             print "exception for %s\n" % (record_id)
 
-class local_test_argument(Command):
-
-    "sets up the database based on models"
-    option_list = (
-        Option("--api_url", "-api_url", dest="api_url"),
-    )
-
-    def run(self, api_url):
-        logger.debug(app.config[api_url])
-        logger.debug("%s" % (api_url))
 
 manager.add_command("query", UsgsApiQuery())
 manager.add_command("initdb", InitDb())
@@ -443,7 +414,6 @@ manager.add_command("drop_earthquakes", dropEarthquakesRows())
 manager.add_command("drop_cities", dropNearbyCitiesRows())
 manager.add_command("drop_row", dropIndividualRow())
 manager.add_command("find_dupes", findDuplicates())
-manager.add_command("local_test_argument", local_test_argument)
 manager.add_command("db", MigrateCommand)
 manager.add_command("assets", ManageAssets(assets))
 
