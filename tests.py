@@ -23,10 +23,12 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 class TestCase(unittest.TestCase):
 
-    request_url = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+    request_url = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
     details_url = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/nc72138821.geojson"
     cities_url = "http://earthquake.usgs.gov/product/nearby-cities/nc72138821/us/1389226110774/nearby-cities.json"
 
@@ -129,10 +131,14 @@ class TestCase(unittest.TestCase):
         list_of_places = [
             "35km N of Road Town, British Virgin Islands",
             "11km NNW of Jones, Oklahoma",
-            "10km WNW of Cobb, California"
+            "10km WNW of Cobb, California",
+            "110km NW of Ensenada, Baja California",
         ]
         for place in list_of_places:
-            if "California" in place:
+            if "Baja California" in place:
+                test_data = False
+                self.assertFalse(test_data)
+            elif "California" in place:
                 test_data = True
                 self.assertTrue(test_data)
             else:
@@ -155,8 +161,7 @@ class TestCase(unittest.TestCase):
         tz = -360
 
         # convert the unix timestamp to utc datetime object
-        test_data = isinstance(datetime.datetime.utcfromtimestamp(
-            date_time / 1e3), datetime.datetime)
+        test_data = isinstance(datetime.datetime.utcfromtimestamp(date_time / 1e3), datetime.datetime)
         self.assertTrue(test_data)
 
     # test views
