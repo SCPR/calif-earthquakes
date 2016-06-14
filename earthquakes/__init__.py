@@ -84,6 +84,20 @@ core_js = Bundle(
 )
 assets.register("core_js", core_js)
 
+detail_js = Bundle(
+    # already-minified js
+    # added to output as-is
+    Bundle(
+        "scripts/libs/jquery.min.js",
+        "scripts/libs/jquery-ui.min.js",
+        "scripts/libs/modernizr.min.js",
+        "scripts/libs/moment.min.js",
+        "scripts/libs/leaflet.min.js",
+    ),
+    output = "assets/min.js"
+)
+assets.register("detail_js", detail_js)
+
 core_css = Bundle(
     "css/jquery-ui.css",
     "css/leaflet.min.css",
@@ -96,6 +110,16 @@ core_css = Bundle(
     output = "assets/min.css"
 )
 assets.register("core_css", core_css)
+
+detail_css = Bundle(
+    "css/jquery-ui.css",
+    "css/leaflet.min.css",
+    "css/style.css",
+    "css/map-application.css",
+    filters = "cssmin",
+    output = "assets/detail-min.css"
+)
+assets.register("detail_css", detail_css)
 
 ie_js = Bundle(
     # js to make ie play nice

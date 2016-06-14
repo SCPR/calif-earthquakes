@@ -117,7 +117,6 @@ def convert_km_to_miles(value):
     else:
         value = value
     output = value / 1.609344
-    logger.debug(output)
     return "{0:.3g}".format(output)
 
 

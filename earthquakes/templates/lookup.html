@@ -10,6 +10,12 @@
 {% block twitter_title %}Earthquake Tracker | 89.3 KPCC{% endblock %}
 {% block twitter_url %}http://earthquakes.scpr.org{% endblock %}
 
+{% block core_page_css %}
+    {% assets "detail_css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet" />
+    {% endassets %}
+{% endblock %}
+
 {% block bodyclass %}landing{% endblock %}
 
 {% block main_content %}
@@ -49,4 +55,8 @@
     </div><!--/ .page-cols -->
 {% endblock %}
 
-{% block extra_js %}{% endblock %}
+{% block core_page_js %}
+    {% assets "detail_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

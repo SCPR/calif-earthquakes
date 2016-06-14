@@ -50,7 +50,7 @@ def index():
         )
 
         # add pass the identifier and the template to the cache
-        cache.set(identifier, tmplt, timeout = cache_expiration)
+        cache.set(identifier, tmplt, timeout=cache_expiration)
         return tmplt
 
 @app.route("/<string:title>/<int:id>/", methods=["GET"])
