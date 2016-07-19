@@ -121,9 +121,12 @@ def convert_km_to_miles(value):
 
 
 def round_floating_point(value):
-    if isinstance(value, (int, long, float)):
-        number = value
+    if value == None:
+        number = 0
     else:
-        number = float(str(value))
+        if isinstance(value, (int, long, float)):
+            number = value
+        else:
+            number = float(value)
     output = "{0:.2g}".format(number)
     return output
